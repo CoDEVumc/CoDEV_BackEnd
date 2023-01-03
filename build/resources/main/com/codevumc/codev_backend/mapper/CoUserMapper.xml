@@ -8,4 +8,25 @@
     <select id="findAll" resultType="CoUser">
         SELECT * FROM CoUser;
     </select>
+
+    <select id="findByEmail" resultType="CoUser">
+        select
+            co_email,
+            co_id,
+            co_password,
+            co_nickName,
+            co_gender,
+            co_phone,
+            role,
+            profileImg
+        from CoUser
+        where co_email = #{co_email}
+    </select>
+
+    <insert id="insertCoUser" parameterType="CoUser">
+        insert into CoUser (co_email, co_id, co_password, co_nickName, co_gender, co_phone, role, profileImg)
+        VALUES (#{co_email}, #{co_id}, #{co_password}, #{co_nickName}, #{co_gender}, #{co_phone}, #{role}, #{profileImg})
+    </insert>
+
+
 </mapper>
