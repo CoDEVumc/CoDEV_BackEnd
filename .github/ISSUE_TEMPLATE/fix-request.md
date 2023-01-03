@@ -1,7 +1,7 @@
 ---
 name: Fix request
 about: 기능 수정 템플릿
-title: "[FIX]"
+title: "[Fix]"
 labels: ''
 assignees: ''
 
