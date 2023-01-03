@@ -1,15 +1,22 @@
 package com.codevumc.codev_backend.service.co_user;
 
-import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
-import com.codevumc.codev_backend.errorhandler.ErrorCode;
-import com.codevumc.codev_backend.mapper.CoUserMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 
-public interface CoUserService {
+import javax.servlet.http.HttpServletRequest;
+
+
+public abstract class CoUserService {
+
+
+
+    public CoDevResponse setResponse(int code, String message, Object object) throws Exception {
+        CoDevResponse.ResponseMap result = new CoDevResponse.ResponseMap();
+        result.setCode(code);
+        result.setResponseData(message, object);
+        return result;
+    }
+
 
 
 }

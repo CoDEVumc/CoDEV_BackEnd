@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface TokenMapper {
     void insertRefreshToken(RefreshToken refreshToken);
     Optional<RefreshToken> findByRefreshToken(String refreshToken);
-    Optional<RefreshToken> findByKeyIdAndUserAgent(String co_email, String userAgent);
-    void deleteByKeyIdAndUserAgent(String co_email, String userAgent);
+    Optional<RefreshToken> findByKeyId(String co_email);
+    void deleteByKeyId(String co_email);
 }

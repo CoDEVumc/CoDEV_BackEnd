@@ -9,17 +9,17 @@ import java.util.Map;
 
 @Setter
 @Getter
-public class ApiResponse {
+public class CoDevResponse {
     private int code = HttpStatus.OK.value();
     private Object result;
 
-    public ApiResponse() { }
+    public CoDevResponse() { }
 
     public void setResult(Object result) {
         this.result = result;
     }
 
-    public static class ResponseMap extends ApiResponse {
+    public static class ResponseMap extends CoDevResponse {
 
         private Map responseData = new HashMap();
 
@@ -29,6 +29,9 @@ public class ApiResponse {
 
         public void setResponseData(String key, Object value) {
             this.responseData.put(key, value);
+        }
+        public void clear() {
+            this.responseData.clear();
         }
 
     }
