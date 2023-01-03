@@ -86,4 +86,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### Custom ###
+.idea
+.gradle
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,java
