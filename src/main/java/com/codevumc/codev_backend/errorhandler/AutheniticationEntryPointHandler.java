@@ -26,6 +26,12 @@ public class AutheniticationEntryPointHandler implements AuthenticationEntryPoin
             return;
         }
 
+        if(exception.equals("ForbiddenException")) {
+            errorCode = ErrorCode.ForbiddenException;
+            setResponse(response, errorCode);
+            return;
+        }
+
         //토큰이 만료된 경우
         if(exception.equals("ExpiredJwtException")) {
             errorCode = ErrorCode.ExpiredJwtException;

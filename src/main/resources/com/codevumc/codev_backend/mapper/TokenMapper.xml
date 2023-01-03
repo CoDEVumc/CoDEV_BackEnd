@@ -19,17 +19,17 @@
         where refreshToken = #{refreshToken}
     </select>
 
-    <select id="findByKeyIdAndUserAgent" resultType="RefreshToken">
+    <select id="findByKeyId" resultType="RefreshToken">
         select
             keyId,
             userAgent
         from refreshtoken
-        where keyId = #{co_email} and userAgent = #{userAgent}
+        where keyId = #{co_email}
     </select>
 
-    <delete id="deleteByKeyIdAndUserAgent">
+    <delete id="deleteByKeyId">
         DELETE FROM refreshtoken
-        WHERE keyId = #{co_email} and userAgent = #{userAgent}
+        WHERE keyId = #{co_email}
     </delete>
 
 </mapper>
