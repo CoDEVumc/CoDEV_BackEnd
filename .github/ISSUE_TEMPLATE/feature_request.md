@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: 기능 개발 템플릿
-title: "[FEAT]"
+title: "[Feat]"
 labels: ''
 assignees: ''
 
