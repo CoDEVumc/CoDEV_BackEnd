@@ -21,9 +21,18 @@
     </select>
 
     <insert id="insertCoUser" parameterType="CoUser">
-        insert into CoUser (co_email, co_password, co_nickName, role, profileImg)
-        VALUES (#{co_email}, #{co_password}, #{co_nickName}, #{role}, #{profileImg})
+        insert into CoUser (co_email, co_password, co_nickName, role
+                <choose>
+                    <when test="profileImg == null">)</when>
+                    <otherwise>, profileImg)</otherwise>
+                </choose>
+        VALUES (#{co_email}, #{co_password}, #{co_nickName}, #{role}
+                <choose>
+                    <when test="profileImg == null">)</when>
+                    <otherwise>, #{profileImg})</otherwise>
+                </choose>
     </insert>
+
 
 
 </mapper>
