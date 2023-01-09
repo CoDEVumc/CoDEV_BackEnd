@@ -15,5 +15,5 @@ public class CoPhotoOfStudy {
     private String co_filePath;
     private String co_fileDownloadPath;
     private Double co_fileSize;
-    private Timestamp createAt;
+    private Timestamp createdAt;
 }
