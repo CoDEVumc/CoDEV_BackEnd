@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class CoUserServiceImpl extends ResponseService implements UserDetailsService {
+public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
 
     @Override
@@ -28,6 +28,7 @@ public class CoUserServiceImpl extends ResponseService implements UserDetailsSer
         else throw new AuthenticationCustomException(ErrorCode.UsernameOrPasswordNotFoundException);
     }
 
+    @Override
     public CoDevResponse findALlUser(String email) {
         try {
 
@@ -39,6 +40,7 @@ public class CoUserServiceImpl extends ResponseService implements UserDetailsSer
 
     }
 
+    @Override
     public CoDevResponse signUpCoUser(CoUser coUser) {
         try {
             coUserMapper.insertCoUser(coUser);
