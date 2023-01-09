@@ -16,6 +16,6 @@ public class CoProject {
     private int co_limit;
     private boolean co_process;
     private Timestamp createdAt;
-    private Timestamp updateAt;
+    private Timestamp updatedAt;
     private boolean status;
 }
