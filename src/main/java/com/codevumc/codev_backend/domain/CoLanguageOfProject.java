@@ -7,12 +7,11 @@ import java.sql.Timestamp;
 
 @Builder
 @AllArgsConstructor
-public class CoPartOfStudy {
-    private long co_posId;
-    private long co_studyId;
-    private long co_partId;
+public class CoLanguageOfProject {
+    private long co_lopId;
+    private long co_projectId;
+    private long co_languageId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
-
 }

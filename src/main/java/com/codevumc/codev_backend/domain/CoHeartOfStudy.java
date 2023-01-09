@@ -7,12 +7,11 @@ import java.sql.Timestamp;
 
 @Builder
 @AllArgsConstructor
-public class CoPartOfStudy {
-    private long co_posId;
+public class CoHeartOfStudy {
+    private long co_hosId;
+    private String co_email;
     private long co_studyId;
-    private long co_partId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
-
 }
