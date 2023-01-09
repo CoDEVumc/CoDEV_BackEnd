@@ -1,4 +1,4 @@
-package com.codevumc.codev_backend.service.co_user;
+package com.codevumc.codev_backend.service;
 
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
@@ -6,7 +6,7 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import javax.servlet.http.HttpServletRequest;
 
 
-public abstract class CoUserService {
+public abstract class ResponseService {
 
 
 

@@ -4,21 +4,20 @@ import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
-import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.mapper.CoUserMapper;
+import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 
 @AllArgsConstructor
 @Service
-public class CoUserServiceImpl extends CoUserService implements UserDetailsService {
+public class CoUserServiceImpl extends ResponseService implements UserDetailsService {
     private final CoUserMapper coUserMapper;
 
     @Override
@@ -29,10 +28,10 @@ public class CoUserServiceImpl extends CoUserService implements UserDetailsServi
         else throw new AuthenticationCustomException(ErrorCode.UsernameOrPasswordNotFoundException);
     }
 
-    public CoDevResponse findALlUser() {
+    public CoDevResponse findALlUser(String email) {
         try {
-            List<CoUser> coUserList = coUserMapper.findAll();
-            return setResponse(200, "Success", coUserList);
+
+            return setResponse(200, "Success", email);
         }catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.ForbiddenException);

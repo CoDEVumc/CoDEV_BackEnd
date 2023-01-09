@@ -36,14 +36,12 @@ public class CoUserController extends JwtController {
         Role role = Role.from(user.get("role"));
         CoUser coUser = CoUser.builder()
                 .co_email(user.get("co_email"))
-                .co_id(user.get("co_id"))
                 .co_password(passwordEncoder.encode(user.get("co_password")))
                 .co_nickName(user.get("co_nickName"))
-                .co_gender(user.get("co_gender"))
-                .co_phone(user.get("co_phone"))
                 .role(role)
-                .roles(Collections.singletonList(role.getValue()))
-                .profileImg(user.get("profileImg")).build();
+                .roles(Collections.singletonList(role.getValue())).build();
+        if(user.get("profileImg") != null)
+            coUser.setProfileImg(user.get("profileImg"));
         return coUserService.signUpCoUser(coUser);
     }
 
@@ -53,8 +51,10 @@ public class CoUserController extends JwtController {
     }
 
     @RequestMapping("/testJWT")
-    public CoDevResponse getCoUserList(HttpServletRequest request) {
-        return coUserService.findALlUser();
+    public CoDevResponse getCoUserList(HttpServletRequest request) throws Exception{
+
+        return coUserService.findALlUser(getCoUserEmail(request));
+
     }
 
     @PostMapping("/token/refresh")

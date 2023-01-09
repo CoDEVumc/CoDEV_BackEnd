@@ -17,11 +17,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CoUser implements UserDetails {
     private String co_email;
-    private String co_id;
     private String co_password;
     private String co_nickName;
-    private String co_gender;
-    private String co_phone;
     private Role role;
     private String profileImg;
 
