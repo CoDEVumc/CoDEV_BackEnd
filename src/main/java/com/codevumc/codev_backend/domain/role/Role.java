@@ -7,10 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Role {
-    ADMIN("ROLE_ADMIN"),
-    USER("ROLE_USER"),
-    DEVELOPER("ROLE_DEVELOPER"),
-    DESIGNER("ROLE_DESIGNER");
+    ADMIN("ADMIN"),
+    USER("USER"),
+    DEVELOPER("DEVELOPER"),
+    DESIGNER("DESIGNER");
     private String value;
 
     @JsonCreator
