@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.CoPhotoOfProjectMapper">
+
+
+    <insert id="insertCoPhotoOfProject" parameterType="CoPhotoOfProject">
+        INSERT INTO CoPhotoOfProject
+        (co_projectId, co_uuId, co_fileName, co_filePath, co_fileDownloadPath, co_fileSize)
+        VALUES
+            (#{co_projectId}, #{co_uuId}, #{co_fileName}, #{co_filePath}, #{co_fileDownloadPath}, #{co_fileSize})
+    </insert>
+
+    <select id="deleteCoPhotoOfProject">
+        DELETE FROM CoPhotoOfProject WHERE co_projectId = #{co_projectId}
+    </select>
+
+    <select id="findByCoProjectId" resultType="CoUser">
+        select
+            co_projectId,
+            co_uuId,
+            co_fileName,
+            co_filePath,
+            co_fileDownloadPath,
+            co_fileSize
+        from CoPhotoOfProject
+        where co_projectId = #{co_projectId}
+    </select>
+
+    <select id="findByCo_uuId" resultType="CoUser">
+        select
+            co_projectId,
+            co_uuId,
+            co_fileName,
+            co_filePath,
+            co_fileDownloadPath,
+            co_fileSize
+        from CoPhotoOfProject
+        where co_uuId = #{co_uuId}
+    </select>
+
+</mapper>
