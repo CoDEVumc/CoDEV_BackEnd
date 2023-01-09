@@ -9,6 +9,7 @@ public abstract class JwtController {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtService jwtService;
 
+
     public JwtController(JwtTokenProvider jwtTokenProvider, JwtService jwtService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.jwtService = jwtService;
