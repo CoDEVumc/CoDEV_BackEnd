@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class CoUser implements UserDetails {
     private String co_email;
     private String co_password;
