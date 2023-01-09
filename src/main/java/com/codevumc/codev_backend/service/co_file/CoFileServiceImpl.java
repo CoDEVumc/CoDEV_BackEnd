@@ -6,6 +6,7 @@ import com.codevumc.codev_backend.file.FileUploadException;
 import com.codevumc.codev_backend.file.FileUploadProperties;
 import com.codevumc.codev_backend.mapper.CoPhotoOfProjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -37,6 +38,7 @@ public class CoFileServiceImpl implements CoFileService{
     private final Path fileLocation;
     private final CoPhotoOfProjectMapper coPhotoOfProjectMapper;
 
+    @Autowired
     public CoFileServiceImpl(FileUploadProperties fileUploadProperties, CoPhotoOfProjectMapper coPhotoOfProjectMapper) {
         this.fileLocation = Paths.get(fileUploadProperties.getUploadDir()).toAbsolutePath(). normalize();
         this.coPhotoOfProjectMapper = coPhotoOfProjectMapper;
@@ -114,6 +116,7 @@ public class CoFileServiceImpl implements CoFileService{
     private CoPhotoOfProject uploadFile(MultipartFile file, long co_projectId) {
         String originFileName = file.getOriginalFilename();
         String fileName = StringUtils.cleanPath(getUUIDFileName(originFileName));
+        System.out.println("FileName = " + fileName);
         try {
             if(fileName.contains(".."))
                 throw new FileUploadException("File Name is Not Visible");

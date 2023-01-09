@@ -1,11 +1,12 @@
 package com.codevumc.codev_backend.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+@Setter
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,4 +21,5 @@ public class CoProject {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
+    private List<CoPhotoOfProject> coPhotoOfProjects;
 }
