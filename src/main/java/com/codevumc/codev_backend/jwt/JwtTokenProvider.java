@@ -40,9 +40,8 @@ public class JwtTokenProvider {
     }
 
     //jwt 토큰 생성
-    public Token createToken(String userPk, List<String> roles) {
+    public Token createToken(String userPk) {
         Claims claims = Jwts.claims().setSubject(userPk);// JWT PayLoad에 저장되는 정보단위, PK값
-        claims.put("roles", roles);
         Date currentTime = new Date();
         try {
             String accessToken = getToken(claims, currentTime, accessTokenValidTime, accessSecretKey);

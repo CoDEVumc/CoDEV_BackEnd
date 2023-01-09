@@ -37,7 +37,7 @@ public class JwtService {
             );
 
             CoUser userinfo = coUserMapper.findByEmail(user.get("co_email")).get();
-            Token token = jwtTokenProvider.createToken(user.get("co_email"), userinfo.getRoles());
+            Token token = jwtTokenProvider.createToken(user.get("co_email"));
             //RefreshToken을 DB에 저장
             RefreshToken refreshToken = RefreshToken.builder()
                     .keyId(token.getKey())
