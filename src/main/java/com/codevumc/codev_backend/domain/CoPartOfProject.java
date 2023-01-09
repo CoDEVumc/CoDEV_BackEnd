@@ -7,15 +7,11 @@ import java.sql.Timestamp;
 
 @Builder
 @AllArgsConstructor
-public class CoProject {
+public class CoPartOfProject {
+    private long co_popId;
     private long co_projectId;
-    private String co_email;
-    private String co_title;
-    private String co_content;
-    private String co_mainImg;
-    private int co_limit;
-    private boolean co_process;
-    private Timestamp createdAt;
+    private long co_partId;
+    private Timestamp createAt;
     private Timestamp updateAt;
     private boolean status;
 }
