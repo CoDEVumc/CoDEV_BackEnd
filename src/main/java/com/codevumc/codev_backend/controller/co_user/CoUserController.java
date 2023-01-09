@@ -9,17 +9,16 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_user.CoUserServiceImpl;
 import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.service.co_user.JwtService;
-import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 public class CoUserController extends JwtController {
+    //사용자가 프로필이미지를 직접 주입 안하면, 이 이미지로 프론트가 처리 해준다.
     private final PasswordEncoder passwordEncoder;
     private final CoUserServiceImpl coUserService;
 
@@ -38,10 +37,13 @@ public class CoUserController extends JwtController {
                 .co_email(user.get("co_email"))
                 .co_password(passwordEncoder.encode(user.get("co_password")))
                 .co_nickName(user.get("co_nickName"))
+                .profileImg(user.get("profileImg"))
                 .role(role)
                 .roles(Collections.singletonList(role.getValue())).build();
-        if(user.get("profileImg") != null)
-            coUser.setProfileImg(user.get("profileImg"));
+//        if(user.get("profileImg") != null)
+//            coUser.setProfileImg(user.get("profileImg"));
+        //TO-DO
+        // 사용자가 이미지를 삽입하면, 파일에 저장한 후 파일 링크를 setProfileImg
         return coUserService.signUpCoUser(coUser);
     }
 
