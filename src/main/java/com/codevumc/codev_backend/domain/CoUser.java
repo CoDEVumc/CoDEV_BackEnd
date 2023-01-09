@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class CoUser implements UserDetails {
     private String co_email;
