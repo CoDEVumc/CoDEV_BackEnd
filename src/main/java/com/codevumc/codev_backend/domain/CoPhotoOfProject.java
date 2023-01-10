@@ -11,13 +11,14 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoPhotoOfProject {
+public class CoPhotoOfProject extends Photo{
     private long co_popId;
     private long co_projectId;
     private String co_uuId;
     private String co_fileName;
     //private String co_url;
     private String co_filePath;
+    private String co_fileUrl;
     private String co_fileDownloadPath;
     private long co_fileSize;
     private Timestamp createdAt;

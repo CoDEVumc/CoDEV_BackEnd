@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class CoFileServiceImpl implements CoFileService{
+public class CoFileServiceImpl extends CoFileService{
     private final Path fileLocation;
     private final CoPhotoOfProjectMapper coPhotoOfProjectMapper;
 
@@ -127,15 +127,19 @@ public class CoFileServiceImpl implements CoFileService{
             File FileOfFilePath = new File(filePath);
             long bytes = (FileOfFilePath.length() / 1024);
             String uuidFileName = FileOfFilePath.getName();
+            String fileUrl = "http://semtle.catholic.ac.kr:8080/image?name="+uuidFileName;
             String fileDownloadUri = getFileDownloadUri("/downloadFile/", uuidFileName);
-            return CoPhotoOfProject.builder()
+            CoPhotoOfProject coPhotoOfProject =  CoPhotoOfProject.builder()
                     .co_projectId(co_projectId)
                     .co_uuId(uuidFileName)
                     .co_fileName(originFileName)
                     .co_filePath(filePath)
+                    .co_fileUrl(fileUrl)
                     .co_fileDownloadPath(fileDownloadUri)
                     .co_fileSize(bytes)
                     .build();
+            coPhotoOfProjectMapper.insertCoPhotoOfProject(coPhotoOfProject);
+            return coPhotoOfProject;
         } catch (IOException e) {
             e.printStackTrace();
             throw new FileUploadException("[" + fileName + "] File upload failed");
@@ -146,7 +150,7 @@ public class CoFileServiceImpl implements CoFileService{
         Date now = new Date();
         String[] name = fileName.split("\\.");
         StringBuilder sb = new StringBuilder(name[0]);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String uploadTime = sdf.format(now);
         //확장자
         String extension = fileName.substring(fileName.lastIndexOf("."), fileName.length());

@@ -15,8 +15,9 @@ import java.util.Optional;
 public class CoProjectServiceImpl extends ResponseService implements CoProjectService {
     private final CoProjectMapper coProjectMapper;
 
-    public long insertProject(CoProject coProject) {
-        return this.coProjectMapper.insertCoProject(coProject);
+    public CoProject insertProject(CoProject coProject) {
+        this.coProjectMapper.insertCoProject(coProject);
+        return coProject;
     }
 
     public CoProject getCoProject(long co_projectId) {

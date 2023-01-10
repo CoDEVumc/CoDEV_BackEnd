@@ -5,14 +5,12 @@
 <mapper namespace="com.codevumc.codev_backend.mapper.CoProjectMapper">
 
 
-    <insert id="insertCoProject" parameterType="CoProject">
-        <selectKey keyProperty="co_projectId" order="AFTER" resultType="long">
-            select co_projectId from CoProject
-        </selectKey>
+    <insert id="insertCoProject" parameterType="CoProject" useGeneratedKeys="true" keyProperty="co_projectId">
         INSERT INTO CoProject
         (co_email, co_title, co_content, co_limit)
         VALUES
             (#{co_email}, #{co_title}, #{co_content}, #{co_limit})
+
     </insert>
 
     <select id="findByCoProjectId" resultType="CoProject">

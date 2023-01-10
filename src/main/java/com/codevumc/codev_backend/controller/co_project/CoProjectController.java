@@ -38,14 +38,13 @@ public class CoProjectController extends JwtController {
 
     @PostMapping(value = "/p1/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, String> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
-        CoProject coProject = coProjectService.getCoProject(this.coProjectService.insertProject(
-                                                            CoProject.builder()
-                                                                    .co_email(getCoUserEmail(request))
-                                                                    .co_title(project.get("co_title"))
-                                                                    .co_content(project.get("co_content"))
-                                                                    .co_limit(Integer.parseInt(project.get("co_limit"))).build()));
+        CoProject coProject = this.coProjectService.insertProject(
+                CoProject.builder()
+                        .co_email(getCoUserEmail(request))
+                        .co_title(project.get("co_title"))
+                        .co_content(project.get("co_content"))
+                        .co_limit(Integer.parseInt(project.get("co_limit"))).build());
 
-        System.out.println("pId = " + coProject.getCo_projectId());
         if(files != null) {
             List<CoPhotoOfProject> coPhotoOfProjects = Arrays.asList(files)
                     .stream()
@@ -56,6 +55,8 @@ public class CoProjectController extends JwtController {
             //TO-DO
             //이미지 첨부 안했을 시 랜덤으로 사진 넣기
         }
+
+
         return coProjectService.getCoProject(coProject);
     }
 }
