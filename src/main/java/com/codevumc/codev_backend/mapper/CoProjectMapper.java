@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Mapper
 public interface CoProjectMapper {
-    long insertCoProject(CoProject coProject);
+    void insertCoProject(CoProject coProject);
 
     Optional<CoProject> findByCoProjectId(long co_projectId);
 }

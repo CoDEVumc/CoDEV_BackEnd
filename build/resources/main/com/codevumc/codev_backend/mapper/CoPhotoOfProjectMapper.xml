@@ -7,9 +7,9 @@
 
     <insert id="insertCoPhotoOfProject" parameterType="CoPhotoOfProject">
         INSERT INTO CoPhotoOfProject
-        (co_projectId, co_uuId, co_fileName, co_filePath, co_fileDownloadPath, co_fileSize)
+        (co_projectId, co_uuId, co_fileName, co_filePath, co_fileUrl, co_fileDownloadPath, co_fileSize)
         VALUES
-            (#{co_projectId}, #{co_uuId}, #{co_fileName}, #{co_filePath}, #{co_fileDownloadPath}, #{co_fileSize})
+            (#{co_projectId}, #{co_uuId}, #{co_fileName}, #{co_filePath}, #{co_fileUrl}, #{co_fileDownloadPath}, #{co_fileSize})
     </insert>
 
     <select id="deleteCoPhotoOfProject">
@@ -22,6 +22,7 @@
             co_uuId,
             co_fileName,
             co_filePath,
+            co_fileUrl,
             co_fileDownloadPath,
             co_fileSize
         from CoPhotoOfProject
@@ -34,6 +35,7 @@
             co_uuId,
             co_fileName,
             co_filePath,
+            co_fileUrl,
             co_fileDownloadPath,
             co_fileSize
         from CoPhotoOfProject

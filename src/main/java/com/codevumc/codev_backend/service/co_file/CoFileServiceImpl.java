@@ -5,7 +5,6 @@ import com.codevumc.codev_backend.file.FileDownloadException;
 import com.codevumc.codev_backend.file.FileUploadException;
 import com.codevumc.codev_backend.file.FileUploadProperties;
 import com.codevumc.codev_backend.mapper.CoPhotoOfProjectMapper;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -34,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class CoFileServiceImpl extends CoFileService{
+public class CoFileServiceImpl implements CoFileService{
     private final Path fileLocation;
     private final CoPhotoOfProjectMapper coPhotoOfProjectMapper;
 
@@ -113,6 +112,7 @@ public class CoFileServiceImpl extends CoFileService{
         return null;
     }
 
+
     private CoPhotoOfProject uploadFile(MultipartFile file, long co_projectId) {
         String originFileName = file.getOriginalFilename();
         String fileName = StringUtils.cleanPath(getUUIDFileName(originFileName));
@@ -129,21 +129,26 @@ public class CoFileServiceImpl extends CoFileService{
             String uuidFileName = FileOfFilePath.getName();
             String fileUrl = "http://semtle.catholic.ac.kr:8080/image?name="+uuidFileName;
             String fileDownloadUri = getFileDownloadUri("/downloadFile/", uuidFileName);
-            CoPhotoOfProject coPhotoOfProject =  CoPhotoOfProject.builder()
-                    .co_projectId(co_projectId)
-                    .co_uuId(uuidFileName)
-                    .co_fileName(originFileName)
-                    .co_filePath(filePath)
-                    .co_fileUrl(fileUrl)
-                    .co_fileDownloadPath(fileDownloadUri)
-                    .co_fileSize(bytes)
-                    .build();
-            coPhotoOfProjectMapper.insertCoPhotoOfProject(coPhotoOfProject);
-            return coPhotoOfProject;
+
+            return insertPhoto(co_projectId, uuidFileName, originFileName, filePath, fileUrl, fileDownloadUri, bytes);
         } catch (IOException e) {
             e.printStackTrace();
             throw new FileUploadException("[" + fileName + "] File upload failed");
         }
+    }
+
+    private CoPhotoOfProject insertPhoto(long co_projectId, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
+        CoPhotoOfProject coPhotoOfProject =  CoPhotoOfProject.builder()
+                .co_projectId(co_projectId)
+                .co_uuId(uuidFileName)
+                .co_fileName(originFileName)
+                .co_filePath(filePath)
+                .co_fileUrl(fileUrl)
+                .co_fileDownloadPath(fileDownloadUri)
+                .co_fileSize(bytes)
+                .build();
+        coPhotoOfProjectMapper.insertCoPhotoOfProject(coPhotoOfProject);
+        return coPhotoOfProject;
     }
 
     private String getUUIDFileName(String fileName) {
