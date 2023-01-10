@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.CoProjectMapper">
+
+
+    <insert id="insertCoProject" parameterType="CoProject" useGeneratedKeys="true" keyProperty="co_projectId">
+        INSERT INTO CoProject
+        (co_email, co_title, co_content, co_limit)
+        VALUES
+            (#{co_email}, #{co_title}, #{co_content}, #{co_limit})
+
+    </insert>
+
+    <select id="findByCoProjectId" resultType="CoProject">
+        select
+            co_projectId, co_email, co_title, co_content, co_mainImg, co_limit, co_process, createdAt, updatedAt, status
+        from CoProject
+        where co_projectId = #{co_projectId}
+    </select>
+
+
+</mapper>
