@@ -1,7 +1,8 @@
 package com.codevumc.codev_backend.errorhandler;
 
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONObject;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,7 @@ public class AutheniticationEntryPointHandler implements AuthenticationEntryPoin
 
     }
 
-    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException{
+    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException, JSONException {
         JSONObject json = new JSONObject();
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("utf-8");

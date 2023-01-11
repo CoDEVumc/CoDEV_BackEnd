@@ -6,12 +6,16 @@ import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoUserMapper;
 import com.codevumc.codev_backend.service.ResponseService;
+import com.codevumc.codev_backend.snslogin.GitHubApi;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.interceptor.CacheableOperation;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -19,6 +23,7 @@ import java.util.Optional;
 @Service
 public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
+    private final GitHubApi gitHubApi;
 
     @Override
     public UserDetails loadUserByUsername(String co_email) throws UsernameNotFoundException {
@@ -51,5 +56,19 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         }
     }
 
+    @Override
+    public CoDevResponse githubTest(String authorize_code) {
+        try {
+            Map<String, Object> userInfo =  gitHubApi.getUserInfo(gitHubApi.getAccessTocken(authorize_code));
+            CoUser coUser = CoUser.builder()
+                    .co_email(userInfo.get("co_email").toString())
+                    .co_password(userInfo.get("co_password").toString())
+                    .build();
+            return setResponse(200, "success", coUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
