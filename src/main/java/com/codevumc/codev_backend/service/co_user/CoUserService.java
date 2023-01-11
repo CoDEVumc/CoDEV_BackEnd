@@ -11,4 +11,5 @@ public interface CoUserService {
 
     CoDevResponse signUpCoUser(CoUser coUser);
 
+    CoDevResponse githubTest(String authorize_code);
 }
