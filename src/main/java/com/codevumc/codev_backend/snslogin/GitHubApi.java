@@ -29,7 +29,6 @@ public class GitHubApi {
             StringBuilder sb = new StringBuilder();
             sb.append("client_id=Iv1.90b1ea1a45795609");
             sb.append("&client_secret=4526563538819df74aada22cdf9c2b3f67075089");
-            sb.append("&redirect_uri=http://localhost:8080/login");
             sb.append("&code=" + authorize_code);
             sb.append("&state=state");
             bw.write(sb.toString());
