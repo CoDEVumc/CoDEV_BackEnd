@@ -1,6 +1,6 @@
 package com.codevumc.codev_backend.errorhandler;
 
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;

@@ -54,9 +54,7 @@ public class CoUserController extends JwtController {
 
     @RequestMapping("/testJWT")
     public CoDevResponse getCoUserList(HttpServletRequest request) throws Exception {
-
         return coUserService.findALlUser(getCoUserEmail(request));
-
     }
 
     @PostMapping("/token/refresh")
@@ -64,7 +62,7 @@ public class CoUserController extends JwtController {
         return getJwtService().newAccessToken(bodyJson);
     }
 
-    @PostMapping("/github/login")
+    @GetMapping("/github/login")
     public CoDevResponse gitHubLogin(@RequestBody @RequestParam(value = "code") String code) throws Exception {
         return coUserService.githubTest(code);
     }

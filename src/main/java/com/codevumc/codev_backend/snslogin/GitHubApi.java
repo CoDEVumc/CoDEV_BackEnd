@@ -2,6 +2,7 @@ package com.codevumc.codev_backend.snslogin;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
+@Component
 public class GitHubApi {
     public String getAccessTocken(String authorize_code) {
         String reqURL = "https://github.com/login/oauth/access_token";
@@ -27,7 +29,7 @@ public class GitHubApi {
             StringBuilder sb = new StringBuilder();
             sb.append("client_id=Iv1.90b1ea1a45795609");
             sb.append("&client_secret=4526563538819df74aada22cdf9c2b3f67075089");
-            sb.append("&redirect_uri=http://localhost:8080/api/user/auth/GitHub_login");
+            sb.append("&redirect_uri=http://localhost:8080/login");
             sb.append("&code=" + authorize_code);
             sb.append("&state=state");
             bw.write(sb.toString());
