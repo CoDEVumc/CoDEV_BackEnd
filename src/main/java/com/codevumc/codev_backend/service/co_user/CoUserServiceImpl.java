@@ -7,6 +7,7 @@ import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoUserMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import com.codevumc.codev_backend.snslogin.GitHubApi;
+import com.codevumc.codev_backend.snslogin.GoogleApi;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.interceptor.CacheableOperation;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,8 @@ import java.util.Optional;
 public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
     private final GitHubApi gitHubApi;
+    private final GoogleApi googleApi;
+
 
     @Override
     public UserDetails loadUserByUsername(String co_email) throws UsernameNotFoundException {
@@ -70,5 +73,18 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         }
         return null;
     }
-
+    @Override
+    public CoDevResponse googleTest(String authorize_code){
+        try {
+            Map<String, Object> userInfo =  googleApi.getUserInfo(googleApi.getAccessToken(authorize_code));
+            CoUser coUser = CoUser.builder()
+                    .co_email(userInfo.get("co_email").toString())
+                    .co_password(userInfo.get("co_password").toString())
+                    .build();
+            return setResponse(200, "success", coUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -12,4 +12,7 @@ public interface CoUserService {
     CoDevResponse signUpCoUser(CoUser coUser);
 
     CoDevResponse githubTest(String authorize_code);
+
+    CoDevResponse googleTest(String authorize_code);
+
 }
