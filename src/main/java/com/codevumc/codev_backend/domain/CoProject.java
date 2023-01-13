@@ -14,12 +14,13 @@ public class CoProject {
     private long co_projectId;
     private String co_email;
     private String co_title;
+    private String co_location;
     private String co_content;
     private String co_mainImg;
-    private int co_limit;
     private boolean co_process;
+    private Timestamp co_deadLine;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
-    private List<CoPhotoOfProject> coPhotoOfProjects;
+    private List<CoPhotos> coPhotos;
 }

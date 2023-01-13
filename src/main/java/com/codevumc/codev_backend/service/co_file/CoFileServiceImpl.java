@@ -1,10 +1,9 @@
 package com.codevumc.codev_backend.service.co_file;
 
-import com.codevumc.codev_backend.domain.CoPhotoOfProject;
 import com.codevumc.codev_backend.file.FileDownloadException;
 import com.codevumc.codev_backend.file.FileUploadException;
 import com.codevumc.codev_backend.file.FileUploadProperties;
-import com.codevumc.codev_backend.mapper.CoPhotoOfProjectMapper;
+import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -35,12 +34,12 @@ import java.util.Optional;
 @Service
 public class CoFileServiceImpl implements CoFileService{
     private final Path fileLocation;
-    private final CoPhotoOfProjectMapper coPhotoOfProjectMapper;
+    private final CoPhotosMapper coPhotos;
 
     @Autowired
-    public CoFileServiceImpl(FileUploadProperties fileUploadProperties, CoPhotoOfProjectMapper coPhotoOfProjectMapper) {
+    public CoFileServiceImpl(FileUploadProperties fileUploadProperties, CoPhotosMapper coPhotos) {
         this.fileLocation = Paths.get(fileUploadProperties.getUploadDir()).toAbsolutePath(). normalize();
-        this.coPhotoOfProjectMapper = coPhotoOfProjectMapper;
+        this.coPhotos = coPhotos;
         try {
             Files.createDirectories(this.fileLocation);
         } catch(Exception e) {
@@ -49,14 +48,14 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     @Override
-    public CoPhotoOfProject storeFile(MultipartFile file, long co_projectId) {
+    public com.codevumc.codev_backend.domain.CoPhotos storeFile(MultipartFile file, long co_projectId) {
         if(file != null)
             return uploadFile(file, co_projectId);
         return null;
     }
 
     @Override
-    public CoPhotoOfProject updateFile(MultipartFile file, long co_projectId) {
+    public com.codevumc.codev_backend.domain.CoPhotos updateFile(MultipartFile file, long co_projectId) {
         deleteFile(co_projectId);
         if(file != null)
             return uploadFile(file, co_projectId);
@@ -89,7 +88,7 @@ public class CoFileServiceImpl implements CoFileService{
 
     @Override
     public ResponseEntity<Resource> showImage(Map<String, String> param) {
-        Optional<CoPhotoOfProject> coPhotoOfProject = coPhotoOfProjectMapper.findByCo_uuId(param.get("name"));
+        Optional<com.codevumc.codev_backend.domain.CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(param.get("name"));
         if(coPhotoOfProject.isPresent()) {
             String fileUrl = coPhotoOfProject.get().getCo_filePath().replace("\\", "/");
             System.out.println("fileUrl = " + fileUrl);
@@ -113,7 +112,7 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
 
-    private CoPhotoOfProject uploadFile(MultipartFile file, long co_projectId) {
+    private com.codevumc.codev_backend.domain.CoPhotos uploadFile(MultipartFile file, long co_projectId) {
         String originFileName = file.getOriginalFilename();
         String fileName = StringUtils.cleanPath(getUUIDFileName(originFileName));
         System.out.println("FileName = " + fileName);
@@ -123,23 +122,25 @@ public class CoFileServiceImpl implements CoFileService{
             Path targetLocation = this.fileLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             String filePath = targetLocation.toString();
-
+            //TO-DO MAKE ENUM
+            String co_type = "PROJECT";
             File FileOfFilePath = new File(filePath);
             long bytes = (FileOfFilePath.length() / 1024);
             String uuidFileName = FileOfFilePath.getName();
             String fileUrl = "http://semtle.catholic.ac.kr:8080/image?name="+uuidFileName;
             String fileDownloadUri = getFileDownloadUri("/downloadFile/", uuidFileName);
 
-            return insertPhoto(co_projectId, uuidFileName, originFileName, filePath, fileUrl, fileDownloadUri, bytes);
+            return insertPhoto(co_projectId, co_type, uuidFileName, originFileName, filePath, fileUrl, fileDownloadUri, bytes);
         } catch (IOException e) {
             e.printStackTrace();
             throw new FileUploadException("[" + fileName + "] File upload failed");
         }
     }
 
-    private CoPhotoOfProject insertPhoto(long co_projectId, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
-        CoPhotoOfProject coPhotoOfProject =  CoPhotoOfProject.builder()
-                .co_projectId(co_projectId)
+    private com.codevumc.codev_backend.domain.CoPhotos insertPhoto(long co_projectId, String co_type, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
+        com.codevumc.codev_backend.domain.CoPhotos coPhotos =  com.codevumc.codev_backend.domain.CoPhotos.builder()
+                .co_targetId(co_projectId)
+                .co_type(co_type)
                 .co_uuId(uuidFileName)
                 .co_fileName(originFileName)
                 .co_filePath(filePath)
@@ -147,8 +148,8 @@ public class CoFileServiceImpl implements CoFileService{
                 .co_fileDownloadPath(fileDownloadUri)
                 .co_fileSize(bytes)
                 .build();
-        coPhotoOfProjectMapper.insertCoPhotoOfProject(coPhotoOfProject);
-        return coPhotoOfProject;
+        this.coPhotos.insertCoPhotoOfProject(coPhotos);
+        return coPhotos;
     }
 
     private String getUUIDFileName(String fileName) {
@@ -173,7 +174,7 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     private String getOriginFileName(String uuId) {
-        Optional<CoPhotoOfProject> coPhotoOfProject = coPhotoOfProjectMapper.findByCo_uuId(uuId);
+        Optional<com.codevumc.codev_backend.domain.CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(uuId);
         if(coPhotoOfProject.isPresent())
             return coPhotoOfProject.get().getCo_fileName();
         return null;
@@ -189,13 +190,13 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     private void deleteFile(long co_projectId) {
-        List<CoPhotoOfProject> coPhotoOfProjects = coPhotoOfProjectMapper.findByCoProjectId(co_projectId);
+        List<com.codevumc.codev_backend.domain.CoPhotos> coPhotos = this.coPhotos.findByCoProjectId(co_projectId);
 
-        for(CoPhotoOfProject list : coPhotoOfProjects) {
+        for(com.codevumc.codev_backend.domain.CoPhotos list : coPhotos) {
             File listOfFile = new File(list.getCo_filePath());
             if(listOfFile.exists())
                 listOfFile.delete();
         }
-        coPhotoOfProjectMapper.deleteCoPhotoOfProject(co_projectId);
+        this.coPhotos.deleteCoPhotoOfProject(co_projectId);
     }
 }

@@ -18,6 +18,7 @@ public class CoUser implements UserDetails {
     private String co_email;
     private String co_password;
     private String co_nickName;
+    private String co_name;
     private Role role;
     private String profileImg;
 

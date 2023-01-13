@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoPhotoOfStudy extends Photo{
+public class CoPhotoOfStudy {
     private long co_posId;
     private long co_studyId;
     private String co_uuId;

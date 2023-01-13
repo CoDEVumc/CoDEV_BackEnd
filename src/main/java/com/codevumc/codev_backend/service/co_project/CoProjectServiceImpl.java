@@ -5,9 +5,9 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -15,17 +15,24 @@ import java.util.Optional;
 public class CoProjectServiceImpl extends ResponseService implements CoProjectService {
     private final CoProjectMapper coProjectMapper;
 
-    public CoProject insertProject(CoProject coProject) {
+    public void insertProject(CoProject coProject, long co_languageId, JSONArray co_parts) {
         this.coProjectMapper.insertCoProject(coProject);
-        return coProject;
+        this.coProjectMapper.insertCoLanguageOfCoProject(coProject.getCo_projectId(), co_languageId);
+        JSONObject jsonObj;
+        for (Object co_part : co_parts) {
+            jsonObj = (JSONObject) co_part;
+            this.coProjectMapper.insertCoPartOfCoProject(coProject.getCo_projectId(), (long) jsonObj.get("co_partId"), (long) jsonObj.get("co_limit"));
+        }
     }
 
-    public CoProject getCoProject(long co_projectId) {
-        Optional<CoProject> coProject = this.coProjectMapper.findByCoProjectId(co_projectId);
-        if(coProject.isPresent())
-            return coProject.get();
-        return null;
-    }
+
+
+//    public CoProject getCoProject(long co_projectId) {
+//        Optional<CoProject> coProject = this.coProjectMapper.findByCoProjectId(co_projectId);
+//        if(coProject.isPresent())
+//            return coProject.get();
+//        return null;
+//    }
 
     public CoDevResponse getCoProject(CoProject coProject) {
         try {
