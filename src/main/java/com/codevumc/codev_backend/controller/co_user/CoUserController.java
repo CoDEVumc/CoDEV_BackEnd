@@ -36,6 +36,7 @@ public class CoUserController extends JwtController {
                 .co_email(user.get("co_email"))
                 .co_password(passwordEncoder.encode(user.get("co_password")))
                 .co_nickName(user.get("co_nickName"))
+                .co_name(user.get("co_name"))
                 .profileImg(user.get("profileImg"))
                 .role(role)
                 .roles(Collections.singletonList(role.getValue())).build();
@@ -65,6 +66,8 @@ public class CoUserController extends JwtController {
     public CoDevResponse gitHubLogin(@RequestBody @RequestParam(value = "code") String code) throws Exception {
         return coUserService.githubTest(code);
     }
+
+
 
 
 }
