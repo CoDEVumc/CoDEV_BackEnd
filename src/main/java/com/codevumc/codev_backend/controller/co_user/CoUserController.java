@@ -2,13 +2,12 @@ package com.codevumc.codev_backend.controller.co_user;
 
 
 import com.codevumc.codev_backend.controller.JwtController;
+import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.domain.RefreshToken;
 import com.codevumc.codev_backend.domain.role.Role;
-import com.codevumc.codev_backend.email.EmailService;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_user.CoUserServiceImpl;
-import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +21,11 @@ public class CoUserController extends JwtController {
     //사용자가 프로필이미지를 직접 주입 안하면, 이 이미지로 프론트가 처리 해준다.
     private final PasswordEncoder passwordEncoder;
     private final CoUserServiceImpl coUserService;
-    private final EmailService emailService;
 
-    public CoUserController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, PasswordEncoder passwordEncoder, CoUserServiceImpl coUserService, EmailService emailService) {
+    public CoUserController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, PasswordEncoder passwordEncoder, CoUserServiceImpl coUserService) {
         super(jwtTokenProvider, jwtService);
         this.passwordEncoder = passwordEncoder;
         this.coUserService = coUserService;
-        this.emailService = emailService;
-    }
-
-    @PostMapping("/mailConfirm")
-    public String mailConfirm(@RequestParam String email) throws Exception {
-        String code = emailService.sendSimpleMessage(email);
-        return code;
     }
 
 
