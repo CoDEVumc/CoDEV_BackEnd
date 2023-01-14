@@ -18,9 +18,11 @@ public class CoProject {
     private String co_content;
     private String co_mainImg;
     private boolean co_process;
-    private Timestamp co_deadLine;
+    private String co_deadLine;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
     private List<CoPhotos> coPhotos;
+    private List<CoPartOfProject> coParts;
+    private List<CoLanguageOfProject> coLanguages;
 }

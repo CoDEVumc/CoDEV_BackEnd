@@ -7,23 +7,25 @@
 
     <insert id="insertCoProject" parameterType="CoProject" useGeneratedKeys="true" keyProperty="co_projectId">
         INSERT INTO CoProject
-        (co_email, co_title, co_location, co_content, co_process, co_deadLine)
-        VALUES (#{co_email}, #{co_title}, #{co_location},#{co_content}, 'ING', #{co_deadLine})
+            (co_email, co_title, co_location, co_content, co_process, co_deadLine)
+        VALUES (#{co_email}, #{co_title}, #{co_location}, #{co_content}, 'ING', #{co_deadLine})
 
     </insert>
 
+    <insert id="insertCoPartOfProject" parameterType="long">
+        INSERT INTO CoPartOfProject
+            (co_projectId, co_partId, co_limit)
+        VALUES (#{co_projectId}, #{co_partId}, #{co_limit})
+    </insert>
 
-    <insert id="insertCoLanguageOfCoProject">
+
+    <insert id="insertCoLanguageOfProject">
         INSERT INTO CoLanguageOfProject
         (co_projectId, co_languageId)
         values (#{co_projectId}, #{co_languageId})
     </insert>
 
-    <insert id="insertCoPartOfCoProject">
-        INSERT INTO CoPartOfProject
-        (co_projectId, co_partId, co_limit)
-        VALUES (#{co_projectId}, #{co_partId}, #{co_limit})
-    </insert>
+
 
 
 

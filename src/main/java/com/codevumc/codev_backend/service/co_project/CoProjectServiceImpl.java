@@ -7,6 +7,7 @@ import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 
@@ -15,20 +16,21 @@ import org.springframework.stereotype.Service;
 public class CoProjectServiceImpl extends ResponseService implements CoProjectService {
     private final CoProjectMapper coProjectMapper;
 
-    public void insertProject(CoProject coProject, long co_languageId, JSONArray co_parts) {
+    public void insertProject(CoProject coProject, long co_languageId, JSONArray co_parts) throws ParseException {
         this.coProjectMapper.insertCoProject(coProject);
-        this.coProjectMapper.insertCoLanguageOfCoProject(coProject.getCo_projectId(), co_languageId);
+        //this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
         JSONObject jsonObj;
         for (Object co_part : co_parts) {
             jsonObj = (JSONObject) co_part;
-            this.coProjectMapper.insertCoPartOfCoProject(coProject.getCo_projectId(), (long) jsonObj.get("co_partId"), (long) jsonObj.get("co_limit"));
+            this.coProjectMapper.insertCoPartOfProject(coProject.getCo_projectId(), Long.parseLong(jsonObj.get("co_partId").toString()), Long.parseLong(jsonObj.get("co_limit").toString()));
         }
+
+
     }
-
-
 
 //    public CoProject getCoProject(long co_projectId) {
 //        Optional<CoProject> coProject = this.coProjectMapper.findByCoProjectId(co_projectId);
+//        coProject.get().setCoParts(coProjectMapper.selectCoPartOfProject(co_projectId));
 //        if(coProject.isPresent())
 //            return coProject.get();
 //        return null;
