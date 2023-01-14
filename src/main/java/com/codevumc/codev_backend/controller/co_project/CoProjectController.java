@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -40,16 +39,17 @@ public class CoProjectController extends JwtController {
 
     @PostMapping(value = "/p1/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, String> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+
         CoProject coProject = CoProject.builder()
                 .co_email(getCoUserEmail(request))
                 .co_title(project.get("co_title"))
                 .co_location(project.get("co_location"))
                 .co_content(project.get("co_content"))
-                .co_deadLine(Timestamp.valueOf(project.get("co_deadLine"))).build();
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(project.get("co_parts"));
-        JSONArray co_parts = (JSONArray) obj;
+                .co_deadLine(project.get("co_deadLine")).build();
 
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(String.valueOf(project.get("co_parts")));
+        JSONArray co_parts = (JSONArray) obj;
         this.coProjectService.insertProject(coProject, Long.parseLong(project.get("co_languageId")), co_parts);
 
         if(files != null) {
@@ -64,6 +64,8 @@ public class CoProjectController extends JwtController {
         }
 
 
-        return coProjectService.getCoProject(coProject);
+        return null;
     }
+
 }
+
