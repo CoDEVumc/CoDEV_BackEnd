@@ -67,6 +67,10 @@ public class CoUserController extends JwtController {
         return coUserService.githubTest(code);
     }
 
+    @GetMapping("/google/login")
+    public CoDevResponse googleLogin(@RequestBody @RequestParam(value = "code") String code) throws Exception{
+        return coUserService.googleTest(code);
+    }
 
 
 
