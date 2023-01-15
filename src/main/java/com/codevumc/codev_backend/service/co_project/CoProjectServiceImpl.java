@@ -5,6 +5,7 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
+import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -18,10 +19,9 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 
     public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) throws ParseException {
         this.coProjectMapper.insertCoProject(coProject);
-        //this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
         JSONObject jsonObj;
         for (Object co_language : co_languages) {
-            long co_languageId = Integer.parseInt(co_language.toString());
+            long co_languageId = (long) co_language;
             this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
         }
         for (Object co_part : co_parts) {
