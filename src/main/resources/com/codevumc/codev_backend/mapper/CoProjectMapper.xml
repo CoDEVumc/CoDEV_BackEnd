@@ -49,10 +49,26 @@
         join CoLanguage as cl on clo.co_languageId = cl.co_languageId
         group by co_projectId) as clp
         on cp.co_projectId = clp.co_projectId
-        where cp.co_location = '경기'
-        and cpp.co_parts like '%프론트%'
-        and (cp.co_title like '%%' or cp.co_content like '%%')
-        and cp.co_process = 'ING'
+        where
+        <choose>
+            <when test="co_locationTag == 전체"> cp.co_location = cp.co_location</when>
+            <otherwise> cp.co_location = #{co_locationTag}</otherwise>
+        </choose>
+        and
+        <choose>
+            <when test="co_partTag == 전체"> cpp.co_parts = cpp.co_parts</when>
+            <otherwise> cpp.co_parts = #{co_partTag}</otherwise>
+        </choose>
+        and
+        <choose>
+            <when test="co_keyword == 전체"> 1 = 1</when>
+            <otherwise> (cp.co_title like #{co_keyword} or cp.co_content like #{co_keyword})</otherwise>
+        </choose>
+        and
+        <choose>
+            <when test="co_processTag == 전체"> 1 = 1</when>
+            <otherwise>cp.co_process = #{co_processTag}</otherwise>
+        </choose>
         order by cp.createdAt;
     </select>
 
