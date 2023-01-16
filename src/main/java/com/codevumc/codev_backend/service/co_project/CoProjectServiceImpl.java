@@ -11,6 +11,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @AllArgsConstructor
 @Service
@@ -19,6 +22,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 
     @Override
     public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
+        Map<String, Object> coPartsDto = new HashMap<>();
         this.coProjectMapper.insertCoProject(coProject);
         JSONObject jsonObj;
         for (Object co_language : co_languages) {
@@ -27,7 +31,10 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         }
         for (Object co_part : co_parts) {
             jsonObj = (JSONObject) co_part;
-            this.coProjectMapper.insertCoPartOfProject(coProject.getCo_projectId(), Long.parseLong(jsonObj.get("co_partId").toString()), Long.parseLong(jsonObj.get("co_limit").toString()));
+            coPartsDto.put("co_projectId", coProject.getCo_projectId());
+            coPartsDto.put("co_part", jsonObj.get("co_part").toString());
+            coPartsDto.put("co_limit", Long.parseLong(jsonObj.get("co_limit").toString()));
+            this.coProjectMapper.insertCoPartOfProject(coPartsDto);
         }
     }
 
