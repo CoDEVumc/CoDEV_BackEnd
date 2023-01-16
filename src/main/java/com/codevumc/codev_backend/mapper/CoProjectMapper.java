@@ -14,4 +14,6 @@ public interface CoProjectMapper {
     void insertCoLanguageOfProject(@Param("co_projectId") long co_projectId, @Param("co_languageId") long co_languageId);
     void insertCoHeartOfProject(String co_email, Long co_projectId);
     Optional<CoHeartOfProject> getCoHeartOfProject(Long co_projectId);
+    void updateCoHeartOfProject(String co_email, Long co_projectId);
+
 }
