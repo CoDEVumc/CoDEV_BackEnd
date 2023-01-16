@@ -127,8 +127,8 @@ public class CoFileServiceImpl implements CoFileService{
             File FileOfFilePath = new File(filePath);
             long bytes = (FileOfFilePath.length() / 1024);
             String uuidFileName = FileOfFilePath.getName();
-            String fileUrl = "http://semtle.catholic.ac.kr:8080/image?name="+uuidFileName;
-            String fileDownloadUri = getFileDownloadUri("/downloadFile/", uuidFileName);
+            String fileUrl = getFileUrl("/image?name=", uuidFileName);
+            String fileDownloadUri = getFileUrl("/downloadFile/", uuidFileName);
 
             return insertPhoto(co_projectId, co_type, uuidFileName, originFileName, filePath, fileUrl, fileDownloadUri, bytes);
         } catch (IOException e) {
@@ -166,9 +166,9 @@ public class CoFileServiceImpl implements CoFileService{
         return sb.toString();
     }
 
-    private String getFileDownloadUri(String downloadPath, String uuidFileName) {
+    private String getFileUrl(String urlPath, String uuidFileName) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(downloadPath)
+                .path(urlPath)
                 .path(uuidFileName)
                 .toUriString();
     }
