@@ -12,10 +12,10 @@
 
     </insert>
 
-    <insert id="insertCoPartOfProject" parameterType="long">
+    <insert id="insertCoPartOfProject" parameterType="hashMap">
         INSERT INTO CoPartOfProject
-            (co_projectId, co_partId, co_limit)
-        VALUES (#{co_projectId}, #{co_partId}, #{co_limit})
+            (co_projectId, co_part, co_limit)
+        VALUES (#{co_projectId}, #{co_part}, #{co_limit})
     </insert>
 
 
@@ -25,8 +25,21 @@
         values (#{co_projectId}, #{co_languageId})
     </insert>
 
+    <select id="getCoProject" resultType="CoProject">
+        select * from CoProject where co_projectId = #{co_projectId}
+    </select>
 
+    <select id="getCoPartList" resultType="CoPartOfProject">
+        select co_part, co_limit from CoPartOfProject where co_projectId = #{co_projectId}
+    </select>
 
+    <select id="getCoLanguageList" resultType="CoLanguageOfProject">
+        select cl.co_languageId, cl.co_language, cl.co_logo from CoLanguageOfProject cop
+        join CoLanguage cl on cl.co_languageId = cop.co_languageId
+        where co_projectId = #{co_projectId}
+    </select>
 
-
+    <select id="getCoHeartCount" resultType="Long">
+        select count(*) as coHeartCount from CoHeartOfProject where co_projectId = #{co_projectId}
+    </select>
 </mapper>
