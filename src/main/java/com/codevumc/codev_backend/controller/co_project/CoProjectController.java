@@ -10,6 +10,8 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
 import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.ibatis.annotations.Param;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,21 +61,23 @@ public class CoProjectController extends JwtController {
         Object coLanguagesObj = parser.parse(String.valueOf(project.get("co_languages")));
         JSONArray co_Languages = (JSONArray) coLanguagesObj;
         this.coProjectService.insertProject(coProject, co_Languages, co_parts);
-        if(files != null) {
+        if (files != null) {
             List<CoPhotos> coPhotos = Arrays.asList(files)
                     .stream()
                     .map(file -> coFileService.storeFile(file, coProject.getCo_projectId(), "PROJECT"))
                     .collect(Collectors.toList());
-            coProject.setCoPhotos(coPhotos);
+            coProject.setCo_photos(coPhotos);
 
             coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", coProject.getCo_projectId()), coProject.getCo_projectId());
         }
 
         return null;
-
-
     }
 
+    @GetMapping(value = "/p1/codev/projects")
+    public CoDevResponse getAllProjects(HttpServletRequest request, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+        return coProjectService.getCoProjects(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag);
+    }
     //찜하기
     @PatchMapping("/heart/{co_projectId}")
     public CoDevResponse heartOfProjectUpdate(HttpServletRequest request, @PathVariable("co_projectId") Long co_projectId) throws Exception {

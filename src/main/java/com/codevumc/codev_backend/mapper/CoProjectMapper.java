@@ -21,6 +21,7 @@ public interface CoProjectMapper {
     void insertCoPartOfProject(Map<String, Object> coPartsDto);
     void insertCoLanguageOfProject(@Param("co_projectId") long co_projectId, @Param("co_languageId") long co_languageId);
     void updateCoMainImg(@Param("co_mainImg") String co_mainImg, @Param("co_projectId") long co_projectId);
+    List<CoProject> getCoProjects(Map<String, Object> condition);
     void insertCoHeartOfProject(String co_email, Long co_projectId);
     Optional<CoHeartOfProject> getCoHeartOfProject(Long co_projectId);
     void deleteCoHeartOfProject(String co_email, Long co_projectId);

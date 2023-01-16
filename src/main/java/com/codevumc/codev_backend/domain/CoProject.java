@@ -23,12 +23,13 @@ public class CoProject {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
-    private long coHeartCount;
-    private String coParts;
-    private String coLanguages;
-    private List<CoPhotos> coPhotos;
-    private List<CoPart> coPartList;
-    private List<CoLanguage> coLanguageList;
+    private long co_heartCount;
+    private boolean co_heart;
+    private String co_parts;
+    private String co_languages;
+    private List<CoPhotos> co_photos;
+    private List<CoPart> co_partList;
+    private List<CoLanguage> co_languageList;
 
     @AllArgsConstructor
     public enum DevType {
