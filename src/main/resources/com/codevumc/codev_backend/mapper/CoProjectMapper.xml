@@ -31,13 +31,21 @@
     </select>
 
     <select id="getCoProjects" parameterType="hashMap" resultType="CoProject">
-        select distinct cp.co_title,
-        DATEDIFF(cp.co_deadLine, now())           as co_deadLine,
+        select distinct cp.co_projectId as 'co_projectId',
+        cp.co_email as 'co_email',
+        cp.co_title as 'co_title',
+        cp.co_location as 'co_location',
+        cp.co_content as 'co_content',
+        cp.co_mainImg as 'co_mainImg',
+        cp.co_process as 'co_process',
+        DATEDIFF(cp.co_deadLine, now())           as 'co_deadLine',
         IF(chp.status is null, false, chp.status) as 'co_heart',
-        clp.co_languages,
-        cpp.co_parts,
-        cpIs.co_total,
-        cp.createdAt
+        clp.co_languages as 'co_languages',
+        cpp.co_parts as 'co_parts',
+        cpIs.co_total as 'co_total',
+        cp.createdAt as 'createdAt',
+        cp.updatedAt as 'updatedAt',
+        cp.status as 'status'
         from CoProject as cp
         left join CoHeartOfProject as chp on cp.co_projectId = chp.co_projectId and chp.co_email = #{co_email}
         left join (select co_projectId, sum(co_limit) as 'co_total'
@@ -66,7 +74,7 @@
         <if test="co_process != null and !co_process.equals('')">
             cp.co_process = #{co_processTag} and
         </if>
-        1 = 1
+        cp.status = true
         order by cp.createdAt;
     </select>
 

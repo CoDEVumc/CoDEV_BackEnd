@@ -65,7 +65,7 @@ public class CoProjectController extends JwtController {
                     .stream()
                     .map(file -> coFileService.storeFile(file, coProject.getCo_projectId()))
                     .collect(Collectors.toList());
-            coProject.setCoPhotos(coPhotos);
+            coProject.setCo_photos(coPhotos);
         }else {
             //TO-DO
             //이미지 첨부 안했을 시 랜덤으로 사진 넣기
