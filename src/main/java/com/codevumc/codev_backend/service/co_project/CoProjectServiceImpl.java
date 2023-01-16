@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -52,10 +53,18 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 //        return null;
 //    }
 
+
+
     @Override
-    public CoDevResponse getCoProject(CoProject coProject) {
+    public CoDevResponse getCoProject(long co_projectId) {
         try {
-            return setResponse(200, "Complete", coProject);
+            Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
+            if(coProject.isPresent()) {
+                coProject.get().setCoPartList(coProjectMapper.getCoPartList(co_projectId));
+                coProject.get().setCoLanguageList(coProjectMapper.getCoLanguageList(co_projectId));
+                coProject.get().setCoHeartCount(coProjectMapper.getCoHeartCount(co_projectId));
+            }
+                return setResponse(200, "Complete", coProject);
         } catch (Exception e) {
             e.printStackTrace();
         }
