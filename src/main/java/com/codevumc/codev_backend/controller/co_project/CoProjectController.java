@@ -9,17 +9,16 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.ibatis.annotations.Param;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,5 +65,9 @@ public class CoProjectController extends JwtController {
         return null;
     }
 
+    @GetMapping(value = "/p1/codev/projects")
+    public CoDevResponse getAllProjects(@RequestParam String coLocationTag, @RequestParam String coPartTag, @RequestParam String coKeyword, @RequestParam String coProcessTag) {
+        return coProjectService.getCoProjects(coLocationTag, coPartTag, coKeyword, coProcessTag);
+    }
 }
 

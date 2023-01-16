@@ -40,13 +40,19 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         }
     }
 
-    public CoDevResponse getCoProjects(Map<String, Object> coProjectsDto) {
-        Optional<List<CoProject>> coProjects = Optional.ofNullable(this.coProjectMapper.getCoProjects(coProjectsDto));
+    public CoDevResponse getCoProjects(String co_locationTag, String co_partTag, String co_keyword, String co_processTag) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("co_locationTag", co_locationTag);
+        condition.put("co_partTag", co_partTag);
+        condition.put("co_keyword", co_keyword);
+        condition.put("co_processTag", co_processTag);
+        Optional<List<CoProject>> coProjects = Optional.ofNullable(this.coProjectMapper.getCoProjects(condition));
         try {
             return setResponse(200, "success", coProjects);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
