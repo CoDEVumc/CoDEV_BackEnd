@@ -8,6 +8,7 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
@@ -46,12 +47,12 @@ public class CoProjectController extends JwtController {
                 .co_location(project.get("co_location"))
                 .co_content(project.get("co_content"))
                 .co_deadLine(project.get("co_deadLine")).build();
-
         JSONParser parser = new JSONParser();
-        Object obj = parser.parse(String.valueOf(project.get("co_parts")));
-        JSONArray co_parts = (JSONArray) obj;
-        this.coProjectService.insertProject(coProject, Long.parseLong(project.get("co_languageId")), co_parts);
-
+        Object coPartsObj = parser.parse(String.valueOf(project.get("co_parts")));
+        JSONArray co_parts = (JSONArray) coPartsObj;
+        Object coLanguagesObj = parser.parse(String.valueOf(project.get("co_languages")));
+        JSONArray co_Languages = (JSONArray) coLanguagesObj;
+        this.coProjectService.insertProject(coProject, co_Languages, co_parts);
         if(files != null) {
             List<CoPhotos> coPhotos = Arrays.asList(files)
                     .stream()
@@ -62,8 +63,6 @@ public class CoProjectController extends JwtController {
             //TO-DO
             //이미지 첨부 안했을 시 랜덤으로 사진 넣기
         }
-
-
         return null;
     }
 
