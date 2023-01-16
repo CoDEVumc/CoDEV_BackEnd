@@ -71,6 +71,4 @@
         </choose>
         order by cp.createdAt;
     </select>
-
-
 </mapper>
