@@ -60,8 +60,7 @@ public class CoProjectController extends JwtController {
                     .collect(Collectors.toList());
             coProject.setCoPhotos(coPhotos);
         }else {
-            //TO-DO
-            //이미지 첨부 안했을 시 랜덤으로 사진 넣기
+
         }
         return null;
     }
