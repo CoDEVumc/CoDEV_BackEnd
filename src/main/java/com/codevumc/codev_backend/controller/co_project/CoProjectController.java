@@ -76,8 +76,6 @@ public class CoProjectController extends JwtController {
     }
 
     //찜하기 취소
-    //근데 찜하기 + 침하기 취소 두개 한꺼번에는 못하는건가요?
-
     @PatchMapping("heart/cancel/{co_projectId}")
     public CoDevResponse heartOfProjectCancle(HttpServletRequest request,  @PathVariable("co_projectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
