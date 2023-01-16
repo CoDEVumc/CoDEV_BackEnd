@@ -7,18 +7,19 @@
 
     <insert id="insertCoPhotoOfProject" parameterType="CoPhotos">
         INSERT INTO CoPhotos
-        (co_targetId, co_uuId, co_fileName, co_filePath, co_fileUrl, co_fileDownloadPath, co_fileSize)
+        (co_targetId, co_type, co_uuId, co_fileName, co_filePath, co_fileUrl, co_fileDownloadPath, co_fileSize)
         VALUES
-            (#{co_projectId}, #{co_uuId}, #{co_fileName}, #{co_filePath}, #{co_fileUrl}, #{co_fileDownloadPath}, #{co_fileSize})
+            (#{co_targetId}, #{co_type}, #{co_uuId}, #{co_fileName}, #{co_filePath}, #{co_fileUrl}, #{co_fileDownloadPath}, #{co_fileSize})
     </insert>
 
     <select id="deleteCoPhotoOfProject">
         DELETE FROM CoPhotos WHERE co_targetId = #{co_projectId}
     </select>
 
-    <select id="findByCoProjectId" resultType="CoPhotoOfProject">
+    <select id="findByCoProjectId" resultType="CoPhotos">
         select
             co_targetId,
+            co_type,
             co_uuId,
             co_fileName,
             co_filePath,
@@ -29,9 +30,10 @@
         where co_targetId = #{co_projectId}
     </select>
 
-    <select id="findByCo_uuId" resultType="CoPhotoOfProject">
+    <select id="findByCo_uuId" resultType="CoPhotos">
         select
             co_targetId,
+            co_type,
             co_uuId,
             co_fileName,
             co_filePath,

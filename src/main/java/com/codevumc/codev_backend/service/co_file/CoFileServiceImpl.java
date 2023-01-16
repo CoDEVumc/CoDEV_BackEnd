@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_file;
 
+import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.file.FileDownloadException;
 import com.codevumc.codev_backend.file.FileUploadException;
 import com.codevumc.codev_backend.file.FileUploadProperties;
@@ -48,17 +49,17 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     @Override
-    public com.codevumc.codev_backend.domain.CoPhotos storeFile(MultipartFile file, long co_projectId) {
+    public CoPhotos storeFile(MultipartFile file, long co_projectId, String co_type) {
         if(file != null)
-            return uploadFile(file, co_projectId);
+            return uploadFile(file, co_projectId, co_type);
         return null;
     }
 
     @Override
-    public com.codevumc.codev_backend.domain.CoPhotos updateFile(MultipartFile file, long co_projectId) {
+    public CoPhotos updateFile(MultipartFile file, long co_projectId, String co_type) {
         deleteFile(co_projectId);
         if(file != null)
-            return uploadFile(file, co_projectId);
+            return uploadFile(file, co_projectId, co_type);
         return null;
     }
 
@@ -112,7 +113,7 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
 
-    private com.codevumc.codev_backend.domain.CoPhotos uploadFile(MultipartFile file, long co_projectId) {
+    private CoPhotos uploadFile(MultipartFile file, long co_projectId, String co_type) {
         String originFileName = file.getOriginalFilename();
         String fileName = StringUtils.cleanPath(getUUIDFileName(originFileName));
         System.out.println("FileName = " + fileName);
@@ -123,7 +124,6 @@ public class CoFileServiceImpl implements CoFileService{
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             String filePath = targetLocation.toString();
             //TO-DO MAKE ENUM
-            String co_type = "PROJECT";
             File FileOfFilePath = new File(filePath);
             long bytes = (FileOfFilePath.length() / 1024);
             String uuidFileName = FileOfFilePath.getName();
@@ -137,7 +137,7 @@ public class CoFileServiceImpl implements CoFileService{
         }
     }
 
-    private com.codevumc.codev_backend.domain.CoPhotos insertPhoto(long co_projectId, String co_type, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
+    private CoPhotos insertPhoto(long co_projectId, String co_type, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
         com.codevumc.codev_backend.domain.CoPhotos coPhotos =  com.codevumc.codev_backend.domain.CoPhotos.builder()
                 .co_targetId(co_projectId)
                 .co_type(co_type)

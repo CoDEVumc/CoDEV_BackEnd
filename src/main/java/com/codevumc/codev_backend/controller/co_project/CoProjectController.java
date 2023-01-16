@@ -56,7 +56,7 @@ public class CoProjectController extends JwtController {
         if(files != null) {
             List<CoPhotos> coPhotos = Arrays.asList(files)
                     .stream()
-                    .map(file -> coFileService.storeFile(file, coProject.getCo_projectId()))
+                    .map(file -> coFileService.storeFile(file, coProject.getCo_projectId(), "PROJECT"))
                     .collect(Collectors.toList());
             coProject.setCoPhotos(coPhotos);
         }else {
