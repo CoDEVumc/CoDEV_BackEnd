@@ -4,12 +4,10 @@
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoProjectMapper">
 
-
     <insert id="insertCoProject" parameterType="CoProject" useGeneratedKeys="true" keyProperty="co_projectId">
         INSERT INTO CoProject
             (co_email, co_title, co_location, co_content, co_process, co_deadLine)
         VALUES (#{co_email}, #{co_title}, #{co_location}, #{co_content}, 'ING', #{co_deadLine})
-
     </insert>
 
     <insert id="insertCoPartOfProject" parameterType="hashMap">
@@ -18,13 +16,19 @@
         VALUES (#{co_projectId}, #{co_part}, #{co_limit})
     </insert>
 
-
     <insert id="insertCoLanguageOfProject">
         INSERT INTO CoLanguageOfProject
         (co_projectId, co_languageId)
         values (#{co_projectId}, #{co_languageId})
     </insert>
 
+    <select id="getCoProject" resultType="CoProject">
+        select * from CoProject where co_projectId = #{co_projectId}
+    </select>
+
+    <select id ="getCoHeartOfProject" resultType="CoHeartOfProject">
+        SELECT status FROM CoHeartOfProject WHERE co_projectId = ${co_projectId}
+    </select>
 
     <select id="getCoProjects" parameterType="hashMap" resultType="CoProject">
         select distinct cp.co_title,
@@ -65,4 +69,29 @@
         1 = 1
         order by cp.createdAt;
     </select>
+
+    <insert id ="insertCoHeartOfProject" >
+        INSERT INTO CoHeartOfProject (co_email,co_projectId)
+        VALUES (#{co_email},#{co_projectId})
+    </insert>
+
+    <delete id="deleteCoHeartOfProject">
+        DELETE FROM CoHeartOfProject
+        WHERE co_projectId = #{co_projectId}
+    </delete>
+
+    <select id="getCoPartList" resultType="CoPartOfProject">
+        select co_part, co_limit from CoPartOfProject where co_projectId = #{co_projectId}
+    </select>
+
+    <select id="getCoLanguageList" resultType="CoLanguageOfProject">
+        select cl.co_languageId, cl.co_language, cl.co_logo from CoLanguageOfProject cop
+        join CoLanguage cl on cl.co_languageId = cop.co_languageId
+        where co_projectId = #{co_projectId}
+    </select>
+
+    <select id="getCoHeartCount" resultType="Long">
+        select count(*) as coHeartCount from CoHeartOfProject where co_projectId = #{co_projectId}
+    </select>
+
 </mapper>
