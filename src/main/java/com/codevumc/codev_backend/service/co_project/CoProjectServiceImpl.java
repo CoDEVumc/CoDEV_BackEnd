@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,34 +41,42 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     public void updateMainImg(String co_mainImg, long co_projectId) {
-
-
         coProjectMapper.updateCoMainImg(co_mainImg, co_projectId);
     }
 
-//    public CoProject getCoProject(long co_projectId) {
-//        Optional<CoProject> coProject = this.coProjectMapper.findByCoProjectId(co_projectId);
-//        coProject.get().setCoParts(coProjectMapper.selectCoPartOfProject(co_projectId));
-//        if(coProject.isPresent())
-//            return coProject.get();
-//        return null;
-//    }
-
-
+    public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("co_email", co_email);
+        condition.put("co_locationTag", co_locationTag);
+        condition.put("co_partTag", setting(co_partTag));
+        condition.put("co_keyword", setting(co_keyword));
+        condition.put("co_processTag", co_processTag);
+        List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
+        try {
+            return setResponse(200, "success", coProjects);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public CoDevResponse getCoProject(long co_projectId) {
         try {
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
-                coProject.get().setCoPartList(coProjectMapper.getCoPartList(co_projectId));
-                coProject.get().setCoLanguageList(coProjectMapper.getCoLanguageList(co_projectId));
-                coProject.get().setCoHeartCount(coProjectMapper.getCoHeartCount(co_projectId));
+                coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
+                coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
+                coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
             }
                 return setResponse(200, "Complete", coProject);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String setting(String keyword) {
+        return keyword == null ? null : "%" + keyword + "%";
     }
 }
