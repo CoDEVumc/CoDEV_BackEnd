@@ -1,14 +1,15 @@
 package com.codevumc.codev_backend.controller.co_project;
 
 import com.codevumc.codev_backend.controller.JwtController;
+import com.codevumc.codev_backend.domain.CoHeartOfProject;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
+import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
@@ -27,11 +28,13 @@ public class CoProjectController extends JwtController {
 
     private final CoFileServiceImpl coFileService;
     private final CoProjectServiceImpl coProjectService;
+    private final CoProjectHeartImpl coProjectHeartService;
 
-    public CoProjectController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoProjectServiceImpl coProjectService) {
+    public CoProjectController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoProjectServiceImpl coProjectService, CoProjectHeartImpl coProjectHeartService) {
         super(jwtTokenProvider, jwtService);
         this.coFileService = coFileService;
         this.coProjectService = coProjectService;
+        this.coProjectHeartService = coProjectHeartService;
     }
 
     @GetMapping("/p1/{co_projectId}")
@@ -65,7 +68,22 @@ public class CoProjectController extends JwtController {
             //이미지 첨부 안했을 시 랜덤으로 사진 넣기
         }
         return null;
+
+
     }
 
+    //찜하기
+    @PatchMapping("/heart/{co_projectId}")
+    public CoDevResponse heartOfProjectUpdate(HttpServletRequest request, @PathVariable("co_projectId") Long co_projectId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coProjectHeartService.insertHeart(co_email,co_projectId);
+    }
+
+    //찜하기 취소
+    @PatchMapping("heart/cancel/{co_projectId}")
+    public CoDevResponse heartOfProjectCancle(HttpServletRequest request,  @PathVariable("co_projectId") Long co_projectId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coProjectHeartService.deleteHeart(co_email,co_projectId);
+    }
 }
 
