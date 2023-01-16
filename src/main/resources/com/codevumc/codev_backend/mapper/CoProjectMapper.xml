@@ -26,7 +26,35 @@
     </insert>
 
 
-
+    <select id="getCoProjects" parameterType="hashMap" resultType="CoProject">
+        select distinct cp.co_title,
+        DATEDIFF(cp.co_deadLine, now())           as co_deadLine,
+        IF(chp.status is null, false, chp.status) as 'co_heart',
+        clp.co_languages,
+        cpp.co_parts,
+        cpIs.co_total,
+        cp.createdAt
+        from CoProject as cp
+        left join CoHeartOfProject as chp on cp.co_projectId = chp.co_projectId and chp.co_email = #{co_email}
+        left join (select co_projectId, sum(co_limit) as 'co_total'
+        from CoPartOfProject
+        group by CoPartOfProject.co_projectId) as cpIs on cpIs.co_projectId = cp.co_projectId
+        left join (select co_projectId, GROUP_CONCAT(co_part SEPARATOR ',') as co_parts
+        from CoPartOfProject
+        where co_limit != 0
+        group by co_projectId) as cpp
+        on cpp.co_projectId = cp.co_projectId
+        left join (select co_projectId, GROUP_CONCAT(cl.co_logo SEPARATOR ',') as co_languages
+        from CoLanguageOfProject as clo
+        join CoLanguage as cl on clo.co_languageId = cl.co_languageId
+        group by co_projectId) as clp
+        on cp.co_projectId = clp.co_projectId
+        where cp.co_location = '경기'
+        and cpp.co_parts like '%프론트%'
+        and (cp.co_title like '%%' or cp.co_content like '%%')
+        and cp.co_process = 'ING'
+        order by cp.createdAt;
+    </select>
 
 
 </mapper>
