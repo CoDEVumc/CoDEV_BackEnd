@@ -30,11 +30,11 @@ public class CoProjectHeartImpl extends ResponseService implements CoProjectHear
     }
 
     @Override
-    public CoDevResponse updateHeart(String co_email,Long co_projectId){
+    public CoDevResponse deleteHeart(String co_email,Long co_projectId){
         try{
             Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
             if(coHeartOfProject.isPresent())
-                this.coProjectMapper.updateCoHeartOfProject(co_email,co_projectId);
+                this.coProjectMapper.deleteCoHeartOfProject(co_email,co_projectId);
         }catch(Exception e){
             e.printStackTrace();
         }
