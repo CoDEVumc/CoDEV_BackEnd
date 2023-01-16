@@ -38,6 +38,12 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         }
     }
 
+    public void updateMainImg(String co_mainImg, long co_projectId) {
+
+
+        coProjectMapper.updateCoMainImg(co_mainImg, co_projectId);
+    }
+
 //    public CoProject getCoProject(long co_projectId) {
 //        Optional<CoProject> coProject = this.coProjectMapper.findByCoProjectId(co_projectId);
 //        coProject.get().setCoParts(coProjectMapper.selectCoPartOfProject(co_projectId));
