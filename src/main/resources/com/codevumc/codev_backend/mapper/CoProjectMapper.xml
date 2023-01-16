@@ -26,6 +26,14 @@
     </insert>
 
 
+    <select id ="getCoHeartOfProject" resultType="CoHeartOfProject">
+        SELECT status FROM CoHeartOfProject WHERE co_projectId = ${co_projectId}
+    </select>
+
+    <insert id ="insertCoHeartOfProject" >
+        INSERT INTO CoHeartOfProject (co_email,co_projectId)
+        VALUES (#{co_email},#{co_projectId})
+    </insert>
 
 
 
