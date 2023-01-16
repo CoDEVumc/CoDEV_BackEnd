@@ -35,6 +35,13 @@
         VALUES (#{co_email},#{co_projectId})
     </insert>
 
+    <update id="updateCoHeartOfProject">
+        UPDATE CoHeartOfProject
+        SET status = 0
+        WHERE co_projectId = #{co_projectId}
+    </update>
+
+
 
 
 </mapper>
