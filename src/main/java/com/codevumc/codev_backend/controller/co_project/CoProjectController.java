@@ -50,6 +50,7 @@ public class CoProjectController extends JwtController {
                 .co_title(project.get("co_title"))
                 .co_location(project.get("co_location"))
                 .co_content(project.get("co_content"))
+                .co_process(CoProject.DevType.from("ING"))
                 .co_deadLine(project.get("co_deadLine")).build();
         JSONParser parser = new JSONParser();
         Object coPartsObj = parser.parse(String.valueOf(project.get("co_parts")));

@@ -32,7 +32,7 @@ public class CoProject {
 
     @AllArgsConstructor
     public enum DevType {
-        ING("ING"), DONE("DONE"), PROGRESS("PROGRESS");
+        ING("ING"), TEST("TEST"), FIN("FIN");
         private String value;
 
         @JsonCreator

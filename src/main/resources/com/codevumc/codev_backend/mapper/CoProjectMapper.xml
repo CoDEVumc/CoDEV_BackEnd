@@ -7,7 +7,7 @@
     <insert id="insertCoProject" parameterType="CoProject" useGeneratedKeys="true" keyProperty="co_projectId">
         INSERT INTO CoProject
             (co_email, co_title, co_location, co_content, co_process, co_deadLine)
-        VALUES (#{co_email}, #{co_title}, #{co_location}, #{co_content}, 'ING', #{co_deadLine})
+        VALUES (#{co_email}, #{co_title}, #{co_location}, #{co_content}, #{co_process}, #{co_deadLine})
 
     </insert>
 
