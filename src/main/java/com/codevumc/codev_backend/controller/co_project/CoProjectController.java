@@ -59,9 +59,10 @@ public class CoProjectController extends JwtController {
                     .map(file -> coFileService.storeFile(file, coProject.getCo_projectId(), "PROJECT"))
                     .collect(Collectors.toList());
             coProject.setCoPhotos(coPhotos);
-        }else {
 
+            coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", coProject.getCo_projectId()), coProject.getCo_projectId());
         }
+
         return null;
     }
 

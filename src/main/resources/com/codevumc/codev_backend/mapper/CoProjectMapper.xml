@@ -25,6 +25,11 @@
         values (#{co_projectId}, #{co_languageId})
     </insert>
 
+    <update id="updateCoMainImg">
+        UPDATE CoProject
+        SET co_mainImg = #{co_mainImg}
+        WHERE `co_projectId` = #{co_projectId};
+    </update>
 
 
 

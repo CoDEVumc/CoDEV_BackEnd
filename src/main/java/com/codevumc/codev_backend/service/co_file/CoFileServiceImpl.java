@@ -112,6 +112,13 @@ public class CoFileServiceImpl implements CoFileService{
         return null;
     }
 
+    public String getCo_MainImg(String co_type, long co_targetId) {
+        Optional<CoPhotos> coPhoto = coPhotos.findByCo_mainImg(co_type, co_targetId);
+        if(coPhoto.isPresent())
+            return coPhoto.get().getCo_fileUrl();
+        return null;
+    }
+
 
     private CoPhotos uploadFile(MultipartFile file, long co_projectId, String co_type) {
         String originFileName = file.getOriginalFilename();
@@ -199,4 +206,6 @@ public class CoFileServiceImpl implements CoFileService{
         }
         this.coPhotos.deleteCoPhotoOfProject(co_projectId);
     }
+
+
 }

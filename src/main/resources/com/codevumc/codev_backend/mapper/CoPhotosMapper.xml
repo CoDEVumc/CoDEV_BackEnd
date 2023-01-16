@@ -44,4 +44,11 @@
         where co_uuId = #{co_uuId}
     </select>
 
+    <select id="findByCo_mainImg" resultType="CoPhotos">
+        select co_fileUrl
+        from CoPhotos
+        where co_type = #{co_type} AND co_targetId = #{co_targetId}
+        order by createdAt desc limit 1;
+    </select>
+
 </mapper>
