@@ -40,13 +40,14 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         }
     }
 
-    public CoDevResponse getCoProjects(String co_locationTag, String co_partTag, String co_keyword, String co_processTag) {
+    public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag) {
         Map<String, Object> condition = new HashMap<>();
+        condition.put("co_email", co_email);
         condition.put("co_locationTag", co_locationTag);
-        condition.put("co_partTag", co_partTag);
-        condition.put("co_keyword", co_keyword);
+        condition.put("co_partTag", setting(co_partTag));
+        condition.put("co_keyword", setting(co_keyword));
         condition.put("co_processTag", co_processTag);
-        Optional<List<CoProject>> coProjects = Optional.ofNullable(this.coProjectMapper.getCoProjects(condition));
+        List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
         try {
             return setResponse(200, "success", coProjects);
         } catch (Exception e) {
@@ -63,5 +64,9 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String setting(String keyword) {
+        return keyword == null ? null : "%" + keyword + "%";
     }
 }

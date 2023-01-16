@@ -65,13 +65,9 @@ public class CoProjectController extends JwtController {
         return null;
     }
 
-    @GetMapping(value = "/p1/codev/projects/{coLocationTag}/{coPartTag}/{coKeyword}/{coProcessTag}")
-    public CoDevResponse getAllProjects(
-            @RequestParam("coLocationTag") String coLocationTag,
-            @RequestParam("coPartTag") String coPartTag,
-            @RequestParam("coKeyword") String coKeyword,
-            @RequestParam("coProcessTag") String coProcessTag) {
-        return coProjectService.getCoProjects(coLocationTag, coPartTag, coKeyword, coProcessTag);
+    @GetMapping(value = "/p1/codev/projects")
+    public CoDevResponse getAllProjects(HttpServletRequest request, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+        return coProjectService.getCoProjects(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag);
     }
 }
 

@@ -50,25 +50,19 @@
         group by co_projectId) as clp
         on cp.co_projectId = clp.co_projectId
         where
-        <choose>
-            <when test="co_locationTag == 전체"> cp.co_location = cp.co_location</when>
-            <otherwise> cp.co_location = #{co_locationTag}</otherwise>
-        </choose>
-        and
-        <choose>
-            <when test="co_partTag == 전체"> cpp.co_parts = cpp.co_parts</when>
-            <otherwise> cpp.co_parts = #{co_partTag}</otherwise>
-        </choose>
-        and
-        <choose>
-            <when test="co_keyword == 전체"> 1 = 1</when>
-            <otherwise> (cp.co_title like #{co_keyword} or cp.co_content like #{co_keyword})</otherwise>
-        </choose>
-        and
-        <choose>
-            <when test="co_processTag == 전체"> 1 = 1</when>
-            <otherwise>cp.co_process = #{co_processTag}</otherwise>
-        </choose>
+        <if test="co_locationTag != null and !co_locationTag.equals('')">
+            cp.co_location = #{co_locationTag} and
+        </if>
+        <if test="co_partTag != null and !co_partTag.equals('')">
+            cpp.co_parts like #{co_partTag} and
+        </if>
+        <if test="co_keyword != null and !co_keyword.equals('')">
+            (cp.co_title like #{co_keyword} or cp.co_content like #{co_keyword}) and
+        </if>
+        <if test="co_process != null and !co_process.equals('')">
+            cp.co_process = #{co_processTag} and
+        </if>
+        1 = 1
         order by cp.createdAt;
     </select>
 </mapper>
