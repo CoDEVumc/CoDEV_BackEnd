@@ -37,6 +37,10 @@ public class CoProjectController extends JwtController {
         this.coProjectHeartService = coProjectHeartService;
     }
 
+    @GetMapping("/p1/{co_projectId}")
+    public CoDevResponse getProject(HttpServletRequest request, @PathVariable("co_projectId") long co_projectId){
+        return coProjectService.getCoProject(co_projectId);
+    }
 
     @PostMapping(value = "/p1/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, String> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
