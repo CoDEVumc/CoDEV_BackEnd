@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 public class CoProjectServiceImpl extends ResponseService implements CoProjectService {
     private final CoProjectMapper coProjectMapper;
 
-    public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) throws ParseException {
+    @Override
+    public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
         this.coProjectMapper.insertCoProject(coProject);
         JSONObject jsonObj;
         for (Object co_language : co_languages) {
@@ -38,6 +39,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 //        return null;
 //    }
 
+    @Override
     public CoDevResponse getCoProject(CoProject coProject) {
         try {
             return setResponse(200, "Complete", coProject);
