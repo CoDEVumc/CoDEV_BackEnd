@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CoPart {
-    private long co_partId;
     private String co_part;
     private Timestamp createdAt;
     private Timestamp updatedAt;
