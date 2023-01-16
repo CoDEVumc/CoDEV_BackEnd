@@ -12,7 +12,9 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -38,13 +40,14 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         }
     }
 
-//    public CoProject getCoProject(long co_projectId) {
-//        Optional<CoProject> coProject = this.coProjectMapper.findByCoProjectId(co_projectId);
-//        coProject.get().setCoParts(coProjectMapper.selectCoPartOfProject(co_projectId));
-//        if(coProject.isPresent())
-//            return coProject.get();
-//        return null;
-//    }
+    public CoDevResponse getCoProjects(Map<String, Object> coProjectsDto) {
+        Optional<List<CoProject>> coProjects = Optional.ofNullable(this.coProjectMapper.getCoProjects(coProjectsDto));
+        try {
+            return setResponse(200, "success", coProjects);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public CoDevResponse getCoProject(CoProject coProject) {
