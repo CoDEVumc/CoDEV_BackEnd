@@ -12,10 +12,10 @@
 
     </insert>
 
-    <insert id="insertCoPartOfProject" parameterType="long">
+    <insert id="insertCoPartOfProject" parameterType="hashMap">
         INSERT INTO CoPartOfProject
-            (co_projectId, co_partId, co_limit)
-        VALUES (#{co_projectId}, #{co_partId}, #{co_limit})
+            (co_projectId, co_part, co_limit)
+        VALUES (#{co_projectId}, #{co_part}, #{co_limit})
     </insert>
 
 
