@@ -20,8 +20,8 @@ public class CoPortfolio {
     private String co_rank;
     private String co_headLine;
     private String co_introduction;
-    private List<String> co_portfolioLanguage;
-    private List<String> co_portfolioLink;
+    private List<String> co_portfolioLanguages;
+    private List<String> co_portfolioLinks;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
