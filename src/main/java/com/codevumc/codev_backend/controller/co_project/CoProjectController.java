@@ -1,19 +1,15 @@
 package com.codevumc.codev_backend.controller.co_project;
 
 import com.codevumc.codev_backend.controller.JwtController;
-import com.codevumc.codev_backend.domain.CoHeartOfProject;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
-import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartImpl;
+import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
-import org.apache.ibatis.annotations.Param;
-import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
@@ -21,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Reader;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,9 +28,9 @@ public class CoProjectController extends JwtController {
 
     private final CoFileServiceImpl coFileService;
     private final CoProjectServiceImpl coProjectService;
-    private final CoProjectHeartImpl coProjectHeartService;
+    private final CoProjectHeartServiceImpl coProjectHeartService;
 
-    public CoProjectController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoProjectServiceImpl coProjectService, CoProjectHeartImpl coProjectHeartService) {
+    public CoProjectController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoProjectServiceImpl coProjectService, CoProjectHeartServiceImpl coProjectHeartService) {
         super(jwtTokenProvider, jwtService);
         this.coFileService = coFileService;
         this.coProjectService = coProjectService;
