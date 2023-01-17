@@ -29,4 +29,5 @@ public interface CoProjectMapper {
     List<CoPart> getCoPartList(long co_projectId);
     List<CoLanguage> getCoLanguageList(long co_projectId);
     long getCoHeartCount(long co_projectId);
+    void deleteCoProject(Map<String, Object> coProjectDto);
 }

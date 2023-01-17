@@ -87,12 +87,19 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public void removeProject(String co_email, long co_projectId) {
+    public CoDevResponse deleteCoProject(String co_email, long co_projectId) {
+        Map<String, Object> coProjectDto = new HashMap<>();
+        coProjectDto.put("co_email", co_email);
+        coProjectDto.put("co_projectId", co_projectId);
         try {
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
-                coProjectMapper.deleteCoProject(co_email, co_projectId);
+                coProjectMapper.deleteCoProject(coProjectDto);
+                return setResponse(200, "Complete", "삭제되었습니다.");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 }
