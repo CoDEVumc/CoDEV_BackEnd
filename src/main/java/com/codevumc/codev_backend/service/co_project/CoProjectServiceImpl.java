@@ -43,10 +43,12 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         }
     }
 
+    @Override
     public void updateMainImg(String co_mainImg, long co_projectId) {
         coProjectMapper.updateCoMainImg(co_mainImg, co_projectId);
     }
 
+    @Override
     public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag) {
         Map<String, Object> condition = new HashMap<>();
         condition.put("co_email", co_email);
