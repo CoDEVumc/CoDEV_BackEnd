@@ -9,4 +9,5 @@ public interface CoProjectService {
     CoDevResponse getCoProject(long co_projectIc);
     void updateMainImg(String co_mainImg, long co_projectId);
     CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag);
+    void removeProject(String co_email, long co_projectId);
 }
