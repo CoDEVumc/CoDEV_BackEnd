@@ -18,6 +18,7 @@
 
     <select id="findByCoProjectId" resultType="CoPhotos">
         select
+            co_photoId,
             co_targetId,
             co_type,
             co_uuId,
@@ -27,7 +28,7 @@
             co_fileDownloadPath,
             co_fileSize
         from CoPhotos
-        where co_targetId = #{co_projectId}
+        where co_targetId = #{co_projectId} and co_type = 'PROJECT'
     </select>
 
     <select id="findByCo_uuId" resultType="CoPhotos">
