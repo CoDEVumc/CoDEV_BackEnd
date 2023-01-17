@@ -19,10 +19,10 @@ public class CoUser implements UserDetails {
     private String co_password;
     private String co_nickName;
     private String co_name;
+    private String co_birth;
+    private String co_gender;
     private Role role;
     private String profileImg;
-    private String birth;
-    private String gender;
 
     @Builder.Default
     private List<String> roles = new ArrayList<>();
