@@ -20,8 +20,11 @@ public class CoProjectHeartImpl extends ResponseService implements CoProjectHear
     public CoDevResponse insertHeart(String co_email, Long co_projectId){
         try{
             Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
-            if(coHeartOfProject.isEmpty())
+            if(coHeartOfProject.isEmpty()) {
                 this.coProjectMapper.insertCoHeartOfProject(co_email,co_projectId);
+                setResponse("Message", "찜등록이 완료되었습니다.");
+            }
+
 
         }catch(Exception e){
             e.printStackTrace();
@@ -33,8 +36,10 @@ public class CoProjectHeartImpl extends ResponseService implements CoProjectHear
     public CoDevResponse deleteHeart(String co_email,Long co_projectId){
         try{
             Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
-            if(coHeartOfProject.isPresent())
+            if(coHeartOfProject.isPresent()) {
                 this.coProjectMapper.deleteCoHeartOfProject(co_email,co_projectId);
+                setResponse("Message", "찜등록이 취소되었습니다.");
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
