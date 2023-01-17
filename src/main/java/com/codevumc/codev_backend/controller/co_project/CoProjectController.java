@@ -59,17 +59,12 @@ public class CoProjectController extends JwtController {
                 .co_process(CoProject.DevType.from("ING"))
                 .co_deadLine(project.get("co_deadLine").toString()).build();
         JSONParser parser = new JSONParser();
-//        Object coPartsObj = parser.parse(String.valueOf(project.get("co_parts")));
         Gson gson = new Gson();
-
         String co_parts = gson.toJson(project.get("co_parts"));
         JSONArray co_partsList = (JSONArray) parser.parse(co_parts);
-
         String co_languages = gson.toJson(project.get("co_languages"));
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
-
-        this.coProjectService.insertProject(coProject, co_partsList, co_languagesList);
-
+        this.coProjectService.insertProject(coProject, co_languagesList, co_partsList);
         if (files != null) {
             List<CoPhotos> coPhotos = Arrays.asList(files)
                     .stream()
@@ -79,7 +74,6 @@ public class CoProjectController extends JwtController {
 
             coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", coProject.getCo_projectId()), coProject.getCo_projectId());
         }
-
         return null;
     }
 
