@@ -1,7 +1,9 @@
 package com.codevumc.codev_backend.service.co_project;
 
+import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @Service
 public class CoProjectServiceImpl extends ResponseService implements CoProjectService {
     private final CoProjectMapper coProjectMapper;
+    private final CoPhotosMapper coPhotosMapper;
 
     @Override
     public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
@@ -68,6 +71,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
                 coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
+                coProject.get().setCo_photos(coPhotosMapper.findByCoProjectId(co_projectId));
             }
                 return setResponse(200, "Complete", coProject);
         } catch (Exception e) {
