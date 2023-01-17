@@ -25,6 +25,10 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     private final CoProjectMapper coProjectMapper;
     private final CoPhotosMapper coPhotosMapper;
 
+    private String setting(String keyword) {
+        return keyword == null ? null : "%" + keyword + "%";
+    }
+
     @Override
     public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
         Map<String, Object> coPartsDto = new HashMap<>();
@@ -82,7 +86,13 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         return null;
     }
 
-    private String setting(String keyword) {
-        return keyword == null ? null : "%" + keyword + "%";
+    @Override
+    public void removeProject(String co_email, long co_projectId) {
+        try {
+            Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
+            if(coProject.isPresent()) {
+                coProjectMapper.deleteCoProject(co_email, co_projectId);
+            }
+        }
     }
 }
