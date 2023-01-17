@@ -28,11 +28,17 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         this.coProjectMapper.insertCoProject(coProject);
         JSONObject jsonObj;
         for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
+            long co_languageId = Long.parseLong(co_language.toString());
             this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
         }
+
+        System.out.println(co_parts);
+
         for (Object co_part : co_parts) {
             jsonObj = (JSONObject) co_part;
+
+            System.out.println("@" + jsonObj);
+
             coPartsDto.put("co_projectId", coProject.getCo_projectId());
             coPartsDto.put("co_part", jsonObj.get("co_part").toString());
             coPartsDto.put("co_limit", Long.parseLong(jsonObj.get("co_limit").toString()));
