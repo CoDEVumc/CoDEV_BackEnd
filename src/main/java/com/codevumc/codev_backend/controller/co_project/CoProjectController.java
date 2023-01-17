@@ -11,7 +11,9 @@ import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
 import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.Gson;
 import org.apache.ibatis.annotations.Param;
+import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -46,21 +49,22 @@ public class CoProjectController extends JwtController {
     }
 
     @PostMapping(value = "/p1/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, String> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+    public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
 
         CoProject coProject = CoProject.builder()
                 .co_email(getCoUserEmail(request))
-                .co_title(project.get("co_title"))
-                .co_location(project.get("co_location"))
-                .co_content(project.get("co_content"))
+                .co_title(project.get("co_title").toString())
+                .co_location(project.get("co_location").toString())
+                .co_content(project.get("co_content").toString())
                 .co_process(CoProject.DevType.from("ING"))
-                .co_deadLine(project.get("co_deadLine")).build();
+                .co_deadLine(project.get("co_deadLine").toString()).build();
         JSONParser parser = new JSONParser();
-        Object coPartsObj = parser.parse(String.valueOf(project.get("co_parts")));
-        JSONArray co_parts = (JSONArray) coPartsObj;
-        Object coLanguagesObj = parser.parse(String.valueOf(project.get("co_languages")));
-        JSONArray co_Languages = (JSONArray) coLanguagesObj;
-        this.coProjectService.insertProject(coProject, co_Languages, co_parts);
+        Gson gson = new Gson();
+        String co_parts = gson.toJson(project.get("co_parts"));
+        JSONArray co_partsList = (JSONArray) parser.parse(co_parts);
+        String co_languages = gson.toJson(project.get("co_languages"));
+        JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
+        this.coProjectService.insertProject(coProject, co_languagesList, co_partsList);
         if (files != null) {
             List<CoPhotos> coPhotos = Arrays.asList(files)
                     .stream()
@@ -70,7 +74,6 @@ public class CoProjectController extends JwtController {
 
             coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", coProject.getCo_projectId()), coProject.getCo_projectId());
         }
-
         return null;
     }
 
