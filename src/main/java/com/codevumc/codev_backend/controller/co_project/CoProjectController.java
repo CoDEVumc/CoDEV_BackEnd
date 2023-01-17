@@ -87,5 +87,12 @@ public class CoProjectController extends JwtController {
         String co_email = getCoUserEmail(request);
         return coProjectHeartService.deleteHeart(co_email,co_projectId);
     }
+
+    @DeleteMapping("/p1/{co_projectId}")
+    public CoDevResponse deleteCoProject(HttpServletRequest request, @PathVariable("co_projectId") Long co_projectId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coProjectService.deleteCoProject(co_email, co_projectId);
+    }
+
 }
 
