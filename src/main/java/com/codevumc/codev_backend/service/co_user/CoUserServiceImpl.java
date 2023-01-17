@@ -38,7 +38,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     public CoDevResponse findALlUser(String email) {
         try {
 
-            return setResponse("Success", email);
+            return setResponse(200, "Success", email);
         }catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.ForbiddenException);
@@ -50,7 +50,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     public CoDevResponse signUpCoUser(CoUser coUser) {
         try {
             coUserMapper.insertCoUser(coUser);
-            return setResponse("coUser", coUser);
+            return setResponse(200, "coUser", coUser);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.FAILEDSIGNUP);
@@ -65,7 +65,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
                     .co_email(userInfo.get("co_email").toString())
                     .co_password(userInfo.get("co_password").toString())
                     .build();
-            return setResponse("success", coUser);
+            return setResponse(200, "success", coUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +80,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
                     .co_email(userInfo.get("co_email").toString())
                     .co_password(userInfo.get("co_password").toString())
                     .build();
-            return setResponse("success", coUser);
+            return setResponse(200, "success", coUser);
         } catch (Exception e) {
             e.printStackTrace();
         }

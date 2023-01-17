@@ -10,8 +10,9 @@ public abstract class ResponseService {
 
 
 
-    public CoDevResponse setResponse(String message, Object object) throws Exception {
+    public CoDevResponse setResponse(int code, String message, Object object) throws Exception {
         CoDevResponse.ResponseMap result = new CoDevResponse.ResponseMap();
+        result.setCode(code);
         result.setResponseData(message, object);
         return result;
     }

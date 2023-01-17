@@ -53,7 +53,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         condition.put("co_processTag", co_processTag);
         List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
         try {
-            return setResponse("success", coProjects);
+            return setResponse(200, "success", coProjects);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
                 coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
             }
-                return setResponse("Complete", coProject);
+                return setResponse(200, "Complete", coProject);
         } catch (Exception e) {
             e.printStackTrace();
         }
