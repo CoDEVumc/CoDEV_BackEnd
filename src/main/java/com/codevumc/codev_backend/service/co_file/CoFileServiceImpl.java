@@ -174,10 +174,10 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     private String getFileUrl(String urlPath, String uuidFileName) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(urlPath)
-                .path(uuidFileName)
-                .toUriString();
+        StringBuilder sb = new StringBuilder(ServletUriComponentsBuilder.fromCurrentContextPath().toUriString());
+        sb.append(urlPath);
+        sb.append(uuidFileName);
+        return sb.toString();
     }
 
     private String getOriginFileName(String uuId) {
