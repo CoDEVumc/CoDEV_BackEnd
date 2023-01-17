@@ -21,6 +21,8 @@ public class CoUser implements UserDetails {
     private String co_name;
     private Role role;
     private String profileImg;
+    private String birth;
+    private String gender;
 
     @Builder.Default
     private List<String> roles = new ArrayList<>();
