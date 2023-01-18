@@ -18,25 +18,18 @@ import java.util.Optional;
 @Service
 public class CoMyPageServiceImpl extends ResponseService implements CoMyPageService{
     private final CoMyPageMapper coMyPageMapper;
-    private final CoPortfolioMapper coPortfolioMapper;
-
 
     @Override
-    public void updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_portfoliolinks, JSONArray co_portfolioLanguages) {
-
-
-        Map<String, Object> coPortfolioDto = new HashMap<>();
+    public void updateCoPortfolio(CoPortfolio coPortfolio,JSONArray co_languages, JSONArray co_links) {
         this.coMyPageMapper.updateCoPortfolio(coPortfolio);
-
-        for (Object co_portfoliolaguage : co_portfolioLanguages) {
-            long co_languageId = (long) co_portfoliolaguage;
+        for (Object co_language : co_languages) {
+            long co_languageId = (long) co_language;
             this.coMyPageMapper.updateCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId);
         }
-
-        for (Object co_portfoliolink : co_portfoliolinks) {
-            String co_link = (String)co_portfoliolink;
+        for (Object co_plink : co_links) {
+            String co_link = (String) co_plink;
             this.coMyPageMapper.updateCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(),co_link);
         }
-
     }
+
 }
