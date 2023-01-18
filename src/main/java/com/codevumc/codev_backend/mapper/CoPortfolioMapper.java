@@ -8,5 +8,5 @@ import java.util.Map;
 @Mapper
 public interface CoPortfolioMapper {
 
-    void updateCoPortfolio(CoPortfolio coPortfolio);
+    CoPortfolio getCoPortfolio(Long co_portfolioId);
 }

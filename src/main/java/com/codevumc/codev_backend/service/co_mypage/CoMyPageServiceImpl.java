@@ -8,6 +8,10 @@ import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class CoMyPageServiceImpl extends ResponseService implements CoMyPageService{
@@ -17,8 +21,16 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
 
     @Override
     public CoDevResponse updateCoPortfolio(CoPortfolio coPortfolio) {
+
         try {
-            coPortfolioMapper.updateCoPortfolio(coPortfolio);
+            //포폴 테이블에 있는 값이 존재할경우 업데이트
+            Optional<CoPortfolio> coPortfolio1 = Optional.ofNullable(coPortfolioMapper.getCoPortfolio(coPortfolio.getCo_portfolioId()));
+            if(coPortfolio1.isPresent()){
+                //if 본인이 맞을경우
+                coMyPageMapper.updateCoPortfolio(coPortfolio);
+                coMyPageMapper.updateCoLaguageOfPortfolio(coPortfolio);
+                coMyPageMapper.updateCoLinkOfPortfolio(coPortfolio);
+                }
             return setResponse(200, "success", coPortfolio);
         } catch (Exception e) {
             e.printStackTrace();

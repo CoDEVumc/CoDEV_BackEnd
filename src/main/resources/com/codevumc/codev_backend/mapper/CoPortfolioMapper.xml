@@ -4,4 +4,9 @@
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoPortfolioMapper">
 
+
+    <select id="getCoPortfolio" resultType="CoProject">
+        select * from CoPortfolio where co_portfolioId = ${co_portfolioId}
+    </select>
+
 </mapper>

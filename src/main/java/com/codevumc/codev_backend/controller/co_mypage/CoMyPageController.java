@@ -28,7 +28,6 @@ public class CoMyPageController extends JwtController {
      * */
     @ResponseBody
     @PatchMapping("/{co_portfolioId}")
-    //이렇게 받는거 맞나? 이러면 coportfolio 에 있는변수 다 입력해야하나?
     public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("co_portfolioId") Long co_portfolioId, @RequestBody CoPortfolio coPortfolio) throws Exception{
             //유저 email 일치한지 확인 코드 필요
             coPortfolio.setCo_email(getCoUserEmail(request));
