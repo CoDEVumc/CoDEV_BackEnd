@@ -5,7 +5,7 @@
 <mapper namespace="com.codevumc.codev_backend.mapper.CoMyPageMapper">
 
     <update id="updateCoPortfolio" parameterType="CoPortfolio">
-        update coportfolio
+        update CoPortfolio
         set
             co_title = #{co_title},
             co_rank = #{co_rank},
@@ -14,18 +14,18 @@
         where co_portfolioId = ${co_portfolioId}
     </update>
 
-    <update id="updateCoLaguageOfPortfolio">
-        update colaguageofportfolio
+    <update id="updateCoLanguageOfPortfolio">
+        update CoLanguageOfPortfolio
         set
-            co_laguageId = #{co_laguageId}
-        where co_portfolioId = ${co_portfolioId}
+            co_languageId = #{co_languageId}
+        where co_portfolioId = #{co_portfolioId}
     </update>
 
-    <update id="updateCoLinkOfPortfolio" parameterType="hashMap">
-        update colinkofportfolio
+    <update id="updateCoLinkOfPortfolio">
+        update CoLinkOfPortfolio
         set
             co_link = #{co_link}
-        where co_portfolioId = ${co_portfolioId}
+        where co_portfolioId = #{co_portfolioId}
     </update>
 
 </mapper>

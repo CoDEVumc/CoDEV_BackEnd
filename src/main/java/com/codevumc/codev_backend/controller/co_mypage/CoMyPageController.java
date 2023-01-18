@@ -46,10 +46,10 @@ public class CoMyPageController extends JwtController {
 
         JSONParser parser = new JSONParser();
         Gson gson = new Gson();
-        String co_portfolioLinks = gson.toJson(portfolio.get("co_link"));
-        JSONArray co_portfoliolinksList = (JSONArray) parser.parse(co_portfolioLinks);
         String co_portfolioLanguages = gson.toJson(portfolio.get("co_portfolioLanguages"));
         JSONArray co_portfolioLanguagesList = (JSONArray) parser.parse(co_portfolioLanguages);
+        String co_portfolioLinks = gson.toJson(portfolio.get("co_portfolioLinks"));
+        JSONArray co_portfoliolinksList = (JSONArray) parser.parse(co_portfolioLinks);
         this.coMyPageService.updateCoPortfolio(coPortfolio,co_portfoliolinksList,co_portfolioLanguagesList);
 
         return null;

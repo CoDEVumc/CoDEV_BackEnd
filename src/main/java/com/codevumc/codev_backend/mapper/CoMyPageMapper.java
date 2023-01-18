@@ -9,6 +9,6 @@ import java.util.Map;
 @Mapper
 public interface CoMyPageMapper {
     void updateCoPortfolio(CoPortfolio coPortfolio);
-    void updateCoLaguageOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_laugagueId") long co_laugageId);
-    void updateCoLinkOfPortfolio(Map<String, Object> coPortfolioDto);
+    void updateCoLanguageOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_languageId") long co_languageId);
+    void updateCoLinkOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_link") String co_link);
 }
