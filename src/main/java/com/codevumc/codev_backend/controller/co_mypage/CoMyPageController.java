@@ -36,21 +36,21 @@ public class CoMyPageController extends JwtController {
             //유저 email 일치한지 확인 코드 필요
 
         CoPortfolio coPortfolio = CoPortfolio.builder()
-                .co_portfolioId(co_portfolioId)
                 .co_email(getCoUserEmail(request))
+                .co_portfolioId(co_portfolioId)
                 .co_title(portfolio.get("co_title").toString())
                 .co_rank(portfolio.get("co_rank").toString())
                 .co_headLine(portfolio.get("co_headLine").toString())
-                .co_introduction(portfolio.get("co_introduction").toString()).build();
-
+                .co_introduction(portfolio.get("co_introduction").toString())
+                .build();
 
         JSONParser parser = new JSONParser();
         Gson gson = new Gson();
-        String co_portfolioLanguages = gson.toJson(portfolio.get("co_portfolioLanguages"));
-        JSONArray co_portfolioLanguagesList = (JSONArray) parser.parse(co_portfolioLanguages);
-        String co_portfolioLinks = gson.toJson(portfolio.get("co_portfolioLinks"));
-        JSONArray co_portfoliolinksList = (JSONArray) parser.parse(co_portfolioLinks);
-        this.coMyPageService.updateCoPortfolio(coPortfolio,co_portfoliolinksList,co_portfolioLanguagesList);
+        String co_languages = gson.toJson(portfolio.get("co_languages"));
+        JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
+        String co_links = gson.toJson(portfolio.get("co_links"));
+        JSONArray co_linksList = (JSONArray) parser.parse(co_links);
+        this.coMyPageService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
 
         return null;
     }
