@@ -28,23 +28,24 @@ public class CoPortfolioController extends JwtController {
         this.coPortfolioService = coPortfolioService;
     }
 
-    @PostMapping(value = "/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(value = "/write")
     public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, Object> portfolio) throws Exception {
         CoPortfolio coPortfolio = CoPortfolio.builder()
                 .co_email(getCoUserEmail(request))
                 .co_title(portfolio.get("co_title").toString())
                 .co_rank(portfolio.get("co_rank").toString())
+                .co_headLine(portfolio.get("co_headLine").toString())
                 .co_introduction(portfolio.get("co_introduction").toString())
                 .build();
 
         JSONParser parser = new JSONParser();
         Gson gson = new Gson();
 
-        String co_portfolioLanguages = gson.toJson(portfolio.get("co_portfolioLanguages"));
-        JSONArray co_portfolioLanguagesList = (JSONArray) parser.parse(co_portfolioLanguages);
-        String co_portfolioLinks = gson.toJson(portfolio.get("co_portfolioLinks"));
-        JSONArray co_portfolioLinksList = (JSONArray) parser.parse(co_portfolioLinks);
-        this.coPortfolioService.insertCoPortfolio(coPortfolio, co_portfolioLanguagesList, co_portfolioLinksList);
+        String co_languages = gson.toJson(portfolio.get("co_languages"));
+        JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
+        String co_links = gson.toJson(portfolio.get("co_links"));
+        JSONArray co_linksList = (JSONArray) parser.parse(co_links);
+        this.coPortfolioService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
 
         return null;
     }
