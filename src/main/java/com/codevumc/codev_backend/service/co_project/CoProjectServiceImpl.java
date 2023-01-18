@@ -94,12 +94,12 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         try {
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
-                coProjectMapper.deleteCoProject(coProjectDto);
-                return setResponse(200, "Complete", "삭제되었습니다.");
+                return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(300, "Failed", "수정 권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
 }
