@@ -14,17 +14,17 @@
         where co_portfolioId = ${co_portfolioId}
     </update>
 
-    <update id="updateCoLaguageOfPortfolio" parameterType="CoPortfolio">
+    <update id="updateCoLaguageOfPortfolio">
         update colaguageofportfolio
         set
-            co_laguageId = ${co_laguageId}
+            co_laguageId = #{co_laguageId}
         where co_portfolioId = ${co_portfolioId}
     </update>
 
-    <update id="updateCoLinkOfPortfolio" parameterType="CoPortfolio">
+    <update id="updateCoLinkOfPortfolio" parameterType="hashMap">
         update colinkofportfolio
         set
-            co_link = #{co_laguageId}
+            co_link = #{co_link}
         where co_portfolioId = ${co_portfolioId}
     </update>
 
