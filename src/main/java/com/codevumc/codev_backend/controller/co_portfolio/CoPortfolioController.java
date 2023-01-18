@@ -10,10 +10,7 @@ import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -28,8 +25,9 @@ public class CoPortfolioController extends JwtController {
         this.coPortfolioService = coPortfolioService;
     }
 
+    @ResponseBody
     @PostMapping(value = "/write")
-    public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, Object> portfolio) throws Exception {
+    public CoDevResponse write(HttpServletRequest request, @RequestBody Map<String, Object> portfolio) throws Exception {
         CoPortfolio coPortfolio = CoPortfolio.builder()
                 .co_email(getCoUserEmail(request))
                 .co_title(portfolio.get("co_title").toString())
@@ -37,16 +35,13 @@ public class CoPortfolioController extends JwtController {
                 .co_headLine(portfolio.get("co_headLine").toString())
                 .co_introduction(portfolio.get("co_introduction").toString())
                 .build();
-
         JSONParser parser = new JSONParser();
         Gson gson = new Gson();
-
         String co_languages = gson.toJson(portfolio.get("co_languages"));
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
         this.coPortfolioService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
-
         return null;
     }
 }
