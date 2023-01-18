@@ -7,10 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.codevumc.codev_backend.domain.*;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,5 +26,5 @@ public interface CoProjectMapper {
     List<CoPart> getCoPartList(long co_projectId);
     List<CoLanguage> getCoLanguageList(long co_projectId);
     long getCoHeartCount(long co_projectId);
-    void deleteCoProject(Map<String, Object> coProjectDto);
+    boolean deleteCoProject(Map<String, Object> coProjectDto);
 }
