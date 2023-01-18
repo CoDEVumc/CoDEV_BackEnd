@@ -19,9 +19,15 @@ public class CoPortfolioServiceImpl extends ResponseService implements CoPortfol
     public void insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_portfolioLanguages, JSONArray co_portfolioLinks) {
         Map<String, Object> coPortfolioDto = new HashMap<>();
         this.coPortfolioMapper.insertCoPortfolio(coPortfolio);
+
         for (Object co_portfolioLanguage : co_portfolioLanguages) {
-            long co_portfolioId = (long) co_portfolioLanguage;
-            this.coPortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.);
+            long co_languageId = (long) co_portfolioLanguage;
+            this.coPortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId);
+        }
+
+        for (Object co_portfolioLink : co_portfolioLinks) {
+            String co_link = (String) co_portfolioLink;
+            this.coPortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link);
         }
     }
 }

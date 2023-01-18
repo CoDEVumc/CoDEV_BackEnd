@@ -14,6 +14,7 @@ public class CoPortfolio {
     private long co_portfolioId;
     private long co_lopfId;
     private String co_email;
+    private String co_title;
     private String co_name;
     private String co_gender;
     private String co_birth;
