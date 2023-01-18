@@ -7,10 +7,8 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoLanguageOfPortfolio {
-    private long co_lopfId;
+public class CoLinkOfPortfolio {
+    private long co_lopId;
     private long co_portfolioId;
-    private long co_languageId;
-    private String co_language;
-    private String co_logo;
+    private String co_link;
 }
