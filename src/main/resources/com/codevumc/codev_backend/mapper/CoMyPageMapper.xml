@@ -4,4 +4,28 @@
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoMyPageMapper">
 
+    <update id="updateCoPortfolio" parameterType="CoPortfolio">
+        update coportfolio
+        set
+            co_title = #{co_title},
+            co_rank = #{co_rank},
+            co_headLine=#{co_headLine},
+            co_introduction =#{co_introduction}
+        where co_portfolioId = ${co_portfolioId}
+    </update>
+
+    <update id="updateCoLaguageOfPortfolio" parameterType="CoPortfolio">
+        update colaguageofportfolio
+        set
+            co_laguageId = ${co_laguageId}
+        where co_portfolioId = ${co_portfolioId}
+    </update>
+
+    <update id="updateCoLinkOfPortfolio" parameterType="CoPortfolio">
+        update colinkofportfolio
+        set
+            co_link = #{co_laguageId}
+        where co_portfolioId = ${co_portfolioId}
+    </update>
+
 </mapper>
