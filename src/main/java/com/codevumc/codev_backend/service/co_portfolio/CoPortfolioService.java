@@ -4,5 +4,5 @@ import com.codevumc.codev_backend.domain.CoPortfolio;
 import org.json.simple.JSONArray;
 
 public interface CoPortfolioService {
-    void insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_portfolioLanguages, JSONArray co_portfolioLinks);
+    void insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
 }
