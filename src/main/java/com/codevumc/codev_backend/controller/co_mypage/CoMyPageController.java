@@ -21,7 +21,6 @@ public class CoMyPageController extends JwtController {
         this.coMyPageService = coMyPageService;
     }
 
-
     /**
      * 포트폴리오 수정
      *
@@ -34,4 +33,7 @@ public class CoMyPageController extends JwtController {
             coPortfolio.setCo_portfolioId(co_portfolioId);
             return coMyPageService.updateCoPortfolio(coPortfolio);
     }
+
+
+
 }
