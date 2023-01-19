@@ -28,4 +28,19 @@
         where cp.co_portfolioId = #{co_portfolioId}
     </select>
 
+    <insert id="insertCoPortfolio" parameterType="CoPortfolio" useGeneratedKeys="true" keyProperty="co_portfolioId">
+        insert into CoPortfolio(co_email, co_title, co_rank, co_headLine, co_introduction)
+        VALUES (#{co_email}, #{co_title}, #{co_rank}, #{co_headLine}, #{co_introduction});
+    </insert>
+
+    <insert id="insertCoLanguageOfPortfolio">
+        insert into CoLanguageOfPortfolio(co_portfolioId, co_languageId)
+        values (#{co_portfolioId}, #{co_languageId});
+    </insert>
+
+    <insert id="insertCoLinkOfPortfolio">
+        insert into CoLinkOfPortfolio(co_portfolioId, co_link)
+        VALUES (#{co_portfolioId}, #{co_link});
+    </insert>
+
 </mapper>
