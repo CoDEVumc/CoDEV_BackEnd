@@ -26,12 +26,13 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
                 if(coMyPageMapper.updateCoPortfolio(coPortfolio)){
                     for (Object co_language : co_languages) {
                         long co_languageId = (long) co_language;
-                        return this.coPortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId)?setResponse(200,"success","수정완료") : setResponse(403,"Forbidden","수정권한이 없습니다.");
+                        coPortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId);
                     }
                     for (Object co_plink : co_links) {
                         String co_link = (String) co_plink;
-                        return this.coPortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link)?setResponse(200,"success","수정완료") : setResponse(403,"Forbidden","수정권한이 없습니다.");
+                        coPortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link);
                     }
+                    return setResponse(200,"Complete","수정 완료되었습니다.");
                 }
             }
         }catch (Exception e){

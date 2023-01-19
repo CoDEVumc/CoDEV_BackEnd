@@ -14,18 +14,5 @@
         where co_portfolioId = ${co_portfolioId}
     </update>
 
-    <update id="updateCoLanguageOfPortfolio">
-        update CoLanguageOfPortfolio
-        set
-            co_languageId = ${co_languageId}
-        where co_portfolioId = ${co_portfolioId}
-    </update>
-
-    <update id="updateCoLinkOfPortfolio">
-        update CoLinkOfPortfolio
-        set
-            co_link = #{co_link}
-        where co_portfolioId = ${co_portfolioId}
-    </update>
 
 </mapper>
