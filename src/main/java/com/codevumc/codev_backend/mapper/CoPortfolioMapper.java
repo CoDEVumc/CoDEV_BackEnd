@@ -14,4 +14,5 @@ public interface CoPortfolioMapper {
     void insertCoLinkOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_link") String co_link);
     Optional<CoPortfolio> getCoPortfolio(Map<String, Object> coPortfolioDto);
     boolean updateCoPortfolio(CoPortfolio coPortfolio);
+    boolean deletePortfolio(Map<String, Object> coPortfolioDto);
 }

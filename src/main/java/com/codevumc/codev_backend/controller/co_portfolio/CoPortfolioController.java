@@ -8,6 +8,7 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_portfolio.CoPortfolioServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
+import org.apache.ibatis.annotations.Delete;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
@@ -76,5 +77,11 @@ public class CoPortfolioController extends JwtController {
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
         return coPortfolioService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
+    }
+
+    @DeleteMapping("/portfolio/{portfolioId}")
+    public CoDevResponse deletePortfolio(HttpServletRequest request, @PathVariable("portfolioId") long portfolioId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return this.coPortfolioService.deletePortfolio(co_email, portfolioId);
     }
 }
