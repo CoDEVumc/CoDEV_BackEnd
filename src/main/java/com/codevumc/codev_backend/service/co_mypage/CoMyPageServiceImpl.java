@@ -20,8 +20,11 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
     private final CoPortfolioMapper coPortfolioMapper;
     @Override
     public CoDevResponse updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links) {
+        Map<String,Object> coPortfolioDto = new HashMap<>();
+        coPortfolioDto.put("co_email",coPortfolio.getCo_email());
+        coPortfolioDto.put("co_portfolioId",coPortfolio.getCo_portfolioId());
         try{
-            Optional<CoPortfolio> coPortfolio1 = coPortfolioMapper.getCoPortfolio(coPortfolio.getCo_portfolioId());
+            Optional<CoPortfolio> coPortfolio1 = coPortfolioMapper.getCoPortfolio(coPortfolioDto);
             if(coPortfolio1.isPresent()){
                 if(coMyPageMapper.updateCoPortfolio(coPortfolio)){
                     for (Object co_language : co_languages) {
