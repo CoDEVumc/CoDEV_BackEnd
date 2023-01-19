@@ -32,7 +32,9 @@ public class CoPortfolioServiceImpl extends ResponseService implements CoPortfol
     public CoDevResponse getCoPortfolio(long co_portfolioId) {
         try {
             Optional<CoPortfolio> coPortfolio = coPortfolioMapper.getCoPortfolio(co_portfolioId);
-            return setResponse(200, "Complete", coPortfolio);
+            if (coPortfolio.isPresent()){
+                return setResponse(200,"Complete",coPortfolio);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
