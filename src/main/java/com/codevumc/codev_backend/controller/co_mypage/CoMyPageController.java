@@ -32,9 +32,6 @@ public class CoMyPageController extends JwtController {
     @ResponseBody
     @PatchMapping("/update/{co_portfolioId}")
     public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("co_portfolioId") Long co_portfolioId, @RequestBody Map<String,Object> portfolio) throws Exception{
-
-            //유저 email 일치한지 확인 코드 필요
-
         CoPortfolio coPortfolio = CoPortfolio.builder()
                 .co_email(getCoUserEmail(request))
                 .co_portfolioId(co_portfolioId)
@@ -50,9 +47,8 @@ public class CoMyPageController extends JwtController {
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
-        this.coMyPageService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
+        return coMyPageService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
 
-        return null;
     }
 
 
