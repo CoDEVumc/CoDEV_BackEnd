@@ -4,7 +4,9 @@
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoPortfolioMapper">
     <select id="getCoPortfolio" resultType="CoPortfolio">
-        select co_title,
+        select
+        cp.co_portfolioId as 'co_portfolioId',
+        cp.co_title as 'co_title',
         cp.co_email as 'co_email',
         CU.co_name   as 'co_name',
         CU.co_birth  as 'co_birth',
