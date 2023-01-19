@@ -5,5 +5,5 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import org.json.simple.JSONArray;
 
 public interface CoMyPageService {
-    void updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
+    CoDevResponse updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
 }
