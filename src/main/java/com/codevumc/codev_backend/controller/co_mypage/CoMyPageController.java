@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/p1/co_mypage")
+@RequestMapping("/codev/my-page")
 public class CoMyPageController extends JwtController {
     private final CoMyPageServiceImpl coMyPageService;
 
@@ -30,8 +30,8 @@ public class CoMyPageController extends JwtController {
      *
      * */
     @ResponseBody
-    @PatchMapping("/update/{co_portfolioId}")
-    public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("co_portfolioId") Long co_portfolioId, @RequestBody Map<String,Object> portfolio) throws Exception{
+    @PatchMapping("/portfolio/{coPortfolioId}")
+    public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") Long co_portfolioId, @RequestBody Map<String,Object> portfolio) throws Exception{
         CoPortfolio coPortfolio = CoPortfolio.builder()
                 .co_email(getCoUserEmail(request))
                 .co_portfolioId(co_portfolioId)
