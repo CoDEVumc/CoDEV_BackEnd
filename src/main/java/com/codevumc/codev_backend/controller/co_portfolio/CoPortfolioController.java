@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/p1/co_portfolio")
+@RequestMapping("/codev")
 public class CoPortfolioController extends JwtController {
     private final CoPortfolioServiceImpl coPortfolioService;
 
@@ -33,7 +33,7 @@ public class CoPortfolioController extends JwtController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/write")
+    @PostMapping(value = "/my-page/portfolio")
     public CoDevResponse write(HttpServletRequest request, @RequestBody Map<String, Object> portfolio) throws Exception {
         CoPortfolio coPortfolio = CoPortfolio.builder()
                 .co_email(getCoUserEmail(request))
@@ -51,8 +51,8 @@ public class CoPortfolioController extends JwtController {
         this.coPortfolioService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
         return null;
     }
-    @GetMapping("/{co_portfolioId}")
-    public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("co_portfolioId") long co_portfolioId, String email)throws Exception{
+    @GetMapping("/my-page/portfolio/{coPortfolioId}")
+    public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long co_portfolioId, String email)throws Exception{
         String co_email = getCoUserEmail(request);
         return coPortfolioService.getCoPortfolio(co_portfolioId,co_email);
     }
