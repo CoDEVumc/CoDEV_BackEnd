@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface CoMyPageMapper {
-    boolean updateCoPortfolio(CoPortfolio coPortfolio);
+
 }
