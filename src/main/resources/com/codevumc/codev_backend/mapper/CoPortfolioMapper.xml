@@ -45,5 +45,14 @@
         VALUES (#{co_portfolioId}, #{co_link});
     </insert>
 
+    <update id="updateCoPortfolio" parameterType="CoPortfolio">
+        update CoPortfolio
+        set
+            co_title = #{co_title},
+            co_rank = #{co_rank},
+            co_headLine=#{co_headLine},
+            co_introduction =#{co_introduction}
+        where co_portfolioId = ${co_portfolioId}
+    </update>
 
 </mapper>

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/codev")
+@RequestMapping("/codev/my-page")
 public class CoPortfolioController extends JwtController {
     private final CoPortfolioServiceImpl coPortfolioService;
 
@@ -33,7 +33,7 @@ public class CoPortfolioController extends JwtController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/my-page/portfolio")
+    @PostMapping(value = "/portfolio")
     public CoDevResponse write(HttpServletRequest request, @RequestBody Map<String, Object> portfolio) throws Exception {
         CoPortfolio coPortfolio = CoPortfolio.builder()
                 .co_email(getCoUserEmail(request))
@@ -51,9 +51,30 @@ public class CoPortfolioController extends JwtController {
         this.coPortfolioService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
         return null;
     }
-    @GetMapping("/my-page/portfolio/{coPortfolioId}")
+
+    @GetMapping("/portfolio/{coPortfolioId}")
     public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long co_portfolioId, String email)throws Exception{
         String co_email = getCoUserEmail(request);
         return coPortfolioService.getCoPortfolio(co_portfolioId,co_email);
+    }
+
+    @ResponseBody
+    @PatchMapping("/portfolio/{coPortfolioId}")
+    public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") Long co_portfolioId, @RequestBody Map<String,Object> portfolio) throws Exception{
+        CoPortfolio coPortfolio = CoPortfolio.builder()
+                .co_email(getCoUserEmail(request))
+                .co_portfolioId(co_portfolioId)
+                .co_title(portfolio.get("co_title").toString())
+                .co_rank(portfolio.get("co_rank").toString())
+                .co_headLine(portfolio.get("co_headLine").toString())
+                .co_introduction(portfolio.get("co_introduction").toString())
+                .build();
+        JSONParser parser = new JSONParser();
+        Gson gson = new Gson();
+        String co_languages = gson.toJson(portfolio.get("co_languages"));
+        JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
+        String co_links = gson.toJson(portfolio.get("co_links"));
+        JSONArray co_linksList = (JSONArray) parser.parse(co_links);
+        return coPortfolioService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
     }
 }
