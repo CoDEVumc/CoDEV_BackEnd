@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/co_project")
+@RequestMapping("/codev")
 public class CoProjectController extends JwtController {
 
     private final CoFileServiceImpl coFileService;
@@ -37,12 +37,12 @@ public class CoProjectController extends JwtController {
         this.coProjectHeartService = coProjectHeartService;
     }
 
-    @GetMapping("/p1/{co_projectId}")
-    public CoDevResponse getProject(HttpServletRequest request, @PathVariable("co_projectId") long co_projectId){
+    @GetMapping("/project/{coProjectId}")
+    public CoDevResponse getProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId){
         return coProjectService.getCoProject(co_projectId);
     }
 
-    @PostMapping(value = "/p1/write", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PostMapping(value = "/project", consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
         CoProject coProject = CoProject.builder()
                 .co_email(getCoUserEmail(request))
@@ -70,26 +70,26 @@ public class CoProjectController extends JwtController {
         return null;
     }
 
-    @GetMapping(value = "/p1/codev/projects")
+    @GetMapping(value = "/project/projects")
     public CoDevResponse getAllProjects(HttpServletRequest request, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
         return coProjectService.getCoProjects(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag);
     }
     //찜하기
-    @PatchMapping("/heart/{co_projectId}")
-    public CoDevResponse heartOfProjectUpdate(HttpServletRequest request, @PathVariable("co_projectId") Long co_projectId) throws Exception {
+    @PatchMapping("/project/heart/{coProjectId}")
+    public CoDevResponse heartOfProjectUpdate(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
         return coProjectHeartService.insertHeart(co_email,co_projectId);
     }
 
     //찜하기 취소
-    @PatchMapping("heart/cancel/{co_projectId}")
-    public CoDevResponse heartOfProjectCancle(HttpServletRequest request,  @PathVariable("co_projectId") Long co_projectId) throws Exception {
+    @PatchMapping("/project/nonheart/{coProjectId}")
+    public CoDevResponse heartOfProjectCancle(HttpServletRequest request,  @PathVariable("coProjectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
         return coProjectHeartService.deleteHeart(co_email,co_projectId);
     }
 
-    @DeleteMapping("/p1/{co_projectId}")
-    public CoDevResponse deleteCoProject(HttpServletRequest request, @PathVariable("co_projectId") Long co_projectId) throws Exception {
+    @DeleteMapping("/project/out/{coProjectId}")
+    public CoDevResponse deleteCoProject(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
         return coProjectService.deleteCoProject(co_email, co_projectId);
     }
