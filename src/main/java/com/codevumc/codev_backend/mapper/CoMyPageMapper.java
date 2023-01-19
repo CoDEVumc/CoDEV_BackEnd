@@ -4,11 +4,9 @@ import com.codevumc.codev_backend.domain.CoPortfolio;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Map;
-
 @Mapper
 public interface CoMyPageMapper {
-    void updateCoPortfolio(CoPortfolio coPortfolio);
-    void updateCoLanguageOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_languageId") long co_languageId);
-    void updateCoLinkOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_link") String co_link);
+    boolean updateCoPortfolio(CoPortfolio coPortfolio);
+    boolean updateCoLanguageOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_languageId") long co_languageId);
+    boolean updateCoLinkOfPortfolio(@Param("co_portfolioId") long co_portfolioId, @Param("co_link") String co_link);
 }
