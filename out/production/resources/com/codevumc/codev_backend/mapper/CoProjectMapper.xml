@@ -108,4 +108,8 @@
         select count(*) as coHeartCount from CoHeartOfProject where co_projectId = #{co_projectId}
     </select>
 
+    <delete id="deleteCoProject" parameterType="hashMap">
+        delete from CoProject where co_email = #{co_email} and co_projectId = #{co_projectId}
+    </delete>
+
 </mapper>

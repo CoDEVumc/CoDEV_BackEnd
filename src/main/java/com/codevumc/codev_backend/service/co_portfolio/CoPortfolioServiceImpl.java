@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -29,11 +31,14 @@ public class CoPortfolioServiceImpl extends ResponseService implements CoPortfol
     }
 
     @Override
-    public CoDevResponse getCoPortfolio(long co_portfolioId) {
+    public CoDevResponse getCoPortfolio(long co_portfolioId,String co_email) {
+        Map<String, Object> coPortfolioDto = new HashMap<>();
+        coPortfolioDto.put("co_email",co_email);
+        coPortfolioDto.put("co_portfolioId",co_portfolioId);
         try {
-            Optional<CoPortfolio> coPortfolio = coPortfolioMapper.getCoPortfolio(co_portfolioId);
+            Optional<CoPortfolio> coPortfolio = coPortfolioMapper.getCoPortfolio(coPortfolioDto);
             if (coPortfolio.isPresent()){
-                return setResponse(200,"Complete",coPortfolio);
+                return setResponse(200,"Complete", coPortfolio);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -52,7 +52,8 @@ public class CoPortfolioController extends JwtController {
         return null;
     }
     @GetMapping("/{co_portfolioId}")
-    public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("co_portfolioId") long co_portfolioId){
-        return coPortfolioService.getCoPortfolio(co_portfolioId);
+    public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("co_portfolioId") long co_portfolioId, String email)throws Exception{
+        String co_email = getCoUserEmail(request);
+        return coPortfolioService.getCoPortfolio(co_portfolioId,co_email);
     }
 }

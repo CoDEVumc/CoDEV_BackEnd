@@ -6,5 +6,5 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 
 public interface CoPortfolioService {
     void insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
-    CoDevResponse getCoPortfolio(long co_portfolioId);
+    CoDevResponse getCoPortfolio(long co_portfolioId, String co_email);
 }
