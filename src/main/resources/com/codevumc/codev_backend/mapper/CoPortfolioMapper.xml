@@ -55,4 +55,7 @@
         where co_portfolioId = ${co_portfolioId}
     </update>
 
+    <delete id="deletePortfolio" parameterType="hashMap">
+        delete from CoPortfolio where co_email = #{co_email} and co_portfolioId = #{co_portfolioId}
+    </delete>
 </mapper>

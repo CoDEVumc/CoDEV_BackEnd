@@ -71,5 +71,24 @@ public class CoPortfolioServiceImpl extends ResponseService implements CoPortfol
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse deletePortfolio(String co_email, long co_portfolioId) {
+        Map<String, Object> coPortfolioDto = new HashMap<>();
+        coPortfolioDto.put("co_email", co_email);
+        coPortfolioDto.put("co_portfolioId", co_portfolioId);
+        try {
+            Optional<CoPortfolio> coPortfolio = coPortfolioMapper.getCoPortfolio(coPortfolioDto);
+            if (coPortfolio.isPresent()) {
+                return this.coPortfolioMapper.deletePortfolio(coPortfolioDto) ? setResponse(200, "Complete", "삭제되었습니다.") : null;
+            } else {
+                return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
 
