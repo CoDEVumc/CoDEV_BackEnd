@@ -19,8 +19,4 @@
         VALUES (#{co_portfolioId}, #{co_link});
     </insert>
 
-    <select id="getCoPortfolio" resultType="CoProject">
-        select * from CoPortfolio where co_portfolioId = ${co_portfolioId}
-    </select>
-
 </mapper>
