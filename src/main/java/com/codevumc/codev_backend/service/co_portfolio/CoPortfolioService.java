@@ -8,4 +8,5 @@ public interface CoPortfolioService {
     void insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
     CoDevResponse getCoPortfolio(long co_portfolioId, String co_email);
     CoDevResponse updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
+    CoDevResponse deletePortfolio(String co_email, long portfolioId);
 }
