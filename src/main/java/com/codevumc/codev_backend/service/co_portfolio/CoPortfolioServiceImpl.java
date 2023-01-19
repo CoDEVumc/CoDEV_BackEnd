@@ -45,5 +45,31 @@ public class CoPortfolioServiceImpl extends ResponseService implements CoPortfol
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links) {
+        Map<String,Object> coPortfolioDto = new HashMap<>();
+        coPortfolioDto.put("co_email",coPortfolio.getCo_email());
+        coPortfolioDto.put("co_portfolioId",coPortfolio.getCo_portfolioId());
+        try{
+            Optional<CoPortfolio> coPortfolio1 = coPortfolioMapper.getCoPortfolio(coPortfolioDto);
+            if(coPortfolio1.isPresent()){
+                if(coPortfolioMapper.updateCoPortfolio(coPortfolio)){
+                    for (Object co_language : co_languages) {
+                        long co_languageId = (long) co_language;
+                        coPortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId);
+                    }
+                    for (Object co_plink : co_links) {
+                        String co_link = (String) co_plink;
+                        coPortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link);
+                    }
+                    return setResponse(200,"Complete","수정 완료되었습니다.");
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 

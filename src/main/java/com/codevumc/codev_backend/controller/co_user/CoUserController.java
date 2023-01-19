@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/codev")
+@RequestMapping("/codev/user")
 public class CoUserController extends JwtController {
     //사용자가 프로필이미지를 직접 주입 안하면, 이 이미지로 프론트가 처리 해준다.
     private final PasswordEncoder passwordEncoder;
@@ -30,7 +30,7 @@ public class CoUserController extends JwtController {
     }
 
 
-    @PostMapping("/user/join")
+    @PostMapping("/join")
     public CoDevResponse signUp(@RequestBody Map<String, String> user) {
         Role role = Role.from(user.get("role"));
         CoUser coUser = CoUser.builder()
@@ -48,27 +48,27 @@ public class CoUserController extends JwtController {
         return coUserService.signUpCoUser(coUser);
     }
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public CoDevResponse login(HttpServletRequest request, @RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent) {
         return getJwtService().login(request, user, userAgent);
     }
 
-    @RequestMapping("/user/testJWT")
+    @RequestMapping("/testJWT")
     public CoDevResponse getCoUserList(HttpServletRequest request) throws Exception {
         return coUserService.findALlUser(getCoUserEmail(request));
     }
 
-    @PostMapping("/user/token/refresh")
+    @PostMapping("/token/refresh")
     public CoDevResponse validateRefreshToken(@RequestBody RefreshToken bodyJson) throws Exception {
         return getJwtService().newAccessToken(bodyJson);
     }
 
-    @GetMapping("/user/github/login")
+    @GetMapping("/github/login")
     public CoDevResponse gitHubLogin(@RequestBody @RequestParam(value = "code") String code) throws Exception {
         return coUserService.githubTest(code);
     }
 
-    @GetMapping("/user/google/login")
+    @GetMapping("/google/login")
     public CoDevResponse googleLogin(@RequestBody @RequestParam(value = "code") String code) throws Exception{
         return coUserService.googleTest(code);
     }
