@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.service.co_portfolio;
 
 import com.codevumc.codev_backend.domain.CoPortfolio;
+import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoPortfolioMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -26,6 +28,22 @@ public class CoPortfolioServiceImpl extends ResponseService implements CoPortfol
             String co_link = (String) co_plink;
             this.coPortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link);
         }
+    }
+
+    @Override
+    public CoDevResponse getCoPortfolio(long co_portfolioId,String co_email) {
+        Map<String, Object> coPortfolioDto = new HashMap<>();
+        coPortfolioDto.put("co_email",co_email);
+        coPortfolioDto.put("co_portfolioId",co_portfolioId);
+        try {
+            Optional<CoPortfolio> coPortfolio = coPortfolioMapper.getCoPortfolio(coPortfolioDto);
+            if (coPortfolio.isPresent()){
+                return setResponse(200,"Complete", coPortfolio);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
