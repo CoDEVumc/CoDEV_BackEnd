@@ -20,32 +20,24 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
     private final CoPortfolioMapper coPortfolioMapper;
     @Override
     public CoDevResponse updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links) {
-
-
         try{
-
             Optional<CoPortfolio> coPortfolio1 = coPortfolioMapper.getCoPortfolio(coPortfolio.getCo_portfolioId());
             if(coPortfolio1.isPresent()){
-                return coMyPageMapper.updateCoPortfolio(coPortfolio) ?setResponse(200,"success","수정완료") : setResponse(403,"Forbidden","수정권한이 없습니다.");
-            }
-
-            if(coPortfolio1.isPresent()){
-                for (Object co_language : co_languages) {
-                    long co_languageId = (long) co_language;
-                    return this.coMyPageMapper.updateCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId)?setResponse(200,"success","수정완료") : setResponse(403,"Forbidden","수정권한이 없습니다.");
-                }
-                for (Object co_plink : co_links) {
-                    String co_link = (String) co_plink;
-                    return this.coMyPageMapper.updateCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(),co_link)?setResponse(200,"success","수정완료") : setResponse(403,"Forbidden","수정권한이 없습니다.");
+                if(coMyPageMapper.updateCoPortfolio(coPortfolio)){
+                    for (Object co_language : co_languages) {
+                        long co_languageId = (long) co_language;
+                        return this.coPortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId)?setResponse(200,"success","수정완료") : setResponse(403,"Forbidden","수정권한이 없습니다.");
+                    }
+                    for (Object co_plink : co_links) {
+                        String co_link = (String) co_plink;
+                        return this.coPortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link)?setResponse(200,"success","수정완료") : setResponse(403,"Forbidden","수정권한이 없습니다.");
+                    }
                 }
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
-
-
     }
 
 }
