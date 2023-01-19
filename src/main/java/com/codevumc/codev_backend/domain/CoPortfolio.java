@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CoPortfolio {
     private long co_portfolioId;
-    private long co_lopfId;
     private String co_email;
     private String co_title;
     private String co_name;
@@ -21,10 +20,8 @@ public class CoPortfolio {
     private String co_rank;
     private String co_headLine;
     private String co_introduction;
-    private String co_parts;
     private String co_languages;
     private String co_links;
-    private List<CoPart> co_partList;
     private List<CoLanguage> co_languageList;
     private List<CoLinkOfPortfolio> co_linkList;
     private Timestamp createdAt;
