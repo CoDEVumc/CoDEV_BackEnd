@@ -25,6 +25,10 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     private final CoProjectMapper coProjectMapper;
     private final CoPhotosMapper coPhotosMapper;
 
+    private String setting(String keyword) {
+        return keyword == null ? null : "%" + keyword + "%";
+    }
+
     @Override
     public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
         Map<String, Object> coPartsDto = new HashMap<>();
@@ -82,7 +86,20 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         return null;
     }
 
-    private String setting(String keyword) {
-        return keyword == null ? null : "%" + keyword + "%";
+    @Override
+    public CoDevResponse deleteCoProject(String co_email, long co_projectId) {
+        Map<String, Object> coProjectDto = new HashMap<>();
+        coProjectDto.put("co_email", co_email);
+        coProjectDto.put("co_projectId", co_projectId);
+        try {
+            Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
+            if(coProject.isPresent()) {
+                return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+
 }
