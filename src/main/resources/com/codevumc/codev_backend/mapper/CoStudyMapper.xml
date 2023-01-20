@@ -21,4 +21,11 @@
         SET co_mainImg = #{co_mainImg}
         WHERE `co_studyId` = #{co_studyId};
     </update>
+
+    <insert id="insertCoPartOfStudy" parameterType="hashMap">
+        INSERT INTO CoPartOfStudy
+            (co_studyId, co_part, co_limit)
+        VALUES (#{co_studyId}, #{co_part}, #{co_limit})
+    </insert>
+
 </mapper>
