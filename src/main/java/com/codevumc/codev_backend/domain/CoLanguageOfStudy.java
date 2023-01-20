@@ -10,10 +10,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CoLanguageOfStudy {
-    private long co_losId;
-    private long co_studyId;
     private long co_languageId;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-    private boolean status;
+    private String co_language;
+    private String co_logo;
 }

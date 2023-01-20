@@ -18,4 +18,6 @@ public interface CoPhotosMapper {
     Optional<CoPhotos> findByCo_uuId(String co_uuId);
 
     Optional<CoPhotos> findByCo_mainImg(@Param("co_type") String co_type, @Param("co_targetId") long co_targetId);
+
+    List<CoPhotos> findByCoStudyId(long co_studyId);
 }

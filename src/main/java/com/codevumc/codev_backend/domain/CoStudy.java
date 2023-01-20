@@ -2,13 +2,12 @@ package com.codevumc.codev_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-@Setter
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
