@@ -22,7 +22,7 @@ public class CoProjectHeartServiceImpl extends ResponseService implements CoProj
             Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
             if(coHeartOfProject.isEmpty()) {
                 this.coProjectMapper.insertCoHeartOfProject(co_email,co_projectId);
-                setResponse(200, "Message", "찜등록이 완료되었습니다.");
+                return setResponse(200, "Complete", "찜등록이 완료되었습니다.");
             }
 
 
@@ -38,7 +38,7 @@ public class CoProjectHeartServiceImpl extends ResponseService implements CoProj
             Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
             if(coHeartOfProject.isPresent()) {
                 this.coProjectMapper.deleteCoHeartOfProject(co_email,co_projectId);
-                setResponse(200, "Message", "찜등록이 취소되었습니다.");
+                return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
             }
         }catch(Exception e){
             e.printStackTrace();
