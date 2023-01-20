@@ -31,6 +31,21 @@
         where co_targetId = #{co_projectId} and co_type = 'PROJECT'
     </select>
 
+    <select id="findByCoStudyId" resultType="CoPhotos">
+        select
+            co_photoId,
+            co_targetId,
+            co_type,
+            co_uuId,
+            co_fileName,
+            co_filePath,
+            co_fileUrl,
+            co_fileDownloadPath,
+            co_fileSize
+        from CoPhotos
+        where co_targetId = #{co_studyId} and co_type = 'STUDY'
+    </select>
+
     <select id="findByCo_uuId" resultType="CoPhotos">
         select
             co_targetId,
