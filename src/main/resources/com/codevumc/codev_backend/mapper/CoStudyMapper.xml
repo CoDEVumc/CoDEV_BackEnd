@@ -59,6 +59,7 @@
             co_mainImg,
             co_deadLine,
             co_process,
+            (select co_limit from CoPartOfStudy where co_studyId = 1) as co_limit,
             createdAt,
             updatedAt,
             status,
