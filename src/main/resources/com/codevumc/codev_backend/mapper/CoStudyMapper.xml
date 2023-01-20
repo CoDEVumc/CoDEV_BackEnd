@@ -3,6 +3,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoStudyMapper">
-
+    <select id="getCoStudies" parameterType="hashMap" resultType="CoStudy">
+        select distinct cs.co_studyId as 'co_studyId',
+        cs.co_email as 'co_email',
+        cs.co_title as 'co_title',
+        cs.co_location as 'co_location',
+        cs.co_content as 'co_content',
+        cs.co_mainImg as 'co_mainImg',
+        cs.co_process as 'co_process',
+        DATEDIFF(cs.co_deadLine, now())           as 'co_deadLine',
+        IF(chs.status is null, false, chs.status) as 'co_heart',
+        clp.co_languages as 'co_languages',
+        cps.co_part as 'co_part',
+        cps.co_limit as 'co_limit',
+        cs.createdAt as 'createdAt',
+        cs.updatedAt as 'updatedAt',
+        cs.status as 'status'
+        from CoStudy as cs
+        left join CoHeartOfStudy as chs on cs.co_studyId = chs.co_studyId and chs.co_email = #{co_email}
+        left join CoPartOfStudy as cps on cs.co_studyId = cps.co_studyId
+        left join CoPartOfStudy as cps on cs.co_studyId = cps.co_studyId
+        left join (select co_studyId, GROUP_CONCAT(cl.co_logo SEPARATOR ',') as co_languages
+        from CoLanguageOfStudy as clo
+        join CoLanguage as cl on clo.co_languageId = cl.co_languageId
+        group by co_studyId) as cls
+        on cs.co_studyId = cls.co_studyId
+        where
+        <if test="co_locationTag != null and !co_locationTag.equals('')">
+            cs.co_location = #{cs_locationTag} and
+        </if>
+        <if test="co_partTag != null and !co_partTag.equals('')">
+            cps.co_part like #{co_partTag} and
+        </if>
+        <if test="co_keyword != null and !co_keyword.equals('')">
+            (cs.co_title like #{co_keyword} or cs.co_content like #{co_keyword}) and
+        </if>
+        <if test="co_process != null and !co_process.equals('')">
+            cs.co_process = #{co_processTag} and
+        </if>
+        cp.status = true
+        order by cp.createdAt;
+    </select>
 
 </mapper>
