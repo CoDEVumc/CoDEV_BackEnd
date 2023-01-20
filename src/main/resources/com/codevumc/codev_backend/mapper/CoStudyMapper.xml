@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoStudyMapper">
+
     <select id="getCoStudies" parameterType="hashMap" resultType="CoStudy">
         select distinct cs.co_studyId as 'co_studyId',
         cs.co_email as 'co_email',
@@ -46,6 +47,34 @@
 
     <select id ="getCoHeartOfStudy" resultType="CoHeartOfStudy">
         SELECT status FROM CoHeartOfStudy WHERE co_studyId = ${co_studyId}
+    </select>
+
+    <select id="getCoStudy" resultType="CoStudy">
+        select
+            co_studyId,
+            co_email,
+            co_title,
+            co_location,
+            co_content,
+            co_mainImg,
+            co_deadLine,
+            co_process,
+            createdAt,
+            updatedAt,
+            status,
+            (select co_part from CoPartOfStudy where co_studyId = #{co_studyId}) as co_part
+        from CoStudy where co_studyId = #{co_studyId}
+    </select>
+
+    <select id="getCoLanguageList" resultType="CoLanguageOfStudy">
+        select cl.co_languageId, cl.co_language, cl.co_logo
+        from CoLanguageOfStudy cop
+        join CoLanguage cl on cl.co_languageId = cop.co_languageId
+        where cop.co_studyId = #{co_studyId}
+    </select>
+
+    <select id="getCoHeartCount" resultType="Long">
+        select count(*) as coHeartCount from CoHeartOfStudy where co_studyId = #{co_studyId}
     </select>
 
     <insert id ="insertCoHeartOfStudy" >

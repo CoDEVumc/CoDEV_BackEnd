@@ -1,19 +1,16 @@
 package com.codevumc.codev_backend.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CoLanguageOfStudy {
-    private long co_losId;
-    private long co_studyId;
     private long co_languageId;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-    private boolean status;
+    private String co_language;
+    private String co_logo;
 }
