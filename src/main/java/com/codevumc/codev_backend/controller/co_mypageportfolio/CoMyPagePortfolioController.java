@@ -1,17 +1,14 @@
-package com.codevumc.codev_backend.controller.co_portfolio;
+package com.codevumc.codev_backend.controller.co_mypageportfolio;
 
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
-import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
-import com.codevumc.codev_backend.service.co_portfolio.CoPortfolioServiceImpl;
+import com.codevumc.codev_backend.service.co_mypageportfolio.CoMyPagePortfolioServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
-import org.apache.ibatis.annotations.Delete;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,16 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping("/codev/my-page")
-public class CoPortfolioController extends JwtController {
-    private final CoPortfolioServiceImpl coPortfolioService;
+public class CoMyPagePortfolioController extends JwtController {
+    private final CoMyPagePortfolioServiceImpl coMyPagePortfolioService;
 
-    public CoPortfolioController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoPortfolioServiceImpl coPortfolioService) {
+    public CoMyPagePortfolioController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoMyPagePortfolioServiceImpl coMyPagePortfolioService) {
         super(jwtTokenProvider, jwtService);
-        this.coPortfolioService = coPortfolioService;
+        this.coMyPagePortfolioService = coMyPagePortfolioService;
     }
 
     @ResponseBody
@@ -49,14 +44,14 @@ public class CoPortfolioController extends JwtController {
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
-        this.coPortfolioService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
+        this.coMyPagePortfolioService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
         return null;
     }
 
     @GetMapping("/portfolio/{coPortfolioId}")
     public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long co_portfolioId, String email)throws Exception{
         String co_email = getCoUserEmail(request);
-        return coPortfolioService.getCoPortfolio(co_portfolioId,co_email);
+        return coMyPagePortfolioService.getCoPortfolio(co_portfolioId,co_email);
     }
 
     @ResponseBody
@@ -76,12 +71,12 @@ public class CoPortfolioController extends JwtController {
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
-        return coPortfolioService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
+        return coMyPagePortfolioService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
     }
 
-    @DeleteMapping("/portfolio/{portfolioId}")
-    public CoDevResponse deletePortfolio(HttpServletRequest request, @PathVariable("portfolioId") long portfolioId) throws Exception {
+    @DeleteMapping("/portfolio/{coPortfolioId}")
+    public CoDevResponse deletePortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long coPortfolioId) throws Exception {
         String co_email = getCoUserEmail(request);
-        return this.coPortfolioService.deletePortfolio(co_email, portfolioId);
+        return this.coMyPagePortfolioService.deletePortfolio(co_email, coPortfolioId);
     }
 }
