@@ -44,4 +44,18 @@
         order by cs.createdAt;
     </select>
 
+    <select id ="getCoHeartOfStudy" resultType="CoHeartOfStudy">
+        SELECT status FROM CoHeartOfStudy WHERE co_studyId = ${co_studyId}
+    </select>
+
+    <insert id ="insertCoHeartOfStudy" >
+        INSERT INTO CoHeartOfStudy (co_email,co_studyId)
+        VALUES (#{co_email},#{co_studyId})
+    </insert>
+
+    <delete id="deleteCoHeartOfStudy">
+        DELETE FROM CoHeartOfStudy
+        WHERE co_studyId = ${co_studyId}
+    </delete>
+
 </mapper>
