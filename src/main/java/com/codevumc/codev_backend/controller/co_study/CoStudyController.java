@@ -7,6 +7,8 @@ import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
 import com.codevumc.codev_backend.service.co_study.CoStudyServiceImpl;
 import com.codevumc.codev_backend.service.co_studyheart.CoStudyHeartServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +25,8 @@ public class CoStudyController extends JwtController {
         this.coStudyService = coStudyService;
         this.coStudyHeartService = coStudyHeartService;
     }
+
+    @PostMapping(consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
 
 
 }
