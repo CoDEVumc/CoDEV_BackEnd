@@ -1,13 +1,14 @@
 package com.codevumc.codev_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class CoStudy {
     private String co_content;
     private String co_mainImg;
     private DevType co_process;
-    private String co_dealLine;
+    private String co_deadLine;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;
