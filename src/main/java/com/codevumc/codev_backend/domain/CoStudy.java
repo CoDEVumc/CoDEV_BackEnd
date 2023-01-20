@@ -27,6 +27,7 @@ public class CoStudy {
     private long co_heartCount;
     private boolean co_heart;
     private String co_part;
+    private int co_limit;
     private String co_languages;
     private List<CoPhotos> co_photos;
     private List<CoLanguage> co_languageList;

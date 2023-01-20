@@ -4,9 +4,12 @@ import com.codevumc.codev_backend.domain.CoStudy;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Map;
+
 @Mapper
 public interface CoStudyMapper {
     void insertCoStudy(CoStudy coStudy);
     void insertCoLanguageOfStudy(long co_studyId, long co_languageId);
     void updateCoMainImg(@Param("co_mainImg") String co_mainImg, @Param("co_studyId") long co_studyId);
+    void insertCoPartOfStudy(Map<String, Object>coPartDto);
 }
