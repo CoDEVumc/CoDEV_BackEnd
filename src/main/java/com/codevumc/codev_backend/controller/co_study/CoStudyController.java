@@ -63,6 +63,7 @@ public class CoStudyController extends JwtController {
                 .co_content(study.get("co_content").toString())
                 .co_process(CoStudy.DevType.from("ING"))
                 .co_part(study.get("co_part").toString())
+                .co_limit((Integer) study.get("co_limit"))
                 .co_deadLine((study.get("co_deadLine").toString())).build();
         JSONParser parser = new JSONParser();
         Gson gson = new Gson();
