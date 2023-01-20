@@ -51,19 +51,22 @@
 
     <select id="getCoStudy" resultType="CoStudy">
         select
-            co_studyId,
-            co_email,
-            co_title,
-            co_location,
-            co_content,
-            co_mainImg,
-            co_deadLine,
-            co_process,
-            createdAt,
-            updatedAt,
-            status,
-            (select co_part from CoPartOfStudy where co_studyId = #{co_studyId}) as co_part
-        from CoStudy where co_studyId = #{co_studyId}
+            cs.co_studyId as co_studyId,
+            cs.co_email as co_email,
+            cs.co_title as co_title,
+            cs.co_location as co_location,
+            cs.co_content as co_content,
+            cs.co_mainImg as co_mainImg,
+            cs.co_deadLine as co_deadLine,
+            cs.co_process as co_process,
+            cpos.co_limit as co_limit,
+            cpos.co_part as co_part,
+            cs.createdAt as createdAt,
+            cs.updatedAt as updatedAt,
+            cs.status as status
+        from CoStudy cs
+        left join CoPartOfStudy cpos on cs.co_studyId = cpos.co_studyId
+        where cs.co_studyId = #{co_studyId}
     </select>
 
     <select id="getCoLanguageList" resultType="CoLanguageOfStudy">
