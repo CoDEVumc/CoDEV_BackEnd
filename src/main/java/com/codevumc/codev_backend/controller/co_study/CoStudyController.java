@@ -8,8 +8,8 @@ import com.codevumc.codev_backend.service.co_study.CoStudyServiceImpl;
 import com.codevumc.codev_backend.service.co_studyheart.CoStudyHeartServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,4 +47,8 @@ public class CoStudyController extends JwtController {
         return coStudyHeartService.deleteHeart(co_email, co_studyId);
     }
 
+    @GetMapping("/{coStudyId}")
+    public CoDevResponse getCoStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
+        return coStudyService.getCoStudy(coStudyId);
+    }
 }
