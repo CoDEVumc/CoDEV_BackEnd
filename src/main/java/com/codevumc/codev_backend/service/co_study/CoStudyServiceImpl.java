@@ -23,7 +23,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         this.coStudyMapper.insertCoStudy(coStudy);
         for (Object co_language : co_languages) {
             long co_languageId = (long) co_language;
-            this.coPhotosMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
+            this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
         }
     }
 }

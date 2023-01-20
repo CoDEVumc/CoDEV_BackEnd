@@ -4,5 +4,9 @@
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoStudyMapper">
 
-
+    <insert id="insertCoStudy" parameterType="hashMap" useGeneratedKeys="true" keyProperty="co_studyId">
+        insert into CoStudy
+            (co_email, co_title, co_location, co_content, co_deadLine)
+        values (#{co_email}, #{co_title}, #{co_location}, #{co_content}, #{co_deadLine});
+    </insert>
 </mapper>
