@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.codevumc.codev_backend.mapper.CoPortfolioMapper">
+<mapper namespace="com.codevumc.codev_backend.mapper.CoMyPagePortfolioMapper">
     <select id="getCoPortfolio" resultType="CoPortfolio">
         select
         cp.co_portfolioId as 'co_portfolioId',
