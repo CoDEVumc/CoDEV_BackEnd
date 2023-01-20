@@ -20,7 +20,7 @@ public class CoStudy {
     private String co_content;
     private String co_mainImg;
     private DevType co_process;
-    private String co_dealLine;
+    private String co_deadLine;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private boolean status;

@@ -26,4 +26,9 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
         }
     }
+
+    @Override
+    public void updateMainImg(String co_mainImg, long co_studyId) {
+        coStudyMapper.updateCoMainImg(co_mainImg, co_studyId);
+    }
 }

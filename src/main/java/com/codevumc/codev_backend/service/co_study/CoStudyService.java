@@ -5,4 +5,5 @@ import org.json.simple.JSONArray;
 
 public interface CoStudyService {
     void insertStudy(CoStudy coStudy, JSONArray co_languages);
+    void updateMainImg(String co_mainImg, long co_studyId);
 }
