@@ -44,7 +44,7 @@ public class CoStudyController extends JwtController {
     }
 
     @GetMapping(value = "/studies")
-    public CoDevResponse getAllProjects(HttpServletRequest request, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+    public CoDevResponse getCoStudies(HttpServletRequest request, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
         return coStudyService.getCoStudies(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag);
     }
 
