@@ -9,4 +9,16 @@
             (co_email, co_title, co_location, co_content, co_deadLine)
         values (#{co_email}, #{co_title}, #{co_location}, #{co_content}, #{co_deadLine});
     </insert>
+
+    <insert id="insertCoLanguageOfStudy">
+        INSERT INTO CoLanguageOfStudy
+            (co_studyId, co_languageId)
+        values (#{co_studyId}, #{co_languageId})
+    </insert>
+
+    <update id="updateCoMainImg">
+        UPDATE CoStudy
+        SET co_mainImg = #{co_mainImg}
+        WHERE `co_studyId` = #{co_studyId};
+    </update>
 </mapper>
