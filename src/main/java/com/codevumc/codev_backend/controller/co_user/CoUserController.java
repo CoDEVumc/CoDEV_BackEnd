@@ -73,6 +73,10 @@ public class CoUserController extends JwtController {
         return coUserService.googleTest(code);
     }
 
+    @PostMapping("/mailConfirm")
+    public CoDevResponse mailConfirm(@RequestParam String email) throws Exception {
+        return coUserService.sendSimpleMessage(email);
+    }
 
 
 }

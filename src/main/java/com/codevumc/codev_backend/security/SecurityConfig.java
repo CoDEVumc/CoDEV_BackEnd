@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .antMatchers("/codev/my-page/**","codev/project/**").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/codev/user/mailConfirm/**").permitAll()
                 .antMatchers("/**").permitAll()
                 .and()
                 .exceptionHandling()
