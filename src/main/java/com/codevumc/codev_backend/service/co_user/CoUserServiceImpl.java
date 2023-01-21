@@ -30,7 +30,6 @@ import java.util.Optional;
 import java.util.Random;
 
 
-@PropertySource("classpath:application.properties")
 @Service
 public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
@@ -39,9 +38,6 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     private final JavaMailSender javaMailSender;
 
     private final String ePw = createKey();
-
-    @Value("${spring.mail.username}")
-    private String id;
 
     @Autowired
     public CoUserServiceImpl(CoUserMapper coUserMapper, GitHubApi gitHubApi, GoogleApi googleApi, JavaMailSender javaMailSender) {
@@ -138,7 +134,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
 
 
         message.setText(msgg.toString(), "utf-8", "html"); //내용, charset타입, subtype
-        message.setFrom(new InternetAddress(id,"CoDev팀")); //보내는 사람의 메일 주소, 보내는 사람 이름
+        message.setFrom(new InternetAddress("co_dev@naver.com","CoDev팀")); //보내는 사람의 메일 주소, 보내는 사람 이름
 
         return message;
     }
