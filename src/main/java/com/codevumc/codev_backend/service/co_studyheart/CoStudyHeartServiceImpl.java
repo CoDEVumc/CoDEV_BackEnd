@@ -16,24 +16,13 @@ public class CoStudyHeartServiceImpl extends ResponseService implements CoStudyH
     private final CoStudyMapper coStudyMapper;
 
     @Override
-    public CoDevResponse insertHeart(String co_email, Long co_studyId) {
+    public CoDevResponse changeHeart(String co_email, Long co_studyId) {
         try{
             Optional<CoHeartOfStudy> coHeartOfStudy = coStudyMapper.getCoHeartOfStudy(co_studyId);
             if(coHeartOfStudy.isEmpty()) {
                 this.coStudyMapper.insertCoHeartOfStudy(co_email,co_studyId);
                 return setResponse(200, "Complete", "찜등록이 완료되었습니다.");
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public CoDevResponse deleteHeart(String co_email, Long co_studyId) {
-        try{
-            Optional<CoHeartOfStudy> coHeartOfStudy = coStudyMapper.getCoHeartOfStudy(co_studyId);
-            if(coHeartOfStudy.isPresent()) {
+            }else{
                 this.coStudyMapper.deleteCoHeartOfStudy(co_email,co_studyId);
                 return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
             }
@@ -42,4 +31,5 @@ public class CoStudyHeartServiceImpl extends ResponseService implements CoStudyH
         }
         return null;
     }
+
 }

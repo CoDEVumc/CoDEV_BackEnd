@@ -17,33 +17,25 @@ public class CoProjectHeartServiceImpl extends ResponseService implements CoProj
 
 
     @Override
-    public CoDevResponse insertHeart(String co_email, Long co_projectId){
+    public CoDevResponse changeHeart(String co_email, Long co_projectId){
         try{
             Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
             if(coHeartOfProject.isEmpty()) {
                 this.coProjectMapper.insertCoHeartOfProject(co_email,co_projectId);
                 return setResponse(200, "Complete", "찜등록이 완료되었습니다.");
             }
-
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public CoDevResponse deleteHeart(String co_email,Long co_projectId){
-        try{
-            Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
-            if(coHeartOfProject.isPresent()) {
+            //찜취소
+            else {
                 this.coProjectMapper.deleteCoHeartOfProject(co_email,co_projectId);
                 return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
             }
+
         }catch(Exception e){
             e.printStackTrace();
         }
         return null;
     }
+
+
 
 }
