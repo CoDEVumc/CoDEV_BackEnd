@@ -58,17 +58,17 @@ public class CoProjectController extends JwtController {
         JSONArray co_partsList = (JSONArray) parser.parse(co_parts);
         String co_languages = gson.toJson(project.get("co_languages"));
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
-        this.coProjectService.insertProject(coProject, co_languagesList, co_partsList);
+        CoDevResponse result = coProjectService.insertProject(coProject, co_languagesList, co_partsList);
         if (files != null) {
             List<CoPhotos> coPhotos = Arrays.asList(files)
                     .stream()
-                    .map(file -> coFileService.storeFile(file, coProject.getCo_projectId(), "PROJECT"))
+                    .map(file -> coFileService.storeFile(file, String.valueOf(coProject.getCo_projectId()), "PROJECT"))
                     .collect(Collectors.toList());
             coProject.setCo_photos(coPhotos);
 
-            coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", coProject.getCo_projectId()), coProject.getCo_projectId());
+            coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", String.valueOf(coProject.getCo_projectId())), coProject.getCo_projectId());
         }
-        return null;
+        return result;
     }
 
     @GetMapping(value = "/projects/{page}")

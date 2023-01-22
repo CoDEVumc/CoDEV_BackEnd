@@ -39,8 +39,6 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     private final GoogleApi googleApi;
     private final JavaMailSender javaMailSender;
 
-    private final String ePw = createKey();
-
     @Autowired
     public CoUserServiceImpl(CoUserMapper coUserMapper, GitHubApi gitHubApi, GoogleApi googleApi, JavaMailSender javaMailSender) {
         this.coUserMapper = coUserMapper;
@@ -73,11 +71,15 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     public CoDevResponse signUpCoUser(CoUser coUser) {
         try {
             coUserMapper.insertCoUser(coUser);
-            return setResponse(200, "coUser", coUser);
+            return setResponse(200, "message", "회원가입이 완료되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.FAILEDSIGNUP);
         }
+    }
+
+    public void updateProfileImg(String profileImg, String co_email) {
+        coUserMapper.updateProfileImg(profileImg, co_email);
     }
 
     @Override
@@ -111,7 +113,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     }
 
     @Override
-    public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
+    public MimeMessage createMessage(String to, String randomNumber) throws MessagingException, UnsupportedEncodingException {
         MimeMessage  message = javaMailSender.createMimeMessage();
 
         message.addRecipients(MimeMessage.RecipientType.TO, to); // to 보내는 대상
@@ -131,7 +133,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         msgg.append("<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>");
         msgg.append("<div style='font-size:130%'>");
         msgg.append("CODE : <strong>");
-        msgg.append(ePw + "</strong><div><br/> ");
+        msgg.append(randomNumber + "</strong><div><br/> ");
         msgg.append("</div>");
 
 
@@ -142,7 +144,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     }
 
     // 인증코드 만들기
-    public static String createKey() {
+    public String createKey() {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
@@ -160,11 +162,12 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     */
     @Override
     public CoDevResponse sendSimpleMessage(String to) throws Exception {
-        MimeMessage message = createMessage(to);
+        String randomNumber = createKey();
+        MimeMessage message = createMessage(to, randomNumber);
         try{
             if(isValidEmail(to)) {
                 javaMailSender.send(message); // 메일 발송
-                return setResponse(200, "success", ePw);
+                return setResponse(200, "success", randomNumber);
             }else
                 return setResponse(400, "error", "이메일 형식이 아닙니다.");
 
