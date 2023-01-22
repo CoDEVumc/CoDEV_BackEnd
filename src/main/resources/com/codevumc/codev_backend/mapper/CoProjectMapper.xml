@@ -77,7 +77,7 @@
         <if test="co_keyword != null and !co_keyword.equals('')">
             (cp.co_title like #{co_keyword} or cp.co_content like #{co_keyword}) and
         </if>
-        <if test="co_process != null and !co_process.equals('')">
+        <if test="co_processTag != null and !co_processTag.equals('')">
             cp.co_process = #{co_processTag} and
         </if>
         cp.status = true
