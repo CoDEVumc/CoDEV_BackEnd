@@ -15,6 +15,8 @@
             co_password,
             co_nickName,
             co_name,
+            co_birth,
+            co_gender,
             role,
             profileImg
         from CoUser
@@ -22,18 +24,15 @@
     </select>
 
     <insert id="insertCoUser" parameterType="CoUser">
-        insert into CoUser (co_email, co_password, co_nickName, co_name, role
-                <choose>
-                    <when test="profileImg == null">)</when>
-                    <otherwise>, profileImg)</otherwise>
-                </choose>
-        VALUES (#{co_email}, #{co_password}, #{co_nickName}, #{co_name}, #{role}
-                <choose>
-                    <when test="profileImg == null">)</when>
-                    <otherwise>, #{profileImg})</otherwise>
-                </choose>
+        insert into CoUser (co_email, co_password, co_nickName, co_name, co_birth, co_gender, role)
+        VALUES (#{co_email}, #{co_password}, #{co_nickName}, #{co_name}, #{co_birth}, #{co_gender}, #{role})
     </insert>
 
+    <update id="updateProfileImg">
+        UPDATE CoUser
+        SET profileImg = #{profileImg}
+        WHERE `co_email` = #{co_email};
+    </update>
 
 
 </mapper>
