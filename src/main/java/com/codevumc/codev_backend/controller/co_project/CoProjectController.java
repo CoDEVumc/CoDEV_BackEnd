@@ -80,16 +80,9 @@ public class CoProjectController extends JwtController {
 
     //찜하기
     @PatchMapping("/heart/{coProjectId}")
-    public CoDevResponse heartOfProjectInsert(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
-        String co_email = getCoUserEmail(request);
-        return coProjectHeartService.insertHeart(co_email,co_projectId);
-    }
-
-    //찜하기 취소
-    @PatchMapping("/nonheart/{coProjectId}")
     public CoDevResponse heartOfProjectDelete(HttpServletRequest request,  @PathVariable("coProjectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
-        return coProjectHeartService.deleteHeart(co_email,co_projectId);
+        return coProjectHeartService.changeHeart(co_email,co_projectId);
     }
 
     @DeleteMapping("/out/{coProjectId}")
