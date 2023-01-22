@@ -73,16 +73,16 @@ public class CoStudyController extends JwtController {
         Gson gson = new Gson();
         String co_languageListByString = gson.toJson(study.get("co_languages"));
         JSONArray co_languageList = (JSONArray) parser.parse(co_languageListByString);
-        this.coStudyService.insertStudy(coStudy, co_languageList);
+        CoDevResponse result = coStudyService.insertStudy(coStudy, co_languageList);
         if (files != null) {
             List<CoPhotos> coPhotos = Arrays.asList(files)
                     .stream()
-                    .map(file -> coFileService.storeFile(file, coStudy.getCo_studyId(), "STUDY"))
+                    .map(file -> coFileService.storeFile(file, String.valueOf(coStudy.getCo_studyId()), "STUDY"))
                     .collect(Collectors.toList());
             coStudy.setCo_photos(coPhotos);
-            coStudyService.updateMainImg(coFileService.getCo_MainImg("STUDY", coStudy.getCo_studyId()), coStudy.getCo_studyId());
+            coStudyService.updateMainImg(coFileService.getCo_MainImg("STUDY", String.valueOf(coStudy.getCo_studyId())), coStudy.getCo_studyId());
         }
-        return null;
+        return result;
     }
 
 
