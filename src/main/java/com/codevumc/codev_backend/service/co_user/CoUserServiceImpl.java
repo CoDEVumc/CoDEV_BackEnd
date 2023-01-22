@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -160,12 +162,28 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     public CoDevResponse sendSimpleMessage(String to) throws Exception {
         MimeMessage message = createMessage(to);
         try{
-            javaMailSender.send(message); // 메일 발송
+            if(isValidEmail(to)) {
+                javaMailSender.send(message); // 메일 발송
+                return setResponse(200, "success", ePw);
+            }else
+                return setResponse(400, "error", "이메일 형식이 아닙니다.");
+
         }catch(MailException es){
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return setResponse(200, "success", ePw);
+
+    }
+
+    private boolean isValidEmail(String email) {
+        boolean err = false;
+        String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+        if(m.matches()) {
+            err = true;
+        }
+        return err;
     }
 
 }
