@@ -41,7 +41,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             Map<String, Object> coPartDto = new HashMap<>();
             coPartDto.put("co_studyId", coStudy.getCo_studyId());
             coPartDto.put("co_part", coStudy.getCo_part());
-            coPartDto.put("co_limit", coStudy.getCo_limit());
+            coPartDto.put("co_total", coStudy.getCo_total());
             this.coStudyMapper.insertCoPartOfStudy(coPartDto);
             return setResponse(200, "message", "스터디 모집글이 작성되었습니다.");
         } catch (Exception e) {
@@ -102,10 +102,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         try {
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if (coStudy.isPresent()) {
-                this.coStudyMapper.deleteCoStudy(studyDto);
-                return setResponse(200, "Complete", "삭제되었습니다.");
-            } else {
-                return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+                return this.coStudyMapper.deleteCoStudy(studyDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
