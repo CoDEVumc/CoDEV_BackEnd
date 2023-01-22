@@ -38,7 +38,7 @@
         <if test="co_keyword != null and !co_keyword.equals('')">
             (cs.co_title like #{co_keyword} or cs.co_content like #{co_keyword}) and
         </if>
-        <if test="co_process != null and !co_process.equals('')">
+        <if test="co_processTag != null and !co_processTag.equals('')">
             cs.co_process = #{co_processTag} and
         </if>
         cs.status = true
