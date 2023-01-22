@@ -11,8 +11,8 @@ import java.util.Map;
 
 public interface CoFileService {
 
-    public CoPhotos storeFile(MultipartFile file, long co_projectId, String co_type);
-    public CoPhotos updateFile(MultipartFile file, long co_projectId, String co_type) ;
+    public CoPhotos storeFile(MultipartFile file, String co_targetId, String co_type);
+    public CoPhotos updateFile(MultipartFile file, String co_targetId, String co_type) ;
     public ResponseEntity<Resource> loadFileAsResource(HttpServletRequest request, String fileName);
     public ResponseEntity<Resource> showImage(@RequestParam Map<String, String> param);
 }
