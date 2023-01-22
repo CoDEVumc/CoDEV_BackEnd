@@ -19,7 +19,7 @@ public interface CoUserService {
 
     CoDevResponse googleTest(String authorize_code);
 
-    MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException;
+    MimeMessage createMessage(String to, String randomNumber) throws MessagingException, UnsupportedEncodingException;
 
     CoDevResponse sendSimpleMessage(String to)throws Exception;
 

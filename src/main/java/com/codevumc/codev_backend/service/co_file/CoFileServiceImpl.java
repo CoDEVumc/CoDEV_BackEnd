@@ -49,17 +49,17 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     @Override
-    public CoPhotos storeFile(MultipartFile file, long co_projectId, String co_type) {
+    public CoPhotos storeFile(MultipartFile file, String co_targetId, String co_type) {
         if(file != null)
-            return uploadFile(file, co_projectId, co_type);
+            return uploadFile(file, co_targetId, co_type);
         return null;
     }
 
     @Override
-    public CoPhotos updateFile(MultipartFile file, long co_projectId, String co_type) {
-        deleteFile(co_projectId);
+    public CoPhotos updateFile(MultipartFile file, String co_targetId, String co_type) {
+        deleteFile(co_targetId, co_type);
         if(file != null)
-            return uploadFile(file, co_projectId, co_type);
+            return uploadFile(file, co_targetId, co_type);
         return null;
     }
 
@@ -112,7 +112,7 @@ public class CoFileServiceImpl implements CoFileService{
         return null;
     }
 
-    public String getCo_MainImg(String co_type, long co_targetId) {
+    public String getCo_MainImg(String co_type, String co_targetId) {
         Optional<CoPhotos> coPhoto = coPhotos.findByCo_mainImg(co_type, co_targetId);
         if(coPhoto.isPresent())
             return coPhoto.get().getCo_fileUrl();
@@ -120,33 +120,32 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
 
-    private CoPhotos uploadFile(MultipartFile file, long co_projectId, String co_type) {
+    private CoPhotos uploadFile(MultipartFile file, String co_targetId, String co_type) {
         String originFileName = file.getOriginalFilename();
         String fileName = StringUtils.cleanPath(getUUIDFileName(originFileName));
-        System.out.println("FileName = " + fileName);
         try {
             if(fileName.contains(".."))
                 throw new FileUploadException("File Name is Not Visible");
-            Path targetLocation = this.fileLocation.resolve(fileName);
+            Path targetLocation = Path.of(this.fileLocation.toString() + "/" + co_type + "/" + fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             String filePath = targetLocation.toString();
             //TO-DO MAKE ENUM
-            File FileOfFilePath = new File(filePath);
+            File FileOfFilePath = new File(filePath.toString());
             long bytes = (FileOfFilePath.length() / 1024);
             String uuidFileName = FileOfFilePath.getName();
             String fileUrl = getFileUrl("/image?name=", uuidFileName);
             String fileDownloadUri = getFileUrl("/downloadFile/", uuidFileName);
 
-            return insertPhoto(co_projectId, co_type, uuidFileName, originFileName, filePath, fileUrl, fileDownloadUri, bytes);
+            return insertPhoto(co_targetId, co_type, uuidFileName, originFileName, filePath.toString(), fileUrl, fileDownloadUri, bytes);
         } catch (IOException e) {
             e.printStackTrace();
             throw new FileUploadException("[" + fileName + "] File upload failed");
         }
     }
 
-    private CoPhotos insertPhoto(long co_projectId, String co_type, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
+    private CoPhotos insertPhoto(String co_targetId, String co_type, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
         com.codevumc.codev_backend.domain.CoPhotos coPhotos =  com.codevumc.codev_backend.domain.CoPhotos.builder()
-                .co_targetId(co_projectId)
+                .co_targetId(co_targetId)
                 .co_type(co_type)
                 .co_uuId(uuidFileName)
                 .co_fileName(originFileName)
@@ -196,15 +195,15 @@ public class CoFileServiceImpl implements CoFileService{
         return null;
     }
 
-    private void deleteFile(long co_projectId) {
-        List<com.codevumc.codev_backend.domain.CoPhotos> coPhotos = this.coPhotos.findByCoProjectId(co_projectId);
+    private void deleteFile(String co_targetId, String co_type) {
+        List<com.codevumc.codev_backend.domain.CoPhotos> coPhotos = this.coPhotos.findByCoTargetId(co_targetId, co_type);
 
         for(com.codevumc.codev_backend.domain.CoPhotos list : coPhotos) {
             File listOfFile = new File(list.getCo_filePath());
             if(listOfFile.exists())
                 listOfFile.delete();
         }
-        this.coPhotos.deleteCoPhotoOfProject(co_projectId);
+        this.coPhotos.deleteCoPhotoOfProject(co_targetId);
     }
 
 

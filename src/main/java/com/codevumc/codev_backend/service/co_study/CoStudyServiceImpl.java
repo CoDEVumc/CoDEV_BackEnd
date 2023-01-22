@@ -1,7 +1,9 @@
 package com.codevumc.codev_backend.service.co_study;
 
 import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
@@ -10,9 +12,12 @@ import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+
 import java.util.Optional;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -35,13 +40,14 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             Map<String, Object> coPartDto = new HashMap<>();
             coPartDto.put("co_studyId", coStudy.getCo_studyId());
             coPartDto.put("co_part", coStudy.getCo_part());
-            coPartDto.put("co_total", coStudy.getCo_total());
+            coPartDto.put("co_limit", coStudy.getCo_limit());
             this.coStudyMapper.insertCoPartOfStudy(coPartDto);
-            return setResponse(200, "success", "스터디 글 작성에 성공하였습니다.");
+            return setResponse(200, "message", "스터디 모집글이 작성되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
-        return null;
+
     }
 
     @Override
@@ -56,8 +62,8 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             if (coStudy.isPresent()) {
                 coStudy.get().setCo_languageList(coStudyMapper.getCoLanguageList(co_studyId));
                 coStudy.get().setCo_heartCount(coStudyMapper.getCoHeartCount(co_studyId));
-                coStudy.get().setCo_photos(coPhotosMapper.findByCoStudyId(co_studyId));
-                return setResponse(200, "success", coStudy);
+                coStudy.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_studyId), "STUDY"));
+                return setResponse(200, "Complete", coStudy);
             } else {
                 return setResponse(403, "Forbidden", "불러오기 실패하였습니다.");
             }
@@ -69,16 +75,16 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
 
     @Override
     public CoDevResponse getCoStudies(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag, int limit, int offset, int page) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("co_email", co_email);
+        condition.put("co_locationTag", co_locationTag);
+        condition.put("co_partTag", setting(co_partTag));
+        condition.put("co_keyword", setting(co_keyword));
+        condition.put("co_processTag", co_processTag);
+        condition.put("limit", limit);
+        condition.put("offset", offset);
+        List<CoStudy> coStudies = this.coStudyMapper.getCoStudies(condition);
         try {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("co_email", co_email);
-            condition.put("co_locationTag", co_locationTag);
-            condition.put("co_partTag", setting(co_partTag));
-            condition.put("co_keyword", setting(co_keyword));
-            condition.put("co_processTag", co_processTag);
-            condition.put("limit", limit);
-            condition.put("offset", offset);
-            List<CoStudy> coStudies = this.coStudyMapper.getCoStudies(condition);
             setResponse(200, "success", coStudies);
             return addResponse("co_page", page);
         } catch (Exception e) {

@@ -1,13 +1,18 @@
 package com.codevumc.codev_backend.service.co_project;
 
+import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
+import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -43,11 +48,12 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 coPartsDto.put("co_limit", jsonObj.get("co_limit"));
                 this.coProjectMapper.insertCoPartOfProject(coPartsDto);
             }
-            return setResponse(200, "success", "글 작성에 성공하였습니다.");
+            return setResponse(200, "message", "프로젝트 모집글이 작성되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
-        return null;
+
     }
 
     @Override
@@ -57,15 +63,16 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 
     @Override
     public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag, int limit, int offset, int page) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("co_email", co_email);
+        condition.put("co_locationTag", co_locationTag);
+        condition.put("co_partTag", setting(co_partTag));
+        condition.put("co_keyword", setting(co_keyword));
+        condition.put("co_processTag", co_processTag);
+        condition.put("limit", limit);
+        condition.put("offset", offset);
+
         try {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("co_email", co_email);
-            condition.put("co_locationTag", co_locationTag);
-            condition.put("co_partTag", setting(co_partTag));
-            condition.put("co_keyword", setting(co_keyword));
-            condition.put("co_processTag", co_processTag);
-            condition.put("limit", limit);
-            condition.put("offset", offset);
             List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
             setResponse(200, "success", coProjects);
             return addResponse("co_page", page);
@@ -83,9 +90,9 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
                 coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
-                coProject.get().setCo_photos(coPhotosMapper.findByCoProjectId(co_projectId));
+                coProject.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_projectId), "PROJECT"));
             }
-                return setResponse(200, "success", coProject);
+                return setResponse(200, "Complete", coProject);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,13 +101,13 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 
     @Override
     public CoDevResponse deleteCoProject(String co_email, long co_projectId) {
+        Map<String, Object> coProjectDto = new HashMap<>();
+        coProjectDto.put("co_email", co_email);
+        coProjectDto.put("co_projectId", co_projectId);
         try {
-            Map<String, Object> coProjectDto = new HashMap<>();
-            coProjectDto.put("co_email", co_email);
-            coProjectDto.put("co_projectId", co_projectId);
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
-                return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "success", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+                return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
