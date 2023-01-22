@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/codev/study")
 public class CoStudyController extends JwtController {
+    public static final int SHOW_COUNT = 10;
+
     private final CoFileServiceImpl coFileService;
     private final CoStudyServiceImpl coStudyService;
     private final CoStudyHeartServiceImpl coStudyHeartService;
@@ -43,9 +45,11 @@ public class CoStudyController extends JwtController {
         this.coStudyHeartService = coStudyHeartService;
     }
 
-    @GetMapping(value = "/studies")
-    public CoDevResponse getCoStudies(HttpServletRequest request, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
-        return coStudyService.getCoStudies(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag);
+    @GetMapping(value = "/studies/{page}")
+    public CoDevResponse getCoStudies(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+        int limit = getLimitCnt(pageNum);
+        int offset = limit - SHOW_COUNT;
+        return coStudyService.getCoStudies(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag, limit, offset, pageNum);
     }
 
     @PatchMapping("/heart/{coStudyId}")
@@ -90,5 +94,14 @@ public class CoStudyController extends JwtController {
     @GetMapping("/{coStudyId}")
     public CoDevResponse getCoStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
         return coStudyService.getCoStudy(coStudyId);
+    }
+
+    private int getLimitCnt(int pageNum) {
+        int limit = SHOW_COUNT;
+        for(int i = 0; i <= pageNum; i++) {
+            if(i != 0)
+                limit += SHOW_COUNT;
+        }
+        return limit;
     }
 }

@@ -42,7 +42,7 @@
             cs.co_process = #{co_processTag} and
         </if>
         cs.status = true
-        order by cs.createdAt;
+        order by cs.createdAt desc limit #{limit} offset #{offset};
     </select>
 
     <select id ="getCoHeartOfStudy" resultType="CoHeartOfStudy">
