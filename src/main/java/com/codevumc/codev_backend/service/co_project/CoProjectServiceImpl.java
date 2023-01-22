@@ -1,16 +1,13 @@
 package com.codevumc.codev_backend.service.co_project;
 
-import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
-import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -62,7 +59,6 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         condition.put("co_processTag", co_processTag);
         condition.put("limit", limit);
         condition.put("offset", offset);
-
         try {
             List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
             setResponse(200, "success", coProjects);

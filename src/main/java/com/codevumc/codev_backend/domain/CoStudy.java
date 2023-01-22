@@ -24,6 +24,7 @@ public class CoStudy {
     private Timestamp updatedAt;
     private boolean status;
     private long co_heartCount;
+    private int co_total;
     private boolean co_heart;
     private String co_part;
     private int co_limit;
