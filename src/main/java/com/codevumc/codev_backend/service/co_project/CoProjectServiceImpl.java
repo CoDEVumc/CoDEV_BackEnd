@@ -2,7 +2,9 @@ package com.codevumc.codev_backend.service.co_project;
 
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
@@ -30,21 +32,28 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
-        Map<String, Object> coPartsDto = new HashMap<>();
-        this.coProjectMapper.insertCoProject(coProject);
-        for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
-            this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
+    public CoDevResponse insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
+        try {
+            Map<String, Object> coPartsDto = new HashMap<>();
+            this.coProjectMapper.insertCoProject(coProject);
+            for (Object co_language : co_languages) {
+                long co_languageId = (long) co_language;
+                this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
+            }
+            JSONObject jsonObj;
+            for (Object co_part : co_parts) {
+                jsonObj = (JSONObject) co_part;
+                coPartsDto.put("co_projectId", coProject.getCo_projectId());
+                coPartsDto.put("co_part", jsonObj.get("co_part").toString());
+                coPartsDto.put("co_limit", jsonObj.get("co_limit"));
+                this.coProjectMapper.insertCoPartOfProject(coPartsDto);
+            }
+            return setResponse(200, "message", "프로젝트 모집글이 작성되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
-        JSONObject jsonObj;
-        for (Object co_part : co_parts) {
-            jsonObj = (JSONObject) co_part;
-            coPartsDto.put("co_projectId", coProject.getCo_projectId());
-            coPartsDto.put("co_part", jsonObj.get("co_part").toString());
-            coPartsDto.put("co_limit", jsonObj.get("co_limit"));
-            this.coProjectMapper.insertCoPartOfProject(coPartsDto);
-        }
+
     }
 
     @Override
@@ -81,7 +90,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
                 coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
-                coProject.get().setCo_photos(coPhotosMapper.findByCoProjectId(co_projectId));
+                coProject.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_projectId), "PROJECT"));
             }
                 return setResponse(200, "Complete", coProject);
         } catch (Exception e) {

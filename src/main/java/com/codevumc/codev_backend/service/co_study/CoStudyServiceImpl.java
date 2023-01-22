@@ -2,7 +2,9 @@ package com.codevumc.codev_backend.service.co_study;
 
 import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
@@ -29,17 +31,24 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     }
 
     @Override
-    public void insertStudy(CoStudy coStudy, JSONArray co_languages) {
-        this.coStudyMapper.insertCoStudy(coStudy);
-        for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
-            this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
+    public CoDevResponse insertStudy(CoStudy coStudy, JSONArray co_languages) {
+        try {
+            this.coStudyMapper.insertCoStudy(coStudy);
+            for (Object co_language : co_languages) {
+                long co_languageId = (long) co_language;
+                this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
+            }
+            Map<String, Object> coPartDto = new HashMap<>();
+            coPartDto.put("co_studyId", coStudy.getCo_studyId());
+            coPartDto.put("co_part", coStudy.getCo_part());
+            coPartDto.put("co_limit", coStudy.getCo_limit());
+            this.coStudyMapper.insertCoPartOfStudy(coPartDto);
+            return setResponse(200, "message", "스터디 모집글이 작성되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
-        Map<String, Object> coPartDto = new HashMap<>();
-        coPartDto.put("co_studyId", coStudy.getCo_studyId());
-        coPartDto.put("co_part", coStudy.getCo_part());
-        coPartDto.put("co_limit", coStudy.getCo_total());
-        this.coStudyMapper.insertCoPartOfStudy(coPartDto);
+
     }
 
     @Override
@@ -54,7 +63,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             if (coStudy.isPresent()) {
                 coStudy.get().setCo_languageList(coStudyMapper.getCoLanguageList(co_studyId));
                 coStudy.get().setCo_heartCount(coStudyMapper.getCoHeartCount(co_studyId));
-                coStudy.get().setCo_photos(coPhotosMapper.findByCoStudyId(co_studyId));
+                coStudy.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_studyId), "STUDY"));
                 return setResponse(200, "Complete", coStudy);
             } else {
                 return setResponse(403, "Forbidden", "불러오기 실패하였습니다.");

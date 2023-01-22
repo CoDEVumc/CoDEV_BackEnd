@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class CoPhotos {
     private long co_photoId;
-    private long co_targetId;
+    private String co_targetId;
     private String co_type;
     private String co_uuId;
     private String co_fileName;
