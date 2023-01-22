@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Mapper
 public interface CoPhotosMapper {
-    void insertCoPhotoOfProject(com.codevumc.codev_backend.domain.CoPhotos coPhotos);
+    void insertCoPhoto(com.codevumc.codev_backend.domain.CoPhotos coPhotos);
 
     void deleteCoPhotoOfProject(long co_projectId);
 
@@ -20,4 +20,5 @@ public interface CoPhotosMapper {
     Optional<CoPhotos> findByCo_mainImg(@Param("co_type") String co_type, @Param("co_targetId") long co_targetId);
 
     List<CoPhotos> findByCoStudyId(long co_studyId);
+
 }

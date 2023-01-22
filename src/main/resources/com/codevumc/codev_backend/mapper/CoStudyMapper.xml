@@ -16,7 +16,7 @@
         IF(chs.status is null, false, chs.status) as 'co_heart',
         cls.co_languages as 'co_languages',
         cps.co_part as 'co_part',
-        cps.co_limit as 'co_limit',
+        cps.co_total as 'co_total',
         cs.createdAt as 'createdAt',
         cs.updatedAt as 'updatedAt',
         cs.status as 'status'
@@ -38,7 +38,7 @@
         <if test="co_keyword != null and !co_keyword.equals('')">
             (cs.co_title like #{co_keyword} or cs.co_content like #{co_keyword}) and
         </if>
-        <if test="co_process != null and !co_process.equals('')">
+        <if test="co_processTag != null and !co_processTag.equals('')">
             cs.co_process = #{co_processTag} and
         </if>
         cs.status = true
@@ -59,7 +59,7 @@
             cs.co_mainImg as co_mainImg,
             cs.co_deadLine as co_deadLine,
             cs.co_process as co_process,
-            cpos.co_limit as co_limit,
+            cpos.co_total as co_total,
             cpos.co_part as co_part,
             cs.createdAt as createdAt,
             cs.updatedAt as updatedAt,
@@ -110,8 +110,8 @@
 
     <insert id="insertCoPartOfStudy" parameterType="hashMap">
         INSERT INTO CoPartOfStudy
-            (co_studyId, co_part, co_limit)
-        VALUES (#{co_studyId}, #{co_part}, #{co_limit})
+            (co_studyId, co_part, co_total)
+        VALUES (#{co_studyId}, #{co_part}, #{co_total})
     </insert>
 
 </mapper>
