@@ -43,8 +43,8 @@ public class CoProjectController extends JwtController {
         return coProjectService.getCoProject(co_projectId);
     }
 
-    @PostMapping(consumes = { MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public CoDevResponse write(HttpServletRequest request, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+    @PostMapping(consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public CoDevResponse insertProject(HttpServletRequest request, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
         CoProject coProject = CoProject.builder()
                 .co_email(getCoUserEmail(request))
                 .co_title(project.get("co_title").toString())
