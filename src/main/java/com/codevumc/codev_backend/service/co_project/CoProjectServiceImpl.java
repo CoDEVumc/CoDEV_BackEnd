@@ -27,21 +27,27 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public void insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
-        Map<String, Object> coPartsDto = new HashMap<>();
-        this.coProjectMapper.insertCoProject(coProject);
-        for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
-            this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
+    public CoDevResponse insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
+        try {
+            Map<String, Object> coPartsDto = new HashMap<>();
+            this.coProjectMapper.insertCoProject(coProject);
+            for (Object co_language : co_languages) {
+                long co_languageId = (long) co_language;
+                this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
+            }
+            JSONObject jsonObj;
+            for (Object co_part : co_parts) {
+                jsonObj = (JSONObject) co_part;
+                coPartsDto.put("co_projectId", coProject.getCo_projectId());
+                coPartsDto.put("co_part", jsonObj.get("co_part").toString());
+                coPartsDto.put("co_limit", jsonObj.get("co_limit"));
+                this.coProjectMapper.insertCoPartOfProject(coPartsDto);
+            }
+            return setResponse(200, "success", "글 작성에 성공하였습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        JSONObject jsonObj;
-        for (Object co_part : co_parts) {
-            jsonObj = (JSONObject) co_part;
-            coPartsDto.put("co_projectId", coProject.getCo_projectId());
-            coPartsDto.put("co_part", jsonObj.get("co_part").toString());
-            coPartsDto.put("co_limit", jsonObj.get("co_limit"));
-            this.coProjectMapper.insertCoPartOfProject(coPartsDto);
-        }
+        return null;
     }
 
     @Override
@@ -79,7 +85,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
                 coProject.get().setCo_photos(coPhotosMapper.findByCoProjectId(co_projectId));
             }
-                return setResponse(200, "Complete", coProject);
+                return setResponse(200, "success", coProject);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,7 +100,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         try {
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
-                return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+                return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "success", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
