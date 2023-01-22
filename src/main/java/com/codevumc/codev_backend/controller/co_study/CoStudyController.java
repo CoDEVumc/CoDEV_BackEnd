@@ -55,7 +55,7 @@ public class CoStudyController extends JwtController {
     @PatchMapping("/heart/{coStudyId}")
     public CoDevResponse heartOfStudyUpdate(HttpServletRequest request, @PathVariable("coStudyId") Long co_studyId) throws Exception{
         String co_email = getCoUserEmail(request);
-        return coStudyHeartService.insertHeart(co_email,co_studyId);
+        return coStudyHeartService.changeHeart(co_email,co_studyId);
     }
 
     @PostMapping(consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
@@ -85,11 +85,6 @@ public class CoStudyController extends JwtController {
         return null;
     }
 
-    @PatchMapping("/nonheart/{coStudyId}")
-    public CoDevResponse heartOfStudyDelete(HttpServletRequest request, @PathVariable("coStudyId") Long co_studyId) throws Exception{
-        String co_email = getCoUserEmail(request);
-        return coStudyHeartService.deleteHeart(co_email, co_studyId);
-    }
 
     @GetMapping("/{coStudyId}")
     public CoDevResponse getCoStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
