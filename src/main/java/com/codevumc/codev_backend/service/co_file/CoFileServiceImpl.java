@@ -154,7 +154,7 @@ public class CoFileServiceImpl implements CoFileService{
                 .co_fileDownloadPath(fileDownloadUri)
                 .co_fileSize(bytes)
                 .build();
-        this.coPhotos.insertCoPhotoOfProject(coPhotos);
+        this.coPhotos.insertCoPhoto(coPhotos);
         return coPhotos;
     }
 
