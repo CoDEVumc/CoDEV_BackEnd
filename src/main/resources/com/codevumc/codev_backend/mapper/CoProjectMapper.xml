@@ -81,7 +81,7 @@
             cp.co_process = #{co_processTag} and
         </if>
         cp.status = true
-        order by cp.createdAt;
+        order by cp.createdAt desc limit #{limit} offset #{offset};
     </select>
 
     <insert id ="insertCoHeartOfProject" >

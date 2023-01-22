@@ -53,16 +53,20 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag) {
+    public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag, int limit, int offset, int page) {
         Map<String, Object> condition = new HashMap<>();
         condition.put("co_email", co_email);
         condition.put("co_locationTag", co_locationTag);
         condition.put("co_partTag", setting(co_partTag));
         condition.put("co_keyword", setting(co_keyword));
         condition.put("co_processTag", co_processTag);
-        List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
+        condition.put("limit", limit);
+        condition.put("offset", offset);
+
         try {
-            return setResponse(200, "success", coProjects);
+            List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
+            setResponse(200, "success", coProjects);
+            return addResponse("co_page", page);
         } catch (Exception e) {
             e.printStackTrace();
         }

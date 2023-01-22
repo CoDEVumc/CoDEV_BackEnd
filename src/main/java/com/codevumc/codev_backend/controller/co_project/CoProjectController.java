@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/codev/project")
 public class CoProjectController extends JwtController {
 
+    public static final int SHOW_COUNT = 10;
     private final CoFileServiceImpl coFileService;
     private final CoProjectServiceImpl coProjectService;
     private final CoProjectHeartServiceImpl coProjectHeartService;
@@ -70,10 +71,13 @@ public class CoProjectController extends JwtController {
         return null;
     }
 
-    @GetMapping(value = "/projects")
-    public CoDevResponse getAllProjects(HttpServletRequest request, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
-        return coProjectService.getCoProjects(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag);
+    @GetMapping(value = "/projects/{page}")
+    public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+        int limit = getLimitCnt(pageNum);
+        int offset = limit - SHOW_COUNT;
+        return coProjectService.getCoProjects(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag, limit, offset, pageNum);
     }
+
     //찜하기
     @PatchMapping("/heart/{coProjectId}")
     public CoDevResponse heartOfProjectInsert(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
@@ -94,5 +98,13 @@ public class CoProjectController extends JwtController {
         return coProjectService.deleteCoProject(co_email, co_projectId);
     }
 
+    private int getLimitCnt(int pageNum) {
+        int limit = SHOW_COUNT;
+        for(int i = 0; i <= pageNum; i++) {
+            if(i != 0)
+                limit += SHOW_COUNT;
+        }
+        return limit;
+    }
 }
 
