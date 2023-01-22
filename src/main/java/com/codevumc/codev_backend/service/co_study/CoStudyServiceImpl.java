@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_study;
 
+import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoPhotosMapper;
@@ -37,7 +38,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         Map<String, Object> coPartDto = new HashMap<>();
         coPartDto.put("co_studyId", coStudy.getCo_studyId());
         coPartDto.put("co_part", coStudy.getCo_part());
-        coPartDto.put("co_limit", coStudy.getCo_limit());
+        coPartDto.put("co_limit", coStudy.getCo_total());
         this.coStudyMapper.insertCoPartOfStudy(coPartDto);
     }
 
@@ -84,4 +85,22 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         return null;
     }
 
+    @Override
+    public CoDevResponse deleteStudy(String co_email, long co_studyId) {
+        Map<String, Object> studyDto = new HashMap<>();
+        studyDto.put("co_email", co_email);
+        studyDto.put("co_studyId", co_studyId);
+        try {
+            Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
+            if (coStudy.isPresent()) {
+                this.coStudyMapper.deleteCoStudy(studyDto);
+                return setResponse(200, "Complete", "삭제되었습니다.");
+            } else {
+                return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
