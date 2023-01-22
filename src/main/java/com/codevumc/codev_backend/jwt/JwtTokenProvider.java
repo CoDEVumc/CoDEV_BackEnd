@@ -25,8 +25,9 @@ public class JwtTokenProvider {
     private String accessSecretKey = "Darren";
     private String refreshSecretKey = "DarrenH";
 
-    //유효시간 30분
-    private long accessTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
+    //유효시간 14일
+    //private long accessTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
+    private long accessTokenValidTime = 1 * 60 * 1000L;
     //유효시간 31일
     private long refreshTokenValidTime = 30 * 24 * 60 * 60 * 1000L;
 
@@ -85,7 +86,7 @@ public class JwtTokenProvider {
 
     //Header에서 token값을 가지고온다.
     public String getAccessToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+        return request.getHeader("CoDev_Authorization");
     }
 
     //토큰의 유효성 검사
@@ -98,6 +99,7 @@ public class JwtTokenProvider {
         } catch (MalformedJwtException e) {
             request.setAttribute("exception", "MalformedJwtException");
         } catch (ExpiredJwtException e) {
+            //토큰 만료시
             request.setAttribute("exception", "ExpiredJwtException");
         } catch (UnsupportedJwtException e) {
             request.setAttribute("exception", "UnsupportedJwtException");
