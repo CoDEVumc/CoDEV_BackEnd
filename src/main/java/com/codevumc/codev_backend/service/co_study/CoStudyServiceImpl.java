@@ -10,12 +10,9 @@ import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Map;
-
-
-import java.util.Optional;
-
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -28,17 +25,23 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     }
 
     @Override
-    public void insertStudy(CoStudy coStudy, JSONArray co_languages) {
-        this.coStudyMapper.insertCoStudy(coStudy);
-        for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
-            this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
+    public CoDevResponse insertStudy(CoStudy coStudy, JSONArray co_languages) {
+        try {
+            this.coStudyMapper.insertCoStudy(coStudy);
+            for (Object co_language : co_languages) {
+                long co_languageId = (long) co_language;
+                this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
+            }
+            Map<String, Object> coPartDto = new HashMap<>();
+            coPartDto.put("co_studyId", coStudy.getCo_studyId());
+            coPartDto.put("co_part", coStudy.getCo_part());
+            coPartDto.put("co_total", coStudy.getCo_total());
+            this.coStudyMapper.insertCoPartOfStudy(coPartDto);
+            return setResponse(200, "success", "스터디 글 작성에 성공하였습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Map<String, Object> coPartDto = new HashMap<>();
-        coPartDto.put("co_studyId", coStudy.getCo_studyId());
-        coPartDto.put("co_part", coStudy.getCo_part());
-        coPartDto.put("co_limit", coStudy.getCo_limit());
-        this.coStudyMapper.insertCoPartOfStudy(coPartDto);
+        return null;
     }
 
     @Override
@@ -66,16 +69,16 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
 
     @Override
     public CoDevResponse getCoStudies(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag, int limit, int offset, int page) {
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("co_email", co_email);
-        condition.put("co_locationTag", co_locationTag);
-        condition.put("co_partTag", setting(co_partTag));
-        condition.put("co_keyword", setting(co_keyword));
-        condition.put("co_processTag", co_processTag);
-        condition.put("limit", limit);
-        condition.put("offset", offset);
-        List<CoStudy> coStudies = this.coStudyMapper.getCoStudies(condition);
         try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("co_locationTag", co_locationTag);
+            condition.put("co_partTag", setting(co_partTag));
+            condition.put("co_keyword", setting(co_keyword));
+            condition.put("co_processTag", co_processTag);
+            condition.put("limit", limit);
+            condition.put("offset", offset);
+            List<CoStudy> coStudies = this.coStudyMapper.getCoStudies(condition);
             setResponse(200, "success", coStudies);
             return addResponse("co_page", page);
         } catch (Exception e) {
