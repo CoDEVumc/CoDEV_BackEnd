@@ -24,4 +24,5 @@ public interface CoStudyMapper {
     void insertCoHeartOfStudy(String co_email, Long co_studyId);
     void deleteCoHeartOfStudy(String co_email, Long co_studyId);
     List<CoStudy> getCoStudies(Map<String, Object> condition);
+    void deleteCoStudy(Map<String, Object> studyDto);
 }

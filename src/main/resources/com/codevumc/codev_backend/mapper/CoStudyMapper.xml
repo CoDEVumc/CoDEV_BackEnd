@@ -59,7 +59,7 @@
             cs.co_mainImg as co_mainImg,
             cs.co_deadLine as co_deadLine,
             cs.co_process as co_process,
-            cpos.co_limit as co_limit,
+            cpos.co_total as co_total,
             cpos.co_part as co_part,
             cs.createdAt as createdAt,
             cs.updatedAt as updatedAt,
@@ -113,5 +113,9 @@
             (co_studyId, co_part, co_limit)
         VALUES (#{co_studyId}, #{co_part}, #{co_limit})
     </insert>
+
+    <delete id="deleteCoStudy" parameterType="hashMap">
+        delete from CoStudy where co_email = #{co_email} and co_studyId = #{co_studyId}
+    </delete>
 
 </mapper>
