@@ -57,15 +57,15 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 
     @Override
     public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag, int limit, int offset, int page) {
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("co_email", co_email);
-        condition.put("co_locationTag", co_locationTag);
-        condition.put("co_partTag", setting(co_partTag));
-        condition.put("co_keyword", setting(co_keyword));
-        condition.put("co_processTag", co_processTag);
-        condition.put("limit", limit);
-        condition.put("offset", offset);
         try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("co_locationTag", co_locationTag);
+            condition.put("co_partTag", setting(co_partTag));
+            condition.put("co_keyword", setting(co_keyword));
+            condition.put("co_processTag", co_processTag);
+            condition.put("limit", limit);
+            condition.put("offset", offset);
             List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
             setResponse(200, "success", coProjects);
             return addResponse("co_page", page);
@@ -94,10 +94,10 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
 
     @Override
     public CoDevResponse deleteCoProject(String co_email, long co_projectId) {
-        Map<String, Object> coProjectDto = new HashMap<>();
-        coProjectDto.put("co_email", co_email);
-        coProjectDto.put("co_projectId", co_projectId);
         try {
+            Map<String, Object> coProjectDto = new HashMap<>();
+            coProjectDto.put("co_email", co_email);
+            coProjectDto.put("co_projectId", co_projectId);
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
                 return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "success", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
