@@ -14,6 +14,7 @@ import java.util.List;
 public class CoProject {
     private long co_projectId;
     private String co_email;
+    private String co_viewer;
     private String co_title;
     private String co_location;
     private String co_content;
@@ -28,6 +29,7 @@ public class CoProject {
     private boolean co_heart;
     private String co_parts;
     private String co_languages;
+    private boolean co_recruitStatus;
     private List<CoPhotos> co_photos;
     private List<CoPart> co_partList;
     private List<CoLanguage> co_languageList;

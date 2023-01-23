@@ -54,12 +54,13 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     }
 
     @Override
-    public CoDevResponse getCoStudy(long co_studyId) {
+    public CoDevResponse getCoStudy(String co_viewer, long co_studyId) {
         try {
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if (coStudy.isPresent()) {
                 coStudy.get().setCo_languageList(coStudyMapper.getCoLanguageList(co_studyId));
                 coStudy.get().setCo_heartCount(coStudyMapper.getCoHeartCount(co_studyId));
+                coStudy.get().setCo_viewer(co_viewer);
                 coStudy.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_studyId), "STUDY"));
                 return setResponse(200, "Complete", coStudy);
             } else {

@@ -82,7 +82,8 @@ public class CoStudyController extends JwtController {
 
     @GetMapping("/{coStudyId}")
     public CoDevResponse getCoStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
-        return coStudyService.getCoStudy(coStudyId);
+        String co_viewer = getCoUserEmail(request);
+        return coStudyService.getCoStudy(co_viewer, coStudyId);
     }
 
     @DeleteMapping("/{coStudyId}")
