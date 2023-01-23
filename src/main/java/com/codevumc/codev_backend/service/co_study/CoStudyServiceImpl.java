@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_study;
 
+import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -90,4 +91,19 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         return null;
     }
 
+    @Override
+    public CoDevResponse deleteStudy(String co_email, long co_studyId) {
+        Map<String, Object> studyDto = new HashMap<>();
+        studyDto.put("co_email", co_email);
+        studyDto.put("co_studyId", co_studyId);
+        try {
+            Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
+            if (coStudy.isPresent()) {
+                return this.coStudyMapper.deleteCoStudy(studyDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

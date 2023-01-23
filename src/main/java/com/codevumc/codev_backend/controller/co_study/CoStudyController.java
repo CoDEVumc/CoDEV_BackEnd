@@ -9,6 +9,7 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_study.CoStudyServiceImpl;
 import com.codevumc.codev_backend.service.co_studyheart.CoStudyHeartServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -82,6 +83,12 @@ public class CoStudyController extends JwtController {
     @GetMapping("/{coStudyId}")
     public CoDevResponse getCoStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
         return coStudyService.getCoStudy(coStudyId);
+    }
+
+    @DeleteMapping("/{coStudyId}")
+    public CoDevResponse deleteStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coStudyService.deleteStudy(co_email, coStudyId);
     }
 
     private int getLimitCnt(int pageNum) {
