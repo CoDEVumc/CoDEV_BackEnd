@@ -80,6 +80,10 @@
         select count(*) as coHeartCount from CoHeartOfStudy where co_studyId = #{co_studyId}
     </select>
 
+    <select id="getCoRecruitStatus" resultType="boolean">
+        select EXISTS(select * from CoRecruitOfStudy where co_email = #{co_viewer} and co_studyId = #{co_studyId}) as co_recruitStatus
+    </select>
+
     <insert id ="insertCoHeartOfStudy" >
         INSERT INTO CoHeartOfStudy (co_email,co_studyId)
         VALUES (#{co_email},#{co_studyId})

@@ -25,4 +25,5 @@ public interface CoStudyMapper {
     void deleteCoHeartOfStudy(String co_email, Long co_studyId);
     List<CoStudy> getCoStudies(Map<String, Object> condition);
     boolean deleteCoStudy(Map<String, Object> studyDto);
+    boolean getCoRecruitStatus(String co_viewer, long co_studyId);
 }

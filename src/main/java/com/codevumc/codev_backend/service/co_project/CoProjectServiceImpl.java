@@ -87,10 +87,11 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         try {
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
+                coProject.get().setCo_viewer(co_viewer);
+                coProject.get().setCo_recruitStatus(coProjectMapper.getCoRecruitStatus(co_viewer, co_projectId));
                 coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
                 coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
-                coProject.get().setCo_viewer(co_viewer);
                 coProject.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_projectId), "PROJECT"));
             }
                 return setResponse(200, "Complete", coProject);
