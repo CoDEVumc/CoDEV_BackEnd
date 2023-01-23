@@ -72,10 +72,10 @@ public class CoProjectController extends JwtController {
     }
 
     @GetMapping(value = "/projects/{page}")
-    public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("co_locationTag") String co_locationTag, @RequestParam("co_partTag") String co_partTag, @RequestParam("co_keyword") String co_keyword, @RequestParam("co_sortingTag") String co_sortingTag, @RequestParam("co_processTag") String co_processTag) throws Exception {
+    public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String co_locationTag, @RequestParam("coPartTag") String co_partTag, @RequestParam("coKeyword") String co_keyword, @RequestParam("coSortingTag") String co_sortingTag, @RequestParam("coProcessTag") String co_processTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coProjectService.getCoProjects(getCoUserEmail(request), co_locationTag, co_partTag, co_keyword, co_sortingTag, co_processTag, limit, offset, pageNum);
+        return coProjectService.getCoProjects(getCoUserEmail(request), co_locationTag, co_partTag, co_keyword, co_sortingTag.toUpperCase(), co_processTag, limit, offset, pageNum);
     }
 
     //찜하기

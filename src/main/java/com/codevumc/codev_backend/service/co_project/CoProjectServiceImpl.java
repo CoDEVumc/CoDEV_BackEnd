@@ -66,7 +66,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
             condition.put("co_locationTag", co_locationTag);
             condition.put("co_partTag", setting(co_partTag));
             condition.put("co_keyword", setting(co_keyword));
-            condition.put("co_sortingTag", setting(co_sortingTag));
+            condition.put("co_sortingTag", co_sortingTag);
             condition.put("co_processTag", co_processTag);
             condition.put("limit", limit);
             condition.put("offset", offset);
