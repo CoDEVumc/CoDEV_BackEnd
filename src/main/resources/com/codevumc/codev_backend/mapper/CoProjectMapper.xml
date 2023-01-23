@@ -117,6 +117,10 @@
         select count(*) as coHeartCount from CoHeartOfProject where co_projectId = #{co_projectId}
     </select>
 
+    <select id="getCoRecruitStatus" resultType="boolean">
+        select EXISTS(select * from CoRecruitOfProject where co_email = #{co_viewer} and co_projectId = #{co_projectId}) as co_recruitStatus
+    </select>
+
     <delete id="deleteCoProject" parameterType="hashMap">
         delete from CoProject where co_email = #{co_email} and co_projectId = #{co_projectId}
     </delete>
