@@ -39,8 +39,9 @@ public class CoProjectController extends JwtController {
     }
 
     @GetMapping("/{coProjectId}")
-    public CoDevResponse getProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId){
-        return coProjectService.getCoProject(co_projectId);
+    public CoDevResponse getProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId) throws Exception {
+        String co_viewer = getCoUserEmail(request);
+        return coProjectService.getCoProject(co_viewer,co_projectId);
     }
 
     @PostMapping(consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
