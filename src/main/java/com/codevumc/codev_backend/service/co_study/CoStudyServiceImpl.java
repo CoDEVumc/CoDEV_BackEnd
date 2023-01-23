@@ -12,12 +12,9 @@ import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Map;
-
-
-import java.util.Optional;
-
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -40,7 +37,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             Map<String, Object> coPartDto = new HashMap<>();
             coPartDto.put("co_studyId", coStudy.getCo_studyId());
             coPartDto.put("co_part", coStudy.getCo_part());
-            coPartDto.put("co_limit", coStudy.getCo_limit());
+            coPartDto.put("co_total", coStudy.getCo_total());
             this.coStudyMapper.insertCoPartOfStudy(coPartDto);
             return setResponse(200, "message", "스터디 모집글이 작성되었습니다.");
         } catch (Exception e) {
