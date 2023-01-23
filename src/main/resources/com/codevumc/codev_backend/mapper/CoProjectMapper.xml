@@ -46,6 +46,7 @@
         cp.co_process as 'co_process',
         DATEDIFF(cp.co_deadLine, now())           as 'co_deadLine',
         IF(chp.status is null, false, chp.status) as 'co_heart',
+        (select count(*) from CoHeartOfProject as chpcnt where cp.co_projectId = chpcnt.co_projectId) as 'co_heartCount',
         clp.co_languages as 'co_languages',
         cpp.co_parts as 'co_parts',
         cpIs.co_total as 'co_total',
@@ -59,8 +60,7 @@
         group by CoPartOfProject.co_projectId) as cpIs on cpIs.co_projectId = cp.co_projectId
         left join (select co_projectId, GROUP_CONCAT(co_part SEPARATOR ',') as co_parts
         from CoPartOfProject
-        where co_limit != 0
-        group by co_projectId) as cpp
+        where co_limit != 0 group by co_projectId) as cpp
         on cpp.co_projectId = cp.co_projectId
         left join (select co_projectId, GROUP_CONCAT(cl.co_logo SEPARATOR ',') as co_languages
         from CoLanguageOfProject as clo
@@ -81,7 +81,16 @@
             cp.co_process = #{co_processTag} and
         </if>
         cp.status = true
-        order by cp.createdAt desc limit #{limit} offset #{offset};
+        order by
+        <choose>
+            <when test='co_sortingTag.equals("POPULARITY")'>
+                co_heartCount desc limit
+            </when>
+            <otherwise>
+                createdAt desc limit
+            </otherwise>
+        </choose>
+        #{limit} offset #{offset}
     </select>
 
     <insert id ="insertCoHeartOfProject" >
