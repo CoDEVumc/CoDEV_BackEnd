@@ -33,18 +33,13 @@
         values (#{co_projectId}, #{co_languageId})
     </insert>
 
-    <update id="updateCoPartOfProject" parameterType="hashMap">
-        UPDATE CoPartOfProject
-        SET co_part = #{co_part},
-            co_limit = #{co_limit}
-        WHERE co_projectId = #{co_projectId}
-    </update>
+    <delete id="deleteCoPartOfProject">
+        DELETE FROM CoPartOfProject WHERE co_projectId = #{co_projectId}
+    </delete>
 
-    <update id="updateCoLanguageOfProject">
-        UPDATE CoLanguageOfProject
-        SET co_languageId = #{co_languageId}
-        WHERE co_projectId = #{co_projectId}
-    </update>
+    <delete id="deleteCoLanguageOfProject">
+        DELETE FROM CoLanguageOfProject WHERE co_projectId = #{co_projectId}
+    </delete>
 
     <update id="updateCoMainImg">
         UPDATE CoProject
