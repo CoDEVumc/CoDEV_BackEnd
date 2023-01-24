@@ -90,4 +90,9 @@ public class CoMyPageController extends JwtController {
         String co_email = getCoUserEmail(request);
         return this.coMyPageService.getHeartOfProjects(co_email);
     }
+
+    @GetMapping("/portfolioList")
+    public CoDevResponse getPortfolioList(HttpServletRequest request) throws Exception {
+        return this.coMyPageService.getCoPortfolios(getCoUserEmail(request));
+    }
 }

@@ -10,8 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface CoMyPageMapper {
-    List<Long> getCoHeartsOfStudy(String co_email);
-    List<CoStudy> getCoStudies(String co_email, long co_studyId);
-    List<Long> getCoHeartsOfProject(String co_email);
-    List<CoProject> getCoProjects(Long coProjectId);
+    List<CoStudy> getCoHeartsOfStudy(String co_email);
+    List<CoProject> getCoHeartsOfProject(String co_email);
+    List<CoPortfolio> getPortfolioByCo_email(String co_email);
 }
