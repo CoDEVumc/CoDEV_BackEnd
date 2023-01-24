@@ -57,6 +57,31 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
+    public CoDevResponse updateProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
+        try {
+            Map<String, Object> coPartsDto = new HashMap<>();
+            this.coProjectMapper.updateCoProject(coProject);
+            for (Object co_language : co_languages) {
+                long co_languageId = (long) co_language;
+                this.coProjectMapper.updateCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
+            }
+            JSONObject jsonObj;
+            for (Object co_part : co_parts) {
+                jsonObj = (JSONObject) co_part;
+                coPartsDto.put("co_projectId", coProject.getCo_projectId());
+                coPartsDto.put("co_part", jsonObj.get("co_part").toString());
+                coPartsDto.put("co_limit", jsonObj.get("co_limit"));
+                this.coProjectMapper.updateCoPartOfProject(coPartsDto);
+            }
+            return setResponse(200, "message", "프로젝트 모집글이 수정되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+
+    }
+
+    @Override
     public void updateMainImg(String co_mainImg, long co_projectId) {
         coProjectMapper.updateCoMainImg(co_mainImg, co_projectId);
     }
