@@ -2,6 +2,8 @@ package com.codevumc.codev_backend.controller.co_study;
 
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
+import com.codevumc.codev_backend.domain.CoPortfolio;
+import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
@@ -93,6 +95,20 @@ public class CoStudyController extends JwtController {
     public CoDevResponse deleteStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
         String co_email = getCoUserEmail(request);
         return coStudyService.deleteStudy(co_email, coStudyId);
+    }
+
+    @ResponseBody
+    @PostMapping("/submission/{coStudyId}")
+    public CoDevResponse submitCoStudy(HttpServletRequest request,
+                                       @PathVariable("coStudyId") long coStudyId,
+                                       @RequestBody Map<String, Object> recruitStudy) throws Exception {
+        CoRecruitOfStudy coRecruitOfStudy = CoRecruitOfStudy.builder()
+                .co_email(getCoUserEmail(request))
+                .co_studyId(coStudyId)
+                .co_portfolioId(Long.parseLong(recruitStudy.get("co_portfolioId").toString()))
+                .co_motivation(recruitStudy.get("co_motivation").toString())
+                .build();
+        return coStudyRecruitService.submitCoStudy(coRecruitOfStudy);
     }
 
     @DeleteMapping("/recruitment/{coStudyId}")
