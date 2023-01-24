@@ -15,8 +15,11 @@ import java.util.Optional;
 @Mapper
 public interface CoProjectMapper {
     void insertCoProject(CoProject coProject);
+    void updateCoProject(CoProject coProject);
     void insertCoPartOfProject(Map<String, Object> coPartsDto);
+    void deleteCoPartOfProject(@Param("co_projectId") long co_projectId);
     void insertCoLanguageOfProject(@Param("co_projectId") long co_projectId, @Param("co_languageId") long co_languageId);
+    void deleteCoLanguageOfProject(@Param("co_projectId") long co_projectId);
     void updateCoMainImg(@Param("co_mainImg") String co_mainImg, @Param("co_projectId") long co_projectId);
     List<CoProject> getCoProjects(Map<String, Object> condition);
     void insertCoHeartOfProject(String co_email, Long co_projectId);
