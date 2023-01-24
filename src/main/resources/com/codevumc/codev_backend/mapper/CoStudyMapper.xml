@@ -14,6 +14,7 @@
         cs.co_process as 'co_process',
         DATEDIFF(cs.co_deadLine, now())           as 'co_deadLine',
         IF(chs.status is null, false, chs.status) as 'co_heart',
+        (select count(*) from CoHeartOfStudy as chscnt where cs.co_studyId = chscnt.co_studyId) as 'co_heartCount',
         cls.co_languages as 'co_languages',
         cps.co_part as 'co_part',
         cps.co_total as 'co_total',
@@ -42,7 +43,16 @@
             cs.co_process = #{co_processTag} and
         </if>
         cs.status = true
-        order by cs.createdAt desc limit #{limit} offset #{offset};
+        order by
+        <choose>
+            <when test='co_sortingTag.equals("POPULARITY")'>
+                co_heartCount desc limit
+            </when>
+            <otherwise>
+                createdAt desc limit
+            </otherwise>
+        </choose>
+        #{limit} offset #{offset}
     </select>
 
     <select id ="getCoHeartOfStudy" resultType="CoHeartOfStudy">
