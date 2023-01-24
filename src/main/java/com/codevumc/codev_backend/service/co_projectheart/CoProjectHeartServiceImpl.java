@@ -26,8 +26,10 @@ public class CoProjectHeartServiceImpl extends ResponseService implements CoProj
             }
             //찜취소
             else {
-                this.coProjectMapper.deleteCoHeartOfProject(co_email,co_projectId);
-                return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
+                if(coProjectMapper.getCoHeartOfProjectEmail(co_projectId) == co_email) {
+                    this.coProjectMapper.deleteCoHeartOfProject(co_email, co_projectId);
+                    return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
+                }
             }
 
         }catch(Exception e){

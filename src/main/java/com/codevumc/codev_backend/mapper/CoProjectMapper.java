@@ -27,6 +27,6 @@ public interface CoProjectMapper {
     List<CoLanguage> getCoLanguageList(long co_projectId);
     long getCoHeartCount(long co_projectId);
     boolean deleteCoProject(Map<String, Object> coProjectDto);
-
     boolean getCoRecruitStatus(String co_viewer, long co_projectId);
+    String getCoHeartOfProjectEmail(Long co_projectId);
 }

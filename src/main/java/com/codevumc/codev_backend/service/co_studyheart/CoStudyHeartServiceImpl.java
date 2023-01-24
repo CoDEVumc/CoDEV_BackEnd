@@ -23,9 +23,10 @@ public class CoStudyHeartServiceImpl extends ResponseService implements CoStudyH
                 this.coStudyMapper.insertCoHeartOfStudy(co_email,co_studyId);
                 return setResponse(200, "Complete", "찜등록이 완료되었습니다.");
             }else{
+                if(coStudyMapper.getCoHeartOfStudyEmail(co_studyId) == co_email){
                 this.coStudyMapper.deleteCoHeartOfStudy(co_email,co_studyId);
                 return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
-            }
+            }}
         }catch(Exception e){
             e.printStackTrace();
         }
