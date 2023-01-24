@@ -5,7 +5,7 @@ import org.json.simple.JSONArray;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 
 public interface CoMyPageService {
-    void insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
+    CoDevResponse insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
     CoDevResponse getCoPortfolio(long co_portfolioId, String co_email);
     CoDevResponse updateCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);
     CoDevResponse deletePortfolio(String co_email, long co_portfolioId);
