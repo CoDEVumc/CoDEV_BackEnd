@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.service.co_project;
 
 import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
@@ -121,6 +122,17 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 return coProjectMapper.deleteCoProject(coProjectDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    @Override
+    public CoDevResponse insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject){
+        try {
+            this.coProjectMapper.insertCoRecruitOfProject(coRecruitOfProject);
+            return setResponse(200, "message", "지원되었습니다");
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
         return null;
