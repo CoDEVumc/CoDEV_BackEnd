@@ -11,4 +11,5 @@ public interface CoMyPageService {
     CoDevResponse deletePortfolio(String co_email, long co_portfolioId);
     CoDevResponse getHeartOfStudies(String co_email);
     CoDevResponse getHeartOfProjects(String co_email);
+    CoDevResponse getCoPortfolios(String co_email);
 }
