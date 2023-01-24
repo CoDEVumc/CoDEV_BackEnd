@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.mapper;
 
+import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.domain.CoLanguage;
 import com.codevumc.codev_backend.domain.CoHeartOfStudy;
@@ -26,5 +27,6 @@ public interface CoStudyMapper {
     List<CoStudy> getCoStudies(Map<String, Object> condition);
     boolean deleteCoStudy(Map<String, Object> studyDto);
     boolean getCoRecruitStatus(String co_viewer, long co_studyId);
-    boolean deleteRecruitOfStudy(Map<String, Object> recruitDto);
+    void deleteRecruitOfStudy(Map<String, Object> recruitDto);
+    void insertCoRecruitOfStudy(CoRecruitOfStudy coRecruitOfStudy);
 }
