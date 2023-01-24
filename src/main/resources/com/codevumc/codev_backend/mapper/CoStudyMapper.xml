@@ -135,4 +135,10 @@
     <delete id="deleteRecruitOfStudy" parameterType="hashMap">
         delete from CoRecruitOfStudy where co_email = #{co_email} and co_studyId = #{co_studyId}
     </delete>
+
+    <insert id="insertCoRecruitOfStudy">
+        insert into CoRecruitOfStudy(co_email, co_studyId, co_portfolioId, co_motivation)
+        values (#{co_email}, #{co_studyId}, #{co_portfolioId}, #{co_motivation})
+    </insert>
+
 </mapper>
