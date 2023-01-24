@@ -40,12 +40,14 @@ public class CoProjectController extends JwtController {
         this.coProjectHeartService = coProjectHeartService;
     }
 
+    //상세보기
     @GetMapping("/{coProjectId}")
     public CoDevResponse getProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId) throws Exception {
         String co_viewer = getCoUserEmail(request);
         return coProjectService.getCoProject(co_viewer,co_projectId);
     }
 
+    //프로젝트 글쓰기
     @PostMapping(consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CoDevResponse insertProject(HttpServletRequest request, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
         CoProject coProject = CoProject.builder()
@@ -55,39 +57,50 @@ public class CoProjectController extends JwtController {
                 .co_content(project.get("co_content").toString())
                 .co_process(CoProject.DevType.from("ING"))
                 .co_deadLine(project.get("co_deadLine").toString()).build();
-        JSONParser parser = new JSONParser();
-        Gson gson = new Gson();
-        String co_parts = gson.toJson(project.get("co_parts"));
-        JSONArray co_partsList = (JSONArray) parser.parse(co_parts);
-        String co_languages = gson.toJson(project.get("co_languages"));
-        JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
-        CoDevResponse result = coProjectService.insertProject(coProject, co_languagesList, co_partsList);
-        if (files != null) {
-            List<CoPhotos> coPhotos = Arrays.asList(files)
-                    .stream()
-                    .map(file -> coFileService.storeFile(file, String.valueOf(coProject.getCo_projectId()), "PROJECT"))
-                    .collect(Collectors.toList());
-            coProject.setCo_photos(coPhotos);
 
-            coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", String.valueOf(coProject.getCo_projectId())), coProject.getCo_projectId());
+        CoDevResponse result = coProjectService.insertProject(coProject, getJSONArray(project.get("co_languages")), getJSONArray(project.get("co_parts")));
+        if (files != null) {
+            coProject.setCo_photos(uploadPhotos(files, String.valueOf(coProject.getCo_projectId())));
         }
         return result;
     }
 
+    //프로젝트 리스트
     @GetMapping(value = "/projects/{page}")
-    public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+    public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String co_locationTag, @RequestParam("coPartTag") String co_partTag, @RequestParam("coKeyword") String co_keyword, @RequestParam("coSortingTag") String co_sortingTag, @RequestParam("coProcessTag") String co_processTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coProjectService.getCoProjects(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag, limit, offset, pageNum);
+        return coProjectService.getCoProjects(getCoUserEmail(request), co_locationTag, co_partTag, co_keyword, co_sortingTag.toUpperCase(), co_processTag, limit, offset, pageNum);
     }
 
     //찜하기
     @PatchMapping("/heart/{coProjectId}")
-    public CoDevResponse heartOfProjectDelete(HttpServletRequest request,  @PathVariable("coProjectId") Long co_projectId) throws Exception {
+    public CoDevResponse heartOfProjectDelete(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
         return coProjectHeartService.changeHeart(co_email,co_projectId);
     }
 
+    //수정하기
+    @PutMapping(value = "/update/{coProjectId}", consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public CoDevResponse updateCoProject(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+        CoProject coProject = CoProject.builder()
+                .co_projectId(co_projectId)
+                .co_email(getCoUserEmail(request))
+                .co_title(project.get("co_title").toString())
+                .co_location(project.get("co_location").toString())
+                .co_content(project.get("co_content").toString())
+                .co_process(CoProject.DevType.from(project.get("co_process").toString()))
+                .co_deadLine(project.get("co_deadLine").toString()).build();
+
+        CoDevResponse result = coProjectService.updateProject(coProject, getJSONArray(project.get("co_languages")), getJSONArray(project.get("co_parts")));
+        coFileService.deleteFile(String.valueOf(coProject.getCo_projectId()), "PROJECT");
+        if (files != null) {
+            coProject.setCo_photos(uploadPhotos(files, String.valueOf(coProject.getCo_projectId())));
+        }
+        return result;
+    }
+
+    //글 삭제
     @DeleteMapping("/out/{coProjectId}")
     public CoDevResponse deleteCoProject(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
@@ -113,6 +126,23 @@ public class CoProjectController extends JwtController {
                 limit += SHOW_COUNT;
         }
         return limit;
+    }
+
+    private JSONArray getJSONArray(Object object) throws Exception{
+        JSONParser parser = new JSONParser();
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(object);
+        return (JSONArray) parser.parse(jsonArray);
+    }
+
+    private List<CoPhotos> uploadPhotos(MultipartFile[] files, String co_targetId) {
+        List<CoPhotos> coPhotos = Arrays.asList(files)
+                .stream()
+                .map(file -> coFileService.storeFile(file, co_targetId, "PROJECT"))
+                .collect(Collectors.toList());
+
+        coProjectService.updateMainImg(coFileService.getCo_MainImg("PROJECT", co_targetId), Long.parseLong(co_targetId));
+        return coPhotos;
     }
 }
 
