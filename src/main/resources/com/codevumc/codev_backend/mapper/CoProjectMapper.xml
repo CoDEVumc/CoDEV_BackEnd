@@ -122,6 +122,10 @@
         WHERE co_projectId = #{co_projectId}
     </delete>
 
+    <select id ="getCoHeartOfProjectEmail" resultType="String">
+        SELECT co_email FROM CoHeartOfProject WHERE co_projectId = ${co_projectId}
+    </select>
+
     <select id="getCoPartList" resultType="CoPartOfProject">
         select co_part, co_limit from CoPartOfProject where co_projectId = #{co_projectId}
     </select>
