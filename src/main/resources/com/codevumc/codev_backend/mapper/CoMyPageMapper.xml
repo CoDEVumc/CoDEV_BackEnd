@@ -71,7 +71,10 @@
 
 
     <select id="getPortfolioByCo_email" resultType="CoPortfolio">
-        SELECT co_portfolioId, co_email, co_title, co_rank, co_headLine, updatedAt  FROM CoPortfolio WHERE co_email = #{co_email};
+        SELECT co_portfolioId, cu.co_email, cu.co_nickName, cu.co_name, cu.profileImg, co_title, co_rank, co_headLine, cp.updatedAt
+        FROM CoPortfolio cp
+             JOIN CoUser cu on cp.co_email = cu.co_email
+        WHERE cu.co_email = #{co_email}
     </select>
 
 

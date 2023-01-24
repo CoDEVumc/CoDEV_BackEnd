@@ -15,6 +15,8 @@ public class CoPortfolio {
     private String co_email;
     private String co_title;
     private String co_name;
+    private String co_nickName;
+    private String profileImg;
     private String co_gender;
     private String co_birth;
     private String co_rank;
