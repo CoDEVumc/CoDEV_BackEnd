@@ -8,7 +8,9 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_study.CoStudyServiceImpl;
 import com.codevumc.codev_backend.service.co_studyheart.CoStudyHeartServiceImpl;
+import com.codevumc.codev_backend.service.co_studyrecruit.CoStudyRecruitServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -30,25 +32,27 @@ public class CoStudyController extends JwtController {
     private final CoFileServiceImpl coFileService;
     private final CoStudyServiceImpl coStudyService;
     private final CoStudyHeartServiceImpl coStudyHeartService;
+    private final CoStudyRecruitServiceImpl coStudyRecruitService;
 
-    public CoStudyController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoStudyServiceImpl coStudyService, CoStudyHeartServiceImpl coStudyHeartService) {
+    public CoStudyController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoStudyServiceImpl coStudyService, CoStudyHeartServiceImpl coStudyHeartService, CoStudyRecruitServiceImpl coStudyRecruitService) {
         super(jwtTokenProvider, jwtService);
         this.coFileService = coFileService;
         this.coStudyService = coStudyService;
         this.coStudyHeartService = coStudyHeartService;
+        this.coStudyRecruitService = coStudyRecruitService;
     }
 
     @GetMapping(value = "/studies/{page}")
-    public CoDevResponse getCoStudies(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+    public CoDevResponse getCoStudies(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coSortingTag") String co_sortingTag, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coStudyService.getCoStudies(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag, limit, offset, pageNum);
+        return coStudyService.getCoStudies(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, co_sortingTag.toUpperCase(), coProcessTag, limit, offset, pageNum);
     }
 
     @PatchMapping("/heart/{coStudyId}")
-    public CoDevResponse heartOfStudyUpdate(HttpServletRequest request, @PathVariable("coStudyId") Long co_studyId) throws Exception{
+    public CoDevResponse heartOfStudyUpdate(HttpServletRequest request, @PathVariable("coStudyId") Long co_studyId) throws Exception {
         String co_email = getCoUserEmail(request);
-        return coStudyHeartService.changeHeart(co_email,co_studyId);
+        return coStudyHeartService.changeHeart(co_email, co_studyId);
     }
 
     @PostMapping(consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
@@ -81,13 +85,25 @@ public class CoStudyController extends JwtController {
 
     @GetMapping("/{coStudyId}")
     public CoDevResponse getCoStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
-        return coStudyService.getCoStudy(coStudyId);
+        String co_viewer = getCoUserEmail(request);
+        return coStudyService.getCoStudy(co_viewer, coStudyId);
+    }
+
+    @DeleteMapping("/{coStudyId}")
+    public CoDevResponse deleteStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coStudyService.deleteStudy(co_email, coStudyId);
+    }
+
+    @DeleteMapping("/recruitment/{coStudyId}")
+    public CoDevResponse cancelRecruitStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
+        return coStudyRecruitService.cancelRecruitStudy(getCoUserEmail(request), coStudyId);
     }
 
     private int getLimitCnt(int pageNum) {
         int limit = SHOW_COUNT;
-        for(int i = 0; i <= pageNum; i++) {
-            if(i != 0)
+        for (int i = 0; i <= pageNum; i++) {
+            if (i != 0)
                 limit += SHOW_COUNT;
         }
         return limit;

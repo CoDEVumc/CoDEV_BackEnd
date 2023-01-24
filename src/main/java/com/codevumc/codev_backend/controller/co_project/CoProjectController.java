@@ -40,8 +40,9 @@ public class CoProjectController extends JwtController {
 
     //상세보기
     @GetMapping("/{coProjectId}")
-    public CoDevResponse getProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId){
-        return coProjectService.getCoProject(co_projectId);
+    public CoDevResponse getProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId) throws Exception {
+        String co_viewer = getCoUserEmail(request);
+        return coProjectService.getCoProject(co_viewer,co_projectId);
     }
 
     //프로젝트 글쓰기
@@ -64,10 +65,10 @@ public class CoProjectController extends JwtController {
 
     //프로젝트 리스트
     @GetMapping(value = "/projects/{page}")
-    public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
+    public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String co_locationTag, @RequestParam("coPartTag") String co_partTag, @RequestParam("coKeyword") String co_keyword, @RequestParam("coSortingTag") String co_sortingTag, @RequestParam("coProcessTag") String co_processTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coProjectService.getCoProjects(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, coProcessTag, limit, offset, pageNum);
+        return coProjectService.getCoProjects(getCoUserEmail(request), co_locationTag, co_partTag, co_keyword, co_sortingTag.toUpperCase(), co_processTag, limit, offset, pageNum);
     }
 
     //찜하기

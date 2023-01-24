@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_study;
 
+import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -53,10 +54,12 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     }
 
     @Override
-    public CoDevResponse getCoStudy(long co_studyId) {
+    public CoDevResponse getCoStudy(String co_viewer, long co_studyId) {
         try {
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if (coStudy.isPresent()) {
+                coStudy.get().setCo_viewer(co_viewer);
+                coStudy.get().setCo_recruitStatus(coStudyMapper.getCoRecruitStatus(co_viewer, co_studyId));
                 coStudy.get().setCo_languageList(coStudyMapper.getCoLanguageList(co_studyId));
                 coStudy.get().setCo_heartCount(coStudyMapper.getCoHeartCount(co_studyId));
                 coStudy.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_studyId), "STUDY"));
@@ -71,17 +74,18 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     }
 
     @Override
-    public CoDevResponse getCoStudies(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag, int limit, int offset, int page) {
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("co_email", co_email);
-        condition.put("co_locationTag", co_locationTag);
-        condition.put("co_partTag", setting(co_partTag));
-        condition.put("co_keyword", setting(co_keyword));
-        condition.put("co_processTag", co_processTag);
-        condition.put("limit", limit);
-        condition.put("offset", offset);
-        List<CoStudy> coStudies = this.coStudyMapper.getCoStudies(condition);
+    public CoDevResponse getCoStudies(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_sortingTag, String co_processTag, int limit, int offset, int page) {
         try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("co_locationTag", co_locationTag);
+            condition.put("co_partTag", setting(co_partTag));
+            condition.put("co_keyword", setting(co_keyword));
+            condition.put("co_sortingTag", co_sortingTag);
+            condition.put("co_processTag", co_processTag);
+            condition.put("limit", limit);
+            condition.put("offset", offset);
+            List<CoStudy> coStudies = this.coStudyMapper.getCoStudies(condition);
             setResponse(200, "success", coStudies);
             return addResponse("co_page", page);
         } catch (Exception e) {
@@ -90,4 +94,19 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         return null;
     }
 
+    @Override
+    public CoDevResponse deleteStudy(String co_email, long co_studyId) {
+        Map<String, Object> studyDto = new HashMap<>();
+        studyDto.put("co_email", co_email);
+        studyDto.put("co_studyId", co_studyId);
+        try {
+            Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
+            if (coStudy.isPresent()) {
+                return this.coStudyMapper.deleteCoStudy(studyDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
