@@ -10,6 +10,7 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
 import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartServiceImpl;
+import com.codevumc.codev_backend.service.co_projectrecruit.CoProjectRecruitServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
@@ -32,12 +33,14 @@ public class CoProjectController extends JwtController {
     private final CoFileServiceImpl coFileService;
     private final CoProjectServiceImpl coProjectService;
     private final CoProjectHeartServiceImpl coProjectHeartService;
+    private final CoProjectRecruitServiceImpl coProjectRecruitService;
 
-    public CoProjectController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoProjectServiceImpl coProjectService, CoProjectHeartServiceImpl coProjectHeartService) {
+    public CoProjectController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoProjectServiceImpl coProjectService, CoProjectHeartServiceImpl coProjectHeartService, CoProjectRecruitServiceImpl coProjectRecruitService) {
         super(jwtTokenProvider, jwtService);
         this.coFileService = coFileService;
         this.coProjectService = coProjectService;
         this.coProjectHeartService = coProjectHeartService;
+        this.coProjectRecruitService = coProjectRecruitService;
     }
 
     //상세보기
@@ -117,6 +120,12 @@ public class CoProjectController extends JwtController {
                 .co_motivation(portfolio.get("co_motivation").toString()).build();
         return coProjectService.insertCoRecruitOfProject(coRecruitOfProject);
 
+    }
+
+    @DeleteMapping("/recruitment/{coProjectId}")
+    public CoDevResponse cancelCoRecruitOfProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coProjectRecruitService.cancelCoRecruitOfProject(co_email,co_projectId);
     }
 
     private int getLimitCnt(int pageNum) {
