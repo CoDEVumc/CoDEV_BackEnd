@@ -1,10 +1,10 @@
-package com.codevumc.codev_backend.controller.co_mypageportfolio;
+package com.codevumc.codev_backend.controller.co_mypage;
 
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
-import com.codevumc.codev_backend.service.co_mypageportfolio.CoMyPagePortfolioServiceImpl;
+import com.codevumc.codev_backend.service.co_mypage.CoMyPageServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
@@ -20,12 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/codev/my-page")
-public class CoMyPagePortfolioController extends JwtController {
-    private final CoMyPagePortfolioServiceImpl coMyPagePortfolioService;
-
-    public CoMyPagePortfolioController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoMyPagePortfolioServiceImpl coMyPagePortfolioService) {
+public class CoMyPageController extends JwtController {
+    private final CoMyPageServiceImpl coMyPageService;
+    public CoMyPageController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoMyPageServiceImpl coMyPagePortfolioService) {
         super(jwtTokenProvider, jwtService);
-        this.coMyPagePortfolioService = coMyPagePortfolioService;
+        this.coMyPageService = coMyPagePortfolioService;
     }
 
     @ResponseBody
@@ -44,14 +43,14 @@ public class CoMyPagePortfolioController extends JwtController {
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
-        this.coMyPagePortfolioService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
+        this.coMyPageService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
         return null;
     }
 
     @GetMapping("/portfolio/{coPortfolioId}")
     public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long co_portfolioId, String email)throws Exception{
         String co_email = getCoUserEmail(request);
-        return coMyPagePortfolioService.getCoPortfolio(co_portfolioId,co_email);
+        return coMyPageService.getCoPortfolio(co_portfolioId,co_email);
     }
 
     @ResponseBody
@@ -71,12 +70,24 @@ public class CoMyPagePortfolioController extends JwtController {
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
-        return coMyPagePortfolioService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
+        return coMyPageService.updateCoPortfolio(coPortfolio, co_languagesList, co_linksList);
     }
 
     @DeleteMapping("/portfolio/{coPortfolioId}")
     public CoDevResponse deletePortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long coPortfolioId) throws Exception {
         String co_email = getCoUserEmail(request);
-        return this.coMyPagePortfolioService.deletePortfolio(co_email, coPortfolioId);
+        return this.coMyPageService.deletePortfolio(co_email, coPortfolioId);
+    }
+
+    @GetMapping("/hearts/studies")
+    public CoDevResponse getHeartOfStudies(HttpServletRequest request) throws Exception{
+        String co_email = getCoUserEmail(request);
+        return this.coMyPageService.getHeartOfStudies(co_email);
+    }
+
+    @GetMapping("/hearts/projects")
+    public CoDevResponse getHeartOfProjects(HttpServletRequest request) throws Exception{
+        String co_email = getCoUserEmail(request);
+        return this.coMyPageService.getHeartOfProjects(co_email);
     }
 }
