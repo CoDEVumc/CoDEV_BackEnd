@@ -59,6 +59,10 @@
         SELECT status FROM CoHeartOfStudy WHERE co_studyId = ${co_studyId}
     </select>
 
+    <select id ="getCoHeartOfStudyEmail" resultType="String">
+        SELECT co_email FROM CoHeartOfStudy WHERE co_studyId = ${co_studyId}
+    </select>
+
     <select id="getCoStudy" resultType="CoStudy">
         select
             cs.co_studyId as co_studyId,
