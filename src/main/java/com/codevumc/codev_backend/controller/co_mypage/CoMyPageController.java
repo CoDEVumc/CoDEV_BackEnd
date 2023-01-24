@@ -43,8 +43,7 @@ public class CoMyPageController extends JwtController {
         JSONArray co_languagesList = (JSONArray) parser.parse(co_languages);
         String co_links = gson.toJson(portfolio.get("co_links"));
         JSONArray co_linksList = (JSONArray) parser.parse(co_links);
-        this.coMyPageService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
-        return null;
+        return this.coMyPageService.insertCoPortfolio(coPortfolio, co_languagesList, co_linksList);
     }
 
     @GetMapping("/portfolio/{coPortfolioId}")
