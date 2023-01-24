@@ -95,22 +95,9 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
 
     @Override
     public CoDevResponse getHeartOfStudies(String co_email) {
-
-        List<List<CoStudy>> studylist = new ArrayList<>();
         try{
-            List<Long> coHeartsOfStudyId = coMyPageMapper.getCoHeartsOfStudy(co_email);
-            if(!coHeartsOfStudyId.isEmpty()){
-                for(Long coStudyId : coHeartsOfStudyId){
-                    //System.out.println("담아온 costudyID:"+coStudyId);
-                    long co_studyId = coStudyId;
-                    List<CoStudy> coStudies = this.coMyPageMapper.getCoStudies(co_email,co_studyId);
-
-                    studylist.add(coStudies);
-                }
-                return setResponse(200,"Complete",studylist);
-            }else{
-                return setResponse(403, "Forbidden", "불러오기 실패하였습니다.");
-            }
+            List<CoStudy> coHeartsOfStudy = coMyPageMapper.getCoHeartsOfStudy(co_email);
+            return setResponse(200, "Complete", coHeartsOfStudy);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -119,22 +106,22 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
 
     @Override
     public CoDevResponse getHeartOfProjects(String co_email) {
+        try {
+            List<CoProject> coHeartOfProjects = coMyPageMapper.getCoHeartsOfProject(co_email);
+            return setResponse(200, "Complete", coHeartOfProjects);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        List<List<CoProject>> projectList = new ArrayList<>();
-        try{
-            List<Long> coHeartsOfProjectId = coMyPageMapper.getCoHeartsOfProject(co_email);
-            if(!coHeartsOfProjectId.isEmpty()){
-                for(Long coProjectId : coHeartsOfProjectId){
-                    System.out.println("담아온 coProjectID:"+coProjectId);
-                    long co_projectId = coProjectId;
-                    List<CoProject> coProjects = this.coMyPageMapper.getCoProjects(co_projectId);
-                    projectList.add(coProjects);
-                }
-                return setResponse(200,"Complete",projectList);
-            }else{
-                return setResponse(403, "Forbidden", "불러오기 실패하였습니다.");
-            }
-        }catch (Exception e){
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getCoPortfolios(String co_email) {
+        try {
+            List<CoPortfolio> coPortfolios = this.coMyPageMapper.getPortfolioByCo_email(co_email);
+            return setResponse(200, "Complete", coPortfolios);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
