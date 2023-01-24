@@ -111,5 +111,11 @@
     <delete id="deleteCoProject" parameterType="hashMap">
         delete from CoProject where co_email = #{co_email} and co_projectId = #{co_projectId}
     </delete>
+    
+    <insert id="insertCoRecruitOfProject" parameterType="CoRecruitOfProject">
+        insert into CoRecruitOfProject
+            (co_email, co_projectId, co_portfolioId, co_partId, co_motivation)
+        VALUES(#{co_email}, #{co_projectId}, #{co_portfolioId}, #{co_partId}, #{co_motivation})
+    </insert>
 
 </mapper>

@@ -14,6 +14,7 @@ public class CoRecruitOfStudy {
     private String co_email;
     private long co_studyId;
     private long co_portfolioId;
+    private String co_motivation;
     private boolean isApproved;
     private Timestamp createdAt;
     private Timestamp updatedAt;

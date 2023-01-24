@@ -27,4 +27,5 @@ public interface CoProjectMapper {
     List<CoLanguage> getCoLanguageList(long co_projectId);
     long getCoHeartCount(long co_projectId);
     boolean deleteCoProject(Map<String, Object> coProjectDto);
+    void insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject);
 }

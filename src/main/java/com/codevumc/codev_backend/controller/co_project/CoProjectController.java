@@ -2,7 +2,9 @@ package com.codevumc.codev_backend.controller.co_project;
 
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
+import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
@@ -90,6 +92,18 @@ public class CoProjectController extends JwtController {
     public CoDevResponse deleteCoProject(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
         String co_email = getCoUserEmail(request);
         return coProjectService.deleteCoProject(co_email, co_projectId);
+    }
+
+    @PostMapping("/submission/{coProjectId}")
+    public CoDevResponse insertCoRecruitOfProject(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestBody Map<String, Object> portfolio) throws Exception{
+        CoRecruitOfProject coRecruitOfProject = CoRecruitOfProject.builder()
+                .co_projectId(co_projectId)
+                .co_email(getCoUserEmail(request))
+                .co_portfolioId(Long.parseLong(portfolio.get("co_portfolioId").toString()))
+                .co_partId(portfolio.get("co_partId").toString())
+                .co_motivation(portfolio.get("co_motivation").toString()).build();
+        return coProjectService.insertCoRecruitOfProject(coRecruitOfProject);
+
     }
 
     private int getLimitCnt(int pageNum) {
