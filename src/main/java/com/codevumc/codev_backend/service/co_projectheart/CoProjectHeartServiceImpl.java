@@ -7,6 +7,7 @@ import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -26,8 +27,10 @@ public class CoProjectHeartServiceImpl extends ResponseService implements CoProj
             }
             //찜취소
             else {
-                this.coProjectMapper.deleteCoHeartOfProject(co_email,co_projectId);
-                return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
+                if(Objects.equals(coProjectMapper.getCoHeartOfProjectEmail(co_projectId), co_email)) {
+                    this.coProjectMapper.deleteCoHeartOfProject(co_email, co_projectId);
+                    return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
+                }
             }
 
         }catch(Exception e){
