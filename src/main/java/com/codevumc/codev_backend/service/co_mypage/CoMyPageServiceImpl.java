@@ -20,16 +20,23 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
     private final CoMyPageMapper coMyPageMapper;
 
     @Override
-    public void insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links) {
-        this.coMyPagePortfolioMapper.insertCoPortfolio(coPortfolio);
-        for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
-            this.coMyPagePortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId);
+    public CoDevResponse insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links) {
+        try {
+            this.coMyPagePortfolioMapper.insertCoPortfolio(coPortfolio);
+            for (Object co_language : co_languages) {
+                long co_languageId = (long) co_language;
+                this.coMyPagePortfolioMapper.insertCoLanguageOfPortfolio(coPortfolio.getCo_portfolioId(), co_languageId);
+            }
+            for (Object co_plink : co_links) {
+                String co_link = (String) co_plink;
+                this.coMyPagePortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link);
+            }
+            return setResponse(200, "message", "포트폴리오가 작성되었습니다.");
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-        for (Object co_plink : co_links) {
-            String co_link = (String) co_plink;
-            this.coMyPagePortfolioMapper.insertCoLinkOfPortfolio(coPortfolio.getCo_portfolioId(), co_link);
-        }
+        return null;
+
     }
 
     @Override
