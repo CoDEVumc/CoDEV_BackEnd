@@ -127,7 +127,16 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
     public CoDevResponse getCoPortfolios(String co_email) {
         try {
             List<CoPortfolio> coPortfolios = this.coMyPageMapper.getPortfolioByCo_email(co_email);
-            return setResponse(200, "Complete", coPortfolios);
+            Map<String, String> map = this.coMyPageMapper.getUserProfile(co_email);
+            map.put("co_email", map.get("co_email"));
+            map.put("co_name", map.get("co_name"));
+            map.put("co_nickName", map.get("co_nickName"));
+            map.put("profileImg", map.get("profileImg"));
+            CoDevResponse result = setResponse(200, "Complete", map);
+            if(coPortfolios != null) {
+                addResponse("Portfolio", coPortfolios);
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }

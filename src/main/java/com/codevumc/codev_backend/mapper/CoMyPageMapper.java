@@ -7,10 +7,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface CoMyPageMapper {
     List<CoStudy> getCoHeartsOfStudy(String co_email);
     List<CoProject> getCoHeartsOfProject(String co_email);
     List<CoPortfolio> getPortfolioByCo_email(String co_email);
+    Map<String, String> getUserProfile(String co_email);
 }

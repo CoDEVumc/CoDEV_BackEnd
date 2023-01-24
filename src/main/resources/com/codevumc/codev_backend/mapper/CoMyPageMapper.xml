@@ -77,5 +77,8 @@
         WHERE cu.co_email = #{co_email}
     </select>
 
+    <select id="getUserProfile" resultType="Map">
+        select co_email, co_nickName, co_name, profileImg from CoUser where co_email = #{co_email}
+    </select>
 
 </mapper>
