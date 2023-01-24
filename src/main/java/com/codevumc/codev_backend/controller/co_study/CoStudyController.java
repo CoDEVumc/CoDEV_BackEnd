@@ -95,7 +95,7 @@ public class CoStudyController extends JwtController {
         return coStudyService.deleteStudy(co_email, coStudyId);
     }
 
-    @DeleteMapping("/recruit-cancel/{coStudyId}")
+    @DeleteMapping("/recruitment/{coStudyId}")
     public CoDevResponse cancelRecruitStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
         return coStudyRecruitService.cancelRecruitStudy(getCoUserEmail(request), coStudyId);
     }
