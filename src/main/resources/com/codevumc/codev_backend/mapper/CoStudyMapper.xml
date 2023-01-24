@@ -132,4 +132,7 @@
         delete from CoStudy where co_email = #{co_email} and co_studyId = #{co_studyId}
     </delete>
 
+    <delete id="deleteRecruitOfStudy" parameterType="hashMap">
+        delete from CoRecruitOfStudy where co_email = #{co_email} and co_studyId = #{co_studyId}
+    </delete>
 </mapper>
