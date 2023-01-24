@@ -56,11 +56,16 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     @Override
-    public CoPhotos updateFile(MultipartFile file, String co_targetId, String co_type) {
-        deleteFile(co_targetId, co_type);
-        if(file != null)
-            return uploadFile(file, co_targetId, co_type);
-        return null;
+    public void deleteFile(String co_targetId, String co_type) {
+        List<CoPhotos> coPhotos = this.coPhotos.findByCoTargetId(co_targetId, co_type);
+        if(coPhotos != null) {
+            for(CoPhotos list : coPhotos) {
+                File listOfFile = new File(list.getCo_filePath());
+                if(listOfFile.exists())
+                    listOfFile.delete();
+            }
+            this.coPhotos.deleteCoPhotoOfProject(co_targetId);
+        }
     }
 
     @Override
@@ -180,7 +185,7 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     private String getOriginFileName(String uuId) {
-        Optional<com.codevumc.codev_backend.domain.CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(uuId);
+        Optional<CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(uuId);
         if(coPhotoOfProject.isPresent())
             return coPhotoOfProject.get().getCo_fileName();
         return null;
@@ -194,17 +199,5 @@ public class CoFileServiceImpl implements CoFileService{
         }
         return null;
     }
-
-    private void deleteFile(String co_targetId, String co_type) {
-        List<com.codevumc.codev_backend.domain.CoPhotos> coPhotos = this.coPhotos.findByCoTargetId(co_targetId, co_type);
-
-        for(com.codevumc.codev_backend.domain.CoPhotos list : coPhotos) {
-            File listOfFile = new File(list.getCo_filePath());
-            if(listOfFile.exists())
-                listOfFile.delete();
-        }
-        this.coPhotos.deleteCoPhotoOfProject(co_targetId);
-    }
-
 
 }

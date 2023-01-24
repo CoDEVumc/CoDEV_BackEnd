@@ -10,6 +10,17 @@
         VALUES (#{co_email}, #{co_title}, #{co_location}, #{co_content}, #{co_process}, #{co_deadLine})
     </insert>
 
+    <update id="updateCoProject" parameterType="CoProject">
+        UPDATE CoProject
+        SET co_title = #{co_title},
+            co_location = #{co_location},
+            co_content = #{co_content},
+            co_mainImg = null,
+            co_process = #{co_process},
+            co_deadLine = #{co_deadLine}
+        WHERE co_projectId = #{co_projectId}
+    </update>
+
     <insert id="insertCoPartOfProject" parameterType="hashMap">
         INSERT INTO CoPartOfProject
             (co_projectId, co_part, co_limit)
@@ -21,6 +32,19 @@
         (co_projectId, co_languageId)
         values (#{co_projectId}, #{co_languageId})
     </insert>
+
+    <update id="updateCoPartOfProject" parameterType="hashMap">
+        UPDATE CoPartOfProject
+        SET co_part = #{co_part},
+            co_limit = #{co_limit}
+        WHERE co_projectId = #{co_projectId}
+    </update>
+
+    <update id="updateCoLanguageOfProject">
+        UPDATE CoLanguageOfProject
+        SET co_languageId = #{co_languageId}
+        WHERE co_projectId = #{co_projectId}
+    </update>
 
     <update id="updateCoMainImg">
         UPDATE CoProject
