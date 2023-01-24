@@ -33,4 +33,5 @@ public interface CoProjectMapper {
     boolean getCoRecruitStatus(String co_viewer, long co_projectId);
     String getCoHeartOfProjectEmail(Long co_projectId);
     void insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject);
+    boolean cancelCoRecruitOfProject(Map<String, Object> recruitDto);
 }
