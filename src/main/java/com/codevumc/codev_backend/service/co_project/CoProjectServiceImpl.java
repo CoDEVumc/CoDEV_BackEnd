@@ -33,19 +33,31 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         try {
             Map<String, Object> coPartsDto = new HashMap<>();
             this.coProjectMapper.insertCoProject(coProject);
-            for (Object co_language : co_languages) {
-                long co_languageId = (long) co_language;
-                this.coProjectMapper.insertCoLanguageOfProject(coProject.getCo_projectId(), co_languageId);
+
+            return insertCoLanguageAndCoPart(co_languages, co_parts, coProject.getCo_projectId(), coPartsDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+
+    }
+
+    @Override
+    public CoDevResponse updateProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
+        try {
+            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(coProject.getCo_projectId());
+            if(coProjectOptional.isPresent()) {
+                if(!coProject.getCo_email().equals(coProjectOptional.get().getCo_email()))
+                    return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
             }
-            JSONObject jsonObj;
-            for (Object co_part : co_parts) {
-                jsonObj = (JSONObject) co_part;
-                coPartsDto.put("co_projectId", coProject.getCo_projectId());
-                coPartsDto.put("co_part", jsonObj.get("co_part").toString());
-                coPartsDto.put("co_limit", jsonObj.get("co_limit"));
-                this.coProjectMapper.insertCoPartOfProject(coPartsDto);
-            }
-            return setResponse(200, "message", "프로젝트 모집글이 작성되었습니다.");
+            Map<String, Object> coPartsDto = new HashMap<>();
+            this.coProjectMapper.updateCoProject(coProject);
+
+            this.coProjectMapper.deleteCoLanguageOfProject(coProject.getCo_projectId());
+            this.coProjectMapper.deleteCoPartOfProject(coProject.getCo_projectId());
+
+            return insertCoLanguageAndCoPart(co_languages, co_parts, coProject.getCo_projectId(), coPartsDto);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
@@ -112,6 +124,22 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
             e.printStackTrace();
         }
         return null;
+    }
+
+    private CoDevResponse insertCoLanguageAndCoPart(JSONArray co_languages, JSONArray co_parts, long co_projectId, Map<String, Object> coPartsDto) throws Exception{
+        for (Object co_language : co_languages) {
+            long co_languageId = (long) co_language;
+            this.coProjectMapper.insertCoLanguageOfProject(co_projectId, co_languageId);
+        }
+        JSONObject jsonObj;
+        for (Object co_part : co_parts) {
+            jsonObj = (JSONObject) co_part;
+            coPartsDto.put("co_projectId", co_projectId);
+            coPartsDto.put("co_part", jsonObj.get("co_part").toString());
+            coPartsDto.put("co_limit", jsonObj.get("co_limit"));
+            this.coProjectMapper.insertCoPartOfProject(coPartsDto);
+        }
+        return setResponse(200, "message", "프로젝트 모집글이 수정되었습니다.");
     }
 
 }
