@@ -1,6 +1,5 @@
 package com.codevumc.codev_backend.service.co_project;
 
-import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -9,10 +8,8 @@ import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
-import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -74,17 +71,17 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_processTag, int limit, int offset, int page) {
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("co_email", co_email);
-        condition.put("co_locationTag", co_locationTag);
-        condition.put("co_partTag", setting(co_partTag));
-        condition.put("co_keyword", setting(co_keyword));
-        condition.put("co_processTag", co_processTag);
-        condition.put("limit", limit);
-        condition.put("offset", offset);
-
+    public CoDevResponse getCoProjects(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_sortingTag, String co_processTag, int limit, int offset, int page) {
         try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("co_locationTag", co_locationTag);
+            condition.put("co_partTag", setting(co_partTag));
+            condition.put("co_keyword", setting(co_keyword));
+            condition.put("co_sortingTag", co_sortingTag);
+            condition.put("co_processTag", co_processTag);
+            condition.put("limit", limit);
+            condition.put("offset", offset);
             List<CoProject> coProjects = this.coProjectMapper.getCoProjects(condition);
             setResponse(200, "success", coProjects);
             return addResponse("co_page", page);
@@ -95,10 +92,12 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public CoDevResponse getCoProject(long co_projectId) {
+    public CoDevResponse getCoProject(String co_viewer, long co_projectId) {
         try {
             Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
             if(coProject.isPresent()) {
+                coProject.get().setCo_viewer(co_viewer);
+                coProject.get().setCo_recruitStatus(coProjectMapper.getCoRecruitStatus(co_viewer, co_projectId));
                 coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
                 coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
