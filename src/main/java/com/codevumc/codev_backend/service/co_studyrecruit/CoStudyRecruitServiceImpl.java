@@ -32,6 +32,12 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             } else {
                 return setResponse(446, "Fail", "지원 실패하였습니다.");
             }
+        } catch (BindingException e) {
+            try {
+                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,6 +57,12 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                 return setResponse(200, "Complete", "지원 취소되었습니다.");
             } else {
                 return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+        } catch (BindingException e) {
+            try {
+                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
