@@ -64,7 +64,10 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             condition.put("co_email", co_email);
             condition.put("co_studyId", co_studyId);
             List<CoRecruitOfStudy> applicants = this.coStudyMapper.getCoStudyApplicants(condition);
-            return setResponse(200, "complete", applicants);
+            if (applicants.isEmpty())
+                return setResponse(200, "Complete", "지원자가 없습니다.");
+            else
+                return setResponse(200, "Complete", applicants);
         } catch (Exception e) {
             e.printStackTrace();
         }
