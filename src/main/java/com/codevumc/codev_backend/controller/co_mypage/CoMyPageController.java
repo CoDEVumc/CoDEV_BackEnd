@@ -94,4 +94,15 @@ public class CoMyPageController extends JwtController {
     public CoDevResponse getPortfolioList(HttpServletRequest request) throws Exception {
         return this.coMyPageService.getCoPortfolios(getCoUserEmail(request));
     }
+
+    @GetMapping("/recruitment")
+    public CoDevResponse getRecruitment(HttpServletRequest request, @RequestParam("type") String type) throws Exception{
+        if(type.equals("study")){
+            return this.coMyPageService.getRecruitStudies(getCoUserEmail(request));
+        }
+        else if(type.equals("project")){
+            return this.coMyPageService.getRecruitProjects(getCoUserEmail(request));
+        }
+        return null;
+    }
 }
