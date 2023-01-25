@@ -79,7 +79,7 @@
         select co_email, co_nickName, co_name, profileImg from CoUser where co_email = #{co_email}
     </select>
 
-    <select id="getParticipateOfProjects" resultType="CoProject">
+    <select id="getRecruitOfProjects" resultType="CoProject">
         select distinct cp.co_projectId as 'co_projectId',
                 cp.co_email as 'co_email',
                 cp.co_title as 'co_title',
@@ -115,7 +115,7 @@
         order by crp.createdAt desc
     </select>
 
-    <select id="getParticipateOfStudies" resultType="CoStudy">
+    <select id="getRecruitOfStudies" resultType="CoStudy">
         select distinct cs.co_studyId as 'co_studyId',
                 cs.co_email as 'co_email',
                 cs.co_title as 'co_title',

@@ -96,12 +96,12 @@ public class CoMyPageController extends JwtController {
     }
 
     @GetMapping("/recruitment")
-    public CoDevResponse getParticipation(HttpServletRequest request, @RequestParam("type") String type) throws Exception{
+    public CoDevResponse getRecruitment(HttpServletRequest request, @RequestParam("type") String type) throws Exception{
         if(type.equals("study")){
-            return this.coMyPageService.getParticipateStudies(getCoUserEmail(request));
+            return this.coMyPageService.getRecruitStudies(getCoUserEmail(request));
         }
         else if(type.equals("project")){
-            return this.coMyPageService.getParticipateProjects(getCoUserEmail(request));
+            return this.coMyPageService.getRecruitProjects(getCoUserEmail(request));
         }
         return null;
     }
