@@ -158,4 +158,14 @@
         delete from CoRecruitOfProject where co_email = #{co_email} and co_projectId = #{co_projectId}
     </delete>
 
+    <select id="getCoProjectProcess" resultType="boolean">
+        select EXISTS(select co_process from CoProject where co_projectId=#{co_projectId} and co_process=#{co_process}) as co_process
+    </select>
+
+    <update id="updateCoProjectdeadLine" parameterType="CoProject">
+        UPDATE CoProject
+        SET co_deadLine = #{co_deadLine}
+        WHERE co_projectId = #{co_projectId} and co_email = #{co_email}
+    </update>
+
 </mapper>
