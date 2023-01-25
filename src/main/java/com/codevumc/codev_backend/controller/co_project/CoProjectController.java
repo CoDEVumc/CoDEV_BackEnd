@@ -118,7 +118,7 @@ public class CoProjectController extends JwtController {
                 .co_portfolioId(Long.parseLong(portfolio.get("co_portfolioId").toString()))
                 .co_partId(portfolio.get("co_partId").toString())
                 .co_motivation(portfolio.get("co_motivation").toString()).build();
-        return coProjectService.insertCoRecruitOfProject(coRecruitOfProject);
+        return coProjectRecruitService.insertCoRecruitOfProject(coRecruitOfProject);
 
     }
 

@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_projectrecruit;
 
+import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
@@ -13,6 +14,24 @@ import java.util.Map;
 @AllArgsConstructor
 public class CoProjectRecruitServiceImpl extends ResponseService implements CoProjectRecruitService {
     private final CoProjectMapper coProjectMapper;
+
+    @Override
+    public CoDevResponse insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject){
+        try {
+            boolean coRecruitOfStatus = coProjectMapper.getCoRecruitStatus(coRecruitOfProject.getCo_email(),coRecruitOfProject.getCo_projectId());
+            if(!coRecruitOfStatus){
+                this.coProjectMapper.insertCoRecruitOfProject(coRecruitOfProject);
+                return setResponse(200, "message", "지원되었습니다");
+            }
+            else {
+                return setResponse(445,"message","이미 지원한 프로젝트입니다");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public CoDevResponse cancelCoRecruitOfProject(String co_email, long co_projectId) {
