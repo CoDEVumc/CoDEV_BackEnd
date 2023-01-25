@@ -8,5 +8,5 @@ import java.util.List;
 public class CoApplicantInfo {
     private String co_part;
     private int co_limit;
-    private List<CoPart> co_applicants;
+    private List<CoUser> co_applicants;
 }

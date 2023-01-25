@@ -168,4 +168,13 @@
         WHERE co_projectId = #{co_projectId} and co_email = #{co_email}
     </update>
 
+    <select id="getCoApplicantsOfProject" parameterType="hashMap" resultType="CoUser">
+        select crp.co_email as 'co_email',
+               cu.co_nickName as 'co_nickname'
+        from CoRecruitOfProject crp
+                 left join CoUser cu on crp.co_email = cu.co_email
+        where crp.co_projectId = #{co_projectId}
+          and crp.co_partId = #{co_part};
+    </select>
+
 </mapper>
