@@ -168,7 +168,7 @@
         WHERE co_projectId = #{co_projectId} and co_email = #{co_email}
     </update>
 
-    <select id="getCoApplicantsOfProject" parameterType="hashMap" resultType="CoUser">
+    <select id="getCoApplicantsOfProject" parameterType="hashMap" resultType="CoUserInfo">
         select crp.co_email as 'co_email',
                cu.co_nickName as 'co_nickname'
         from CoRecruitOfProject crp

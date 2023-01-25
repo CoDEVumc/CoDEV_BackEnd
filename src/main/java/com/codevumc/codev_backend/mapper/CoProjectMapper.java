@@ -33,5 +33,5 @@ public interface CoProjectMapper {
     boolean cancelCoRecruitOfProject(Map<String, Object> recruitDto);
     boolean getCoProjectProcess( long co_projectId, String co_process);
     void updateCoProjectdeadLine(CoProject coProject);
-    List<CoUser> getCoApplicantsOfProject(Map<String, Object> applicantDto);
+    List<CoUserInfo> getCoApplicantsOfProject(Map<String, Object> applicantDto);
 }
