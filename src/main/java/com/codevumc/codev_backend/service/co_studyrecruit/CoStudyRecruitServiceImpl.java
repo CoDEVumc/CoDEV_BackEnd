@@ -19,9 +19,13 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
 
     @Override
     public CoDevResponse submitCoStudy(CoRecruitOfStudy coRecruitOfStudy) {
+        Map<String, Object> recruitDto = new HashMap<>();
+        recruitDto.put("co_email", coRecruitOfStudy.getCo_email());
+        recruitDto.put("co_studyId", coRecruitOfStudy.getCo_studyId());
         try {
             boolean coRecruitStatus = coStudyMapper.getCoRecruitStatus(coRecruitOfStudy.getCo_email(), coRecruitOfStudy.getCo_studyId());
-            if (!coRecruitStatus) {
+            boolean isWriter = coStudyMapper.isWriter(recruitDto);
+            if (!coRecruitStatus && !isWriter) {
                 this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
                 return setResponse(200, "Complete", "지원 완료되었습니다.");
             } else {
@@ -40,7 +44,8 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
         recruitDto.put("co_studyId", co_studyId);
         try {
             boolean coRecruitStatus = coStudyMapper.getCoRecruitStatus(co_email, co_studyId);
-            if (coRecruitStatus) {
+            boolean isWriter = coStudyMapper.isWriter(recruitDto);
+            if (coRecruitStatus && !isWriter) {
                 this.coStudyMapper.deleteRecruitOfStudy(recruitDto);
                 return setResponse(200, "Complete", "지원 취소되었습니다.");
             } else {
