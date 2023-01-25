@@ -74,10 +74,10 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                     return setResponse(403, "Forbidden", "작성자가 아닙니다.");
                 List<CoApplicantInfo> coApplicantsOfProject = new ArrayList<>();
                 List<CoPartOfProject> coPartsOfProject = this.coProjectMapper.getCoPartList(co_projectId);  // 각 파트별 인원수 정보
-                CoApplicantInfo coApplicantInfo = new CoApplicantInfo();
                 Map<String, Object> applicantDto = new HashMap<>();
                 // 파트 수 만큼 반복(추후 파트 변동 가능성)
                 for (CoPartOfProject coPartOfProject : coPartsOfProject) {
+                    CoApplicantInfo coApplicantInfo = new CoApplicantInfo();
                     coApplicantInfo.setCo_part(coPartOfProject.getCo_part());
                     coApplicantInfo.setCo_limit(coPartOfProject.getCo_limit());
                     applicantDto.put("co_projectId", co_projectId);
