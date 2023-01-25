@@ -30,17 +30,10 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     @Override
     public CoDevResponse insertStudy(CoStudy coStudy, JSONArray co_languages) {
         try {
-            this.coStudyMapper.insertCoStudy(coStudy);
-            for (Object co_language : co_languages) {
-                long co_languageId = (long) co_language;
-                this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
-            }
             Map<String, Object> coPartDto = new HashMap<>();
-            coPartDto.put("co_studyId", coStudy.getCo_studyId());
-            coPartDto.put("co_part", coStudy.getCo_part());
-            coPartDto.put("co_total", coStudy.getCo_total());
-            this.coStudyMapper.insertCoPartOfStudy(coPartDto);
-            return setResponse(200, "message", "스터디 모집글이 작성되었습니다.");
+            this.coStudyMapper.insertCoStudy(coStudy);
+
+            return insertCoLanguage(co_languages, coStudy.getCo_studyId(), coPartDto);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
@@ -51,6 +44,25 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     @Override
     public void updateMainImg(String co_mainImg, long co_studyId) {
         coStudyMapper.updateCoMainImg(co_mainImg, co_studyId);
+    }
+
+    @Override
+    public CoDevResponse updateStudy(CoStudy coStudy, JSONArray co_languages) {
+        try {
+            Optional<CoStudy> coStudyOptional = coStudyMapper.getCoStudy(coStudy.getCo_studyId());
+            if(coStudyOptional.isPresent()) {
+                if(!coStudy.getCo_email().equals(coStudyOptional.get().getCo_email()))
+                    return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+            Map<String, Object> coPartsDto = new HashMap<>();
+            this.coStudyMapper.updateCoStudy(coStudy);
+
+            this.coStudyMapper.deleteCoLanguageOfStudy(coStudy.getCo_studyId());
+            return insertCoLanguage(co_languages, coStudy.getCo_studyId(), coPartsDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
     }
 
     @Override
@@ -108,5 +120,14 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             e.printStackTrace();
         }
         return null;
+    }
+
+    private CoDevResponse insertCoLanguage(JSONArray co_languages, long co_studyId, Map<String, Object> coPartsDto) throws Exception{
+        for (Object co_language : co_languages) {
+            long co_languageId = (long) co_language;
+            this.coStudyMapper.insertCoLanguageOfStudy(co_studyId, co_languageId);
+        }
+
+        return setResponse(200, "message", "스터디 모집글이 작성/수정되었습니다.");
     }
 }
