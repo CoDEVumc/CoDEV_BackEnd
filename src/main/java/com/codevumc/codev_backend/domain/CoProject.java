@@ -34,6 +34,7 @@ public class CoProject {
     private List<CoPart> co_partList;
     private List<CoLanguage> co_languageList;
 
+    @Getter
     @AllArgsConstructor
     public enum DevType {
         ING("ING"), TEST("TEST"), FIN("FIN");
