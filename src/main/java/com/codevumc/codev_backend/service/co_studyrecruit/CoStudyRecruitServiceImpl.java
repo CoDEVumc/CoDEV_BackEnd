@@ -6,6 +6,7 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
+import org.apache.ibatis.binding.BindingException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -72,6 +73,12 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                     return setResponse(200, "Complete", applicants);
             } else {
                 return setResponse(403, "Forbidden", "권한이 없습니다.");
+            }
+        } catch (BindingException e) {
+            try {
+                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
