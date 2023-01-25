@@ -68,10 +68,12 @@
         order by chp.createdAt desc
     </select>
 
+
+
     <select id="getPortfolioByCo_email" resultType="CoPortfolio">
         SELECT co_portfolioId, cu.co_email, cu.co_nickName, cu.co_name, cu.profileImg, co_title, co_rank, co_headLine, cp.updatedAt
         FROM CoPortfolio cp
-             JOIN CoUser cu on cp.co_email = cu.co_email
+                 JOIN CoUser cu on cp.co_email = cu.co_email
         WHERE cu.co_email = #{co_email}
     </select>
 
@@ -79,22 +81,52 @@
         select co_email, co_nickName, co_name, profileImg from CoUser where co_email = #{co_email}
     </select>
 
-    <select id="getRecruitOfProjects" resultType="CoProject">
+    <select id="getParticipateOfStudies" resultType="CoStudy">
+        select distinct cs.co_studyId as 'co_studyId',
+                        cs.co_email as 'co_email',
+                        cs.co_title as 'co_title',
+                        cs.co_location as 'co_location',
+                        cs.co_content as 'co_content',
+                        cs.co_mainImg as 'co_mainImg',
+                        cs.co_process as 'co_process',
+                        DATEDIFF(cs.co_deadLine, now())           as 'co_deadLine',
+                        IF(chs.status is null, false, chs.status) as 'co_heart',
+                        (select count(*) from CoHeartOfStudy as chscnt where cs.co_studyId = chscnt.co_studyId) as 'co_heartCount',
+                        cls.co_languages as 'co_languages',
+                        cps.co_part as 'co_part',
+                        cps.co_total as 'co_total',
+                        crs.createdAt as 'createdAt',
+                        cs.status as 'status'
+        from CoStudy as cs
+                 left join CoHeartOfStudy as chs on cs.co_studyId = chs.co_studyId and chs.co_email = #{co_email}
+                 left join CoRecruitOfStudy as crs on cs.co_studyId = crs.co_studyId and crs.co_email = #{co_email}
+                 left join CoPartOfStudy as cps on cs.co_studyId = cps.co_studyId
+                 left join (select co_studyId, GROUP_CONCAT(cl.co_logo SEPARATOR ',') as co_languages
+                            from CoLanguageOfStudy as clo
+                                     join CoLanguage as cl on clo.co_languageId = cl.co_languageId
+                            group by co_studyId) as cls
+                           on cs.co_studyId = cls.co_studyId
+        where
+            crs.isApproved = true
+        order by crs.createdAt desc
+    </select>
+
+    <select id="getParticipateOfProjects" resultType="CoProject">
         select distinct cp.co_projectId as 'co_projectId',
-                cp.co_email as 'co_email',
-                cp.co_title as 'co_title',
-                cp.co_location as 'co_location',
-                cp.co_content as 'co_content',
-                cp.co_mainImg as 'co_mainImg',
-                cp.co_process as 'co_process',
-                DATEDIFF(cp.co_deadLine, now())           as 'co_deadLine',
-                IF(chp.status is null, false, chp.status) as 'co_heart',
-                (select count(*) from CoHeartOfProject as chpcnt where cp.co_projectId = chpcnt.co_projectId) as 'co_heartCount',
-                clp.co_languages as 'co_languages',
-                cpp.co_parts as 'co_parts',
-                cpIs.co_total as 'co_total',
-                crp.createdAt as 'createdAt',
-                cp.status as 'status'
+                        cp.co_email as 'co_email',
+                        cp.co_title as 'co_title',
+                        cp.co_location as 'co_location',
+                        cp.co_content as 'co_content',
+                        cp.co_mainImg as 'co_mainImg',
+                        cp.co_process as 'co_process',
+                        DATEDIFF(cp.co_deadLine, now())           as 'co_deadLine',
+                        IF(chp.status is null, false, chp.status) as 'co_heart',
+                        (select count(*) from CoHeartOfProject as chpcnt where cp.co_projectId = chpcnt.co_projectId) as 'co_heartCount',
+                        clp.co_languages as 'co_languages',
+                        cpp.co_parts as 'co_parts',
+                        cpIs.co_total as 'co_total',
+                        crp.createdAt as 'createdAt',
+                        cp.status as 'status'
         from CoProject as cp
                  left join CoHeartOfProject as chp on cp.co_projectId = chp.co_projectId and chp.co_email = #{co_email}
                  left join CoRecruitOfProject as crp on cp.co_projectId = crp.co_projectId and crp.co_email = #{co_email}
@@ -111,9 +143,10 @@
                             group by co_projectId) as clp
                            on cp.co_projectId = clp.co_projectId
         where
-            crp.status = true
+            crp.isApproved = true
         order by crp.createdAt desc
     </select>
+
 
     <select id="getRecruitOfStudies" resultType="CoStudy">
         select distinct cs.co_studyId as 'co_studyId',
@@ -209,4 +242,5 @@
             crp.isApproved = true
         order by crp.createdAt desc
     </select>
+
 </mapper>
