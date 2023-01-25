@@ -31,11 +31,11 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                 this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
                 return setResponse(200, "Complete", "지원 완료되었습니다.");
             } else {
-                return setResponse(446, "Fail", "지원 실패하였습니다.");
+                return setResponse(403, "Forbidden", "지원 실패하였습니다.");
             }
         } catch (BindingException e) {
             try {
-                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
+                return setResponse(446, "Fail", "없는 아이디 이거나 잘못된 아이디 입니다.");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -61,7 +61,7 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             }
         } catch (BindingException e) {
             try {
-                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
+                return setResponse(446, "Fail", "없는 아이디 이거나 잘못된 아이디 값 입니다.");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -89,7 +89,7 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             }
         } catch (BindingException e) {
             try {
-                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
+                return setResponse(446, "Fail", "없는 아이디 이거나 잘못된 아이디 값 입니다.");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
