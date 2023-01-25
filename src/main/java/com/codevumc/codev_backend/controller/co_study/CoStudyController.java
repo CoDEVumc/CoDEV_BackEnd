@@ -116,6 +116,11 @@ public class CoStudyController extends JwtController {
         return coStudyRecruitService.cancelRecruitStudy(getCoUserEmail(request), coStudyId);
     }
 
+    @GetMapping("/recruitment/{coStudyId}")
+    public CoDevResponse getCoStudyApplicants(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
+        return coStudyRecruitService.getCoStudyApplicants(getCoUserEmail(request), coStudyId);
+    }
+
     private int getLimitCnt(int pageNum) {
         int limit = SHOW_COUNT;
         for (int i = 0; i <= pageNum; i++) {
