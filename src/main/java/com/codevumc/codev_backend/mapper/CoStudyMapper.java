@@ -30,4 +30,5 @@ public interface CoStudyMapper {
     void insertCoRecruitOfStudy(CoRecruitOfStudy coRecruitOfStudy);
     boolean deleteRecruitOfStudy(Map<String, Object> recruitDto);
     String getCoHeartOfStudyEmail(Long co_studyId);
+    List<CoRecruitOfStudy> getCoStudyApplicants(Map<String, Object> condition);
 }
