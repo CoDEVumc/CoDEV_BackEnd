@@ -84,8 +84,6 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                             .co_limit(coPartOfProject.getCo_limit())
                             .co_applicants(this.coProjectMapper.getCoApplicantsOfProject(applicantDto))
                             .build();
-                    coApplicantInfo.setCo_part(coPartOfProject.getCo_part());
-                    coApplicantInfo.setCo_limit(coPartOfProject.getCo_limit());
                     coApplicantsOfProject.add(coApplicantInfo);
                 }
                 return setResponse(200, "message", coApplicantsOfProject);
