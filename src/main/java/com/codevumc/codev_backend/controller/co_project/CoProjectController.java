@@ -129,12 +129,12 @@ public class CoProjectController extends JwtController {
     }
 
     @PatchMapping("/recruitment/extension/{coProjectId}")
-    public CoDevResponse updateCoProjectdeadLine(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestBody Map<String, Object> project) throws Exception {
+    public CoDevResponse updateCoProjectDeadLine(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestBody Map<String, Object> project) throws Exception {
         CoProject coProject = CoProject.builder()
                 .co_projectId(co_projectId)
                 .co_email(getCoUserEmail(request))
                 .co_deadLine(project.get("co_deadLine").toString()).build();
-        return coProjectService.updateCoProjectdeadLine(coProject);
+        return coProjectService.updateCoProjectDeadLine(coProject);
     }
 
     private int getLimitCnt(int pageNum) {

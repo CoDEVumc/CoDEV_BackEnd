@@ -144,7 +144,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public CoDevResponse updateCoProjectdeadLine(CoProject coProject) {
+    public CoDevResponse updateCoProjectDeadLine(CoProject coProject) {
         try {
             Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(coProject.getCo_projectId());
             boolean coProjectProcess = coProjectMapper.getCoProjectProcess(coProject.getCo_projectId(), CoProject.DevType.FIN.getValue());
