@@ -118,13 +118,4 @@ public class CoMyPageController extends JwtController {
         return null;
     }
 
-    @GetMapping("/participation")
-    public CoDevResponse getParticipation(HttpServletRequest request, @RequestParam("type") String type) throws Exception {
-        if (type.equals("study")) {
-            return this.coMyPageService.getParticipateStudies(getCoUserEmail(request));
-        } else if (type.equals("project")) {
-            return this.coMyPageService.getParticipateProjects(getCoUserEmail(request));
-        }
-        return null;
-    }
 }
