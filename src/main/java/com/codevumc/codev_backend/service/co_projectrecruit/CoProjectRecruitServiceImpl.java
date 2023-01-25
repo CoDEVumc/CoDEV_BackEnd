@@ -71,18 +71,21 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
             Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(co_projectId);
             if(coProjectOptional.isPresent()){  // 글 존재여부
                 if (!coProjectOptional.get().getCo_email().equals(co_email)) // pm이 아닌 경우
-                    return setResponse(403, "Forbidden", "작성자가 아닙니다.");
+                    return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
                 List<CoApplicantInfo> coApplicantsOfProject = new ArrayList<>();
-                List<CoPartOfProject> coPartsOfProject = this.coProjectMapper.getCoPartList(co_projectId);  // 각 파트별 인원수 정보
+                List<CoPartOfProject> coPartsOfProject = this.coProjectMapper.getCoPartList(co_projectId);
                 Map<String, Object> applicantDto = new HashMap<>();
                 // 파트 수 만큼 반복(추후 파트 변동 가능성)
                 for (CoPartOfProject coPartOfProject : coPartsOfProject) {
-                    CoApplicantInfo coApplicantInfo = new CoApplicantInfo();
-                    coApplicantInfo.setCo_part(coPartOfProject.getCo_part());
-                    coApplicantInfo.setCo_limit(coPartOfProject.getCo_limit());
                     applicantDto.put("co_projectId", co_projectId);
                     applicantDto.put("co_part", coPartOfProject.getCo_part());
-                    coApplicantInfo.setCo_applicants(this.coProjectMapper.getCoApplicantsOfProject(applicantDto));
+                    CoApplicantInfo coApplicantInfo = CoApplicantInfo.builder()
+                            .co_part(coPartOfProject.getCo_part())
+                            .co_limit(coPartOfProject.getCo_limit())
+                            .co_applicants(this.coProjectMapper.getCoApplicantsOfProject(applicantDto))
+                            .build();
+                    coApplicantInfo.setCo_part(coPartOfProject.getCo_part());
+                    coApplicantInfo.setCo_limit(coPartOfProject.getCo_limit());
                     coApplicantsOfProject.add(coApplicantInfo);
                 }
                 return setResponse(200, "message", coApplicantsOfProject);
