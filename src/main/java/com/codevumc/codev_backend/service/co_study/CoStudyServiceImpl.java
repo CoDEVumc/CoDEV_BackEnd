@@ -1,6 +1,5 @@
 package com.codevumc.codev_backend.service.co_study;
 
-import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -30,10 +29,8 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
     @Override
     public CoDevResponse insertStudy(CoStudy coStudy, JSONArray co_languages) {
         try {
-            Map<String, Object> coPartDto = new HashMap<>();
             this.coStudyMapper.insertCoStudy(coStudy);
-
-            return insertCoLanguage(co_languages, coStudy.getCo_studyId(), coPartDto);
+            return insertCoLanguageAndCoPart(co_languages, coStudy);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
@@ -54,11 +51,9 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
                 if(!coStudy.getCo_email().equals(coStudyOptional.get().getCo_email()))
                     return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
             }
-            Map<String, Object> coPartsDto = new HashMap<>();
             this.coStudyMapper.updateCoStudy(coStudy);
-
             this.coStudyMapper.deleteCoLanguageOfStudy(coStudy.getCo_studyId());
-            return insertCoLanguage(co_languages, coStudy.getCo_studyId(), coPartsDto);
+            return insertCoLanguageAndCoPart(co_languages, coStudy);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
@@ -122,12 +117,16 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         return null;
     }
 
-    private CoDevResponse insertCoLanguage(JSONArray co_languages, long co_studyId, Map<String, Object> coPartsDto) throws Exception{
+    private CoDevResponse insertCoLanguageAndCoPart(JSONArray co_languages, CoStudy coStudy) throws Exception{
+        Map<String, Object> coPartDto = new HashMap<>();
+        coPartDto.put("co_studyId", coStudy.getCo_studyId());
+        coPartDto.put("co_part", coStudy.getCo_part());
+        coPartDto.put("co_total", coStudy.getCo_total());
         for (Object co_language : co_languages) {
             long co_languageId = (long) co_language;
-            this.coStudyMapper.insertCoLanguageOfStudy(co_studyId, co_languageId);
+            this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
         }
-
+        this.coStudyMapper.insertCoPartOfStudy(coPartDto);
         return setResponse(200, "message", "스터디 모집글이 작성/수정되었습니다.");
     }
 }
