@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,24 +21,20 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
 
     @Override
     public CoDevResponse submitCoStudy(CoRecruitOfStudy coRecruitOfStudy) {
-        Map<String, Object> recruitDto = new HashMap<>();
-        recruitDto.put("co_email", coRecruitOfStudy.getCo_email());
-        recruitDto.put("co_studyId", coRecruitOfStudy.getCo_studyId());
         try {
             boolean coRecruitStatus = coStudyMapper.getCoRecruitStatus(coRecruitOfStudy.getCo_email(), coRecruitOfStudy.getCo_studyId());
-            boolean isWriter = coStudyMapper.isWriter(recruitDto);
-            if (!coRecruitStatus && !isWriter) {
-                this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
-                return setResponse(200, "Complete", "지원 완료되었습니다.");
-            } else {
-                return setResponse(446, "Fail", "지원 실패하였습니다.");
+            Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(coRecruitOfStudy.getCo_studyId());
+            if(coStudy.isPresent()) {
+                if(coStudy.get().getCo_email().equals(coRecruitOfStudy.getCo_email()))
+                    return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
+                if (!coRecruitStatus) {
+                    this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
+                    return setResponse(200, "message", "지원 완료되었습니다.");
+                } else {
+                    return setResponse(445,"message","이미 지원한 프로젝트입니다");
+                }
             }
-        } catch (BindingException e) {
-            try {
-                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,21 +46,21 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
         Map<String, Object> recruitDto = new HashMap<>();
         recruitDto.put("co_email", co_email);
         recruitDto.put("co_studyId", co_studyId);
+
         try {
             boolean coRecruitStatus = coStudyMapper.getCoRecruitStatus(co_email, co_studyId);
-            boolean isWriter = coStudyMapper.isWriter(recruitDto);
-            if (coRecruitStatus && !isWriter) {
-                this.coStudyMapper.deleteRecruitOfStudy(recruitDto);
-                return setResponse(200, "Complete", "지원 취소되었습니다.");
-            } else {
-                return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
+            if(coStudy.isPresent()) {
+                if(coStudy.get().getCo_email().equals(co_email))
+                    return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
+                if (coRecruitStatus) {
+                    this.coStudyMapper.deleteRecruitOfStudy(recruitDto);
+                    return setResponse(200, "message", "지원 취소되었습니다.");
+                } else {
+                    return setResponse(445, "message", "이미 지원이 취소되었습니다.");
+                }
             }
-        } catch (BindingException e) {
-            try {
-                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,21 +73,13 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
             condition.put("co_studyId", co_studyId);
-            boolean isWriter = coStudyMapper.isWriter(condition);
-            List<CoRecruitOfStudy> applicants = this.coStudyMapper.getCoStudyApplicants(condition);
-            if (isWriter) {
-                if (applicants.isEmpty())
-                    return setResponse(200, "Complete", "지원자가 없습니다.");
-                else
+            Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
+            if(coStudy.isPresent()) {
+                if(coStudy.get().getCo_email().equals(co_email)) {
+                    List<CoRecruitOfStudy> applicants = this.coStudyMapper.getCoStudyApplicants(condition);
                     return setResponse(200, "Complete", applicants);
-            } else {
-                return setResponse(403, "Forbidden", "권한이 없습니다.");
-            }
-        } catch (BindingException e) {
-            try {
-                return setResponse(403, "Forbidden", "잘못된 아이디 값 입니다.");
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                }else
+                    return setResponse(403, "Forbidden", "권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();

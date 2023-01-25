@@ -4,6 +4,8 @@ import com.codevumc.codev_backend.domain.CoHeartOfStudy;
 import com.codevumc.codev_backend.domain.CoLanguage;
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.domain.CoLanguage;
+import com.codevumc.codev_backend.domain.CoHeartOfStudy;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,10 +29,9 @@ public interface CoStudyMapper {
     void deleteCoHeartOfStudy(String co_email, Long co_studyId);
     List<CoStudy> getCoStudies(Map<String, Object> condition);
     boolean deleteCoStudy(Map<String, Object> studyDto);
-    boolean getCoRecruitStatus(String co_viewer, long co_studyId);
+    boolean getCoRecruitStatus(String co_email, long co_studyId);
     void insertCoRecruitOfStudy(CoRecruitOfStudy coRecruitOfStudy);
     void deleteRecruitOfStudy(Map<String, Object> recruitDto);
     String getCoHeartOfStudyEmail(Long co_studyId);
     List<CoRecruitOfStudy> getCoStudyApplicants(Map<String, Object> condition);
-    boolean isWriter(Map<String, Object> recruitDto);
 }
