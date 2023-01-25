@@ -143,4 +143,27 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         return setResponse(200, "message", "프로젝트 모집글이 수정되었습니다.");
     }
 
+    @Override
+    public CoDevResponse updateCoProjectDeadLine(CoProject coProject) {
+        try {
+            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(coProject.getCo_projectId());
+            boolean coProjectProcess = coProjectMapper.getCoProjectProcess(coProject.getCo_projectId(), CoProject.DevType.FIN.getValue());
+            if(coProjectOptional.isPresent()) {
+                if (!coProjectProcess){
+                    this.coProjectMapper.updateCoProjectdeadLine(coProject);
+                    return setResponse(200,"message","기간이 연장되었습니다");
+                }
+                if(!coProject.getCo_email().equals(coProjectOptional.get().getCo_email()))
+                    return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+                else{
+                    return setResponse(446,"message","이미 모집된 프로젝트입니다");
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
