@@ -1,12 +1,9 @@
 package com.codevumc.codev_backend.mapper;
 
 
-import com.codevumc.codev_backend.domain.CoHeartOfProject;
-import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import com.codevumc.codev_backend.domain.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +23,7 @@ public interface CoProjectMapper {
     Optional<CoHeartOfProject> getCoHeartOfProject(Long co_projectId);
     void deleteCoHeartOfProject(String co_email, Long co_projectId);
     Optional<CoProject> getCoProject(@Param("co_projectId") long co_projectId);
-    List<CoPart> getCoPartList(long co_projectId);
+    List<CoPartOfProject> getCoPartList(long co_projectId);
     List<CoLanguage> getCoLanguageList(long co_projectId);
     long getCoHeartCount(long co_projectId);
     boolean deleteCoProject(Map<String, Object> coProjectDto);
