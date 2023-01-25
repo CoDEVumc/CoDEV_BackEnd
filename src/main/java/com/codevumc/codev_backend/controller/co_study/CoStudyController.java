@@ -2,7 +2,6 @@ package com.codevumc.codev_backend.controller.co_study;
 
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
-import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -12,7 +11,6 @@ import com.codevumc.codev_backend.service.co_study.CoStudyServiceImpl;
 import com.codevumc.codev_backend.service.co_studyheart.CoStudyHeartServiceImpl;
 import com.codevumc.codev_backend.service.co_studyrecruit.CoStudyRecruitServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
-import org.springframework.web.bind.annotation.*;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;

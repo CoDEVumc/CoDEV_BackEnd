@@ -51,4 +51,19 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse getCoApplicantsOfProject(String co_email, long co_projectId) {
+        try{
+            Map<String, Object> applicantDto = new HashMap<>();
+            applicantDto.put("co_email", co_email);
+            applicantDto.put("co_projectId", co_projectId);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
