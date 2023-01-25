@@ -21,7 +21,8 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
     public CoDevResponse submitCoStudy(CoRecruitOfStudy coRecruitOfStudy) {
         try {
             boolean coRecruitStatus = coStudyMapper.getCoRecruitStatus(coRecruitOfStudy.getCo_email(), coRecruitOfStudy.getCo_studyId());
-            if (!coRecruitStatus) {
+            boolean isAlreadySubmit = coStudyMapper.isAlreadySubmit(coRecruitOfStudy.getCo_email(), coRecruitOfStudy.getCo_studyId());
+            if (!coRecruitStatus && !isAlreadySubmit) {
                 this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
                 return setResponse(200, "Complete", "지원 완료되었습니다.");
             } else {

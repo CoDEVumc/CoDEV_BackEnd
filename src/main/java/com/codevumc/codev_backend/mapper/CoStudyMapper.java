@@ -31,4 +31,5 @@ public interface CoStudyMapper {
     boolean deleteRecruitOfStudy(Map<String, Object> recruitDto);
     String getCoHeartOfStudyEmail(Long co_studyId);
     List<CoRecruitOfStudy> getCoStudyApplicants(Map<String, Object> condition);
+    boolean isAlreadySubmit(String co_email, long co_studyId);
 }

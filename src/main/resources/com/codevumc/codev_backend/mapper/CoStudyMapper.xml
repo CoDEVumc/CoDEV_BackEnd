@@ -151,4 +151,8 @@
         where cs.co_email = #{co_email} and cos.co_studyId = #{co_studyId}
     </select>
 
+    <select id="isAlreadySubmit" resultType="boolean">
+        select exists(select co_email from CoRecruitOfStudy where co_email = #{co_email} and co_studyId = #{co_studyId})
+    </select>
+
 </mapper>
