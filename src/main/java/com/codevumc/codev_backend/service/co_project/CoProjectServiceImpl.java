@@ -126,17 +126,6 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         }
         return null;
     }
-    @Override
-    public CoDevResponse insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject){
-        try {
-            this.coProjectMapper.insertCoRecruitOfProject(coRecruitOfProject);
-            return setResponse(200, "message", "지원되었습니다");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     private CoDevResponse insertCoLanguageAndCoPart(JSONArray co_languages, JSONArray co_parts, long co_projectId, Map<String, Object> coPartsDto) throws Exception{
         for (Object co_language : co_languages) {
