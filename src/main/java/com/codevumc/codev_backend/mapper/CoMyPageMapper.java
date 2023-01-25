@@ -19,6 +19,4 @@ public interface CoMyPageMapper {
     List<CoProject> getParticipateOfProjects(String co_email);
     List<CoProject> getRecruitOfProjects(String co_email);
     List<CoStudy> getRecruitOfStudies(String co_email);
-    List<CoStudy> getParticipateOfStudies(String co_email);
-    List<CoProject> getParticipateOfProjects(String co_email);
 }
