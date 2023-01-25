@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.service.co_studyrecruit;
 
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
+import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -44,6 +46,20 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             } else {
                 return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getCoStudyApplicants(String co_email, long co_studyId) {
+        try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("co_studyId", co_studyId);
+            List<CoRecruitOfStudy> applicants = this.coStudyMapper.getCoStudyApplicants(condition);
+            return setResponse(200, "complete", applicants);
         } catch (Exception e) {
             e.printStackTrace();
         }
