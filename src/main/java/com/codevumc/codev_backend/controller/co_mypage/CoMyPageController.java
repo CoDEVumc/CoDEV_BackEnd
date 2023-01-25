@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/codev/my-page")
 public class CoMyPageController extends JwtController {
     private final CoMyPageServiceImpl coMyPageService;
+
     public CoMyPageController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoMyPageServiceImpl coMyPagePortfolioService) {
         super(jwtTokenProvider, jwtService);
         this.coMyPageService = coMyPagePortfolioService;
@@ -47,14 +48,14 @@ public class CoMyPageController extends JwtController {
     }
 
     @GetMapping("/portfolio/{coPortfolioId}")
-    public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long co_portfolioId, String email)throws Exception{
+    public CoDevResponse getPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") long co_portfolioId, String email) throws Exception {
         String co_email = getCoUserEmail(request);
-        return coMyPageService.getCoPortfolio(co_portfolioId,co_email);
+        return coMyPageService.getCoPortfolio(co_portfolioId, co_email);
     }
 
     @ResponseBody
     @PatchMapping("/portfolio/{coPortfolioId}")
-    public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") Long co_portfolioId, @RequestBody Map<String,Object> portfolio) throws Exception{
+    public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") Long co_portfolioId, @RequestBody Map<String, Object> portfolio) throws Exception {
         CoPortfolio coPortfolio = CoPortfolio.builder()
                 .co_email(getCoUserEmail(request))
                 .co_portfolioId(co_portfolioId)
@@ -79,13 +80,13 @@ public class CoMyPageController extends JwtController {
     }
 
     @GetMapping("/hearts/studies")
-    public CoDevResponse getHeartOfStudies(HttpServletRequest request) throws Exception{
+    public CoDevResponse getHeartOfStudies(HttpServletRequest request) throws Exception {
         String co_email = getCoUserEmail(request);
         return this.coMyPageService.getHeartOfStudies(co_email);
     }
 
     @GetMapping("/hearts/projects")
-    public CoDevResponse getHeartOfProjects(HttpServletRequest request) throws Exception{
+    public CoDevResponse getHeartOfProjects(HttpServletRequest request) throws Exception {
         String co_email = getCoUserEmail(request);
         return this.coMyPageService.getHeartOfProjects(co_email);
     }
@@ -94,4 +95,27 @@ public class CoMyPageController extends JwtController {
     public CoDevResponse getPortfolioList(HttpServletRequest request) throws Exception {
         return this.coMyPageService.getCoPortfolios(getCoUserEmail(request));
     }
+
+
+    @GetMapping("/participation")
+    public CoDevResponse getParticipation(HttpServletRequest request, @RequestParam("type") String type) throws Exception {
+        if (type.equals("study")) {
+            return this.coMyPageService.getParticipateStudies(getCoUserEmail(request));
+        } else if (type.equals("project")) {
+            return this.coMyPageService.getParticipateProjects(getCoUserEmail(request));
+        }
+        return null;
+    }
+
+    @GetMapping("/recruitment")
+    public CoDevResponse getRecruitment(HttpServletRequest request, @RequestParam("type") String type) throws Exception {
+        if (type.equals("study")) {
+            return this.coMyPageService.getRecruitStudies(getCoUserEmail(request));
+        } else if (type.equals("project")) {
+            return this.coMyPageService.getRecruitProjects(getCoUserEmail(request));
+
+        }
+        return null;
+    }
+
 }
