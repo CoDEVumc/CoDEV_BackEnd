@@ -143,7 +143,7 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
         return null;
     }
 
-    @Override
+@Override
     public CoDevResponse getParticipateStudies(String co_email) {
         try{
             List<CoStudy> coStudies = this.coMyPageMapper.getParticipateOfStudies(co_email);
@@ -159,6 +159,28 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
         try{
             List<CoProject> coProjects = this.coMyPageMapper.getParticipateOfProjects(co_email);
             return setResponse(200,"Complete",coProjects);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getRecruitProjects(String co_email) {
+        try{
+            List<CoProject> coProjects = this.coMyPageMapper.getRecruitOfProjects(co_email);
+            return setResponse(200,"Complete",coProjects);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getRecruitStudies(String co_email) {
+        try{
+            List<CoStudy> coStudies = this.coMyPageMapper.getRecruitOfStudies(co_email);
+            return setResponse(200,"Complete",coStudies);
         }catch (Exception e) {
             e.printStackTrace();
         }

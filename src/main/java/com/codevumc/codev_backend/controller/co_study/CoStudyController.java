@@ -57,10 +57,11 @@ public class CoStudyController extends JwtController {
         return coStudyHeartService.changeHeart(co_email, co_studyId);
     }
 
+    //스터디 글쓰기
     @PostMapping(consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public CoDevResponse insertStudy(HttpServletRequest reqest, @RequestPart Map<String, Object> study, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+    public CoDevResponse insertStudy(HttpServletRequest request, @RequestPart Map<String, Object> study, @RequestPart(required = false) MultipartFile[] files) throws Exception {
         CoStudy coStudy = CoStudy.builder()
-                .co_email(getCoUserEmail(reqest))
+                .co_email(getCoUserEmail(request))
                 .co_title(study.get("co_title").toString())
                 .co_location(study.get("co_location").toString())
                 .co_content(study.get("co_content").toString())
@@ -68,18 +69,10 @@ public class CoStudyController extends JwtController {
                 .co_part(study.get("co_part").toString())
                 .co_total((Integer) study.get("co_total"))
                 .co_deadLine((study.get("co_deadLine").toString())).build();
-        JSONParser parser = new JSONParser();
-        Gson gson = new Gson();
-        String co_languageListByString = gson.toJson(study.get("co_languages"));
-        JSONArray co_languageList = (JSONArray) parser.parse(co_languageListByString);
-        CoDevResponse result = coStudyService.insertStudy(coStudy, co_languageList);
+
+        CoDevResponse result = coStudyService.insertStudy(coStudy, getJSONArray(study.get("co_languages")));
         if (files != null) {
-            List<CoPhotos> coPhotos = Arrays.asList(files)
-                    .stream()
-                    .map(file -> coFileService.storeFile(file, String.valueOf(coStudy.getCo_studyId()), "STUDY"))
-                    .collect(Collectors.toList());
-            coStudy.setCo_photos(coPhotos);
-            coStudyService.updateMainImg(coFileService.getCo_MainImg("STUDY", String.valueOf(coStudy.getCo_studyId())), coStudy.getCo_studyId());
+            coStudy.setCo_photos(uploadPhotos(files, String.valueOf(coStudy.getCo_studyId())));
         }
         return result;
     }
@@ -90,6 +83,28 @@ public class CoStudyController extends JwtController {
         String co_viewer = getCoUserEmail(request);
         return coStudyService.getCoStudy(co_viewer, coStudyId);
     }
+
+    @PutMapping(value = "/update/{coStudyId}", consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public CoDevResponse updateCoStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId, @RequestPart Map<String, Object> study, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+        CoStudy coStudy = CoStudy.builder()
+                .co_studyId(coStudyId)
+                .co_email(getCoUserEmail(request))
+                .co_title(study.get("co_title").toString())
+                .co_location(study.get("co_location").toString())
+                .co_content(study.get("co_content").toString())
+                .co_process(CoStudy.DevType.from(study.get("co_process").toString()))
+                .co_part(study.get("co_part").toString())
+                .co_total((Integer) study.get("co_total"))
+                .co_deadLine((study.get("co_deadLine").toString())).build();
+
+        CoDevResponse result = coStudyService.updateStudy(coStudy, getJSONArray(study.get("co_languages")));
+        coFileService.deleteFile(String.valueOf(coStudy.getCo_studyId()), "STUDY");
+        if(files != null) {
+            coStudy.setCo_photos(uploadPhotos(files, String.valueOf(coStudy.getCo_studyId())));
+        }
+        return result;
+    }
+
 
     @DeleteMapping("/{coStudyId}")
     public CoDevResponse deleteStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
@@ -128,5 +143,22 @@ public class CoStudyController extends JwtController {
                 limit += SHOW_COUNT;
         }
         return limit;
+    }
+
+    private JSONArray getJSONArray(Object object) throws Exception{
+        JSONParser parser = new JSONParser();
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(object);
+        return (JSONArray) parser.parse(jsonArray);
+    }
+
+    private List<CoPhotos> uploadPhotos(MultipartFile[] files, String co_targetId) {
+        List<CoPhotos> coPhotos = Arrays.asList(files)
+                .stream()
+                .map(file -> coFileService.storeFile(file, co_targetId, "STUDY"))
+                .collect(Collectors.toList());
+
+        coStudyService.updateMainImg(coFileService.getCo_MainImg("STUDY", co_targetId), Long.parseLong(co_targetId));
+        return coPhotos;
     }
 }
