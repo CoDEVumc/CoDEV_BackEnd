@@ -63,11 +63,16 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
             condition.put("co_studyId", co_studyId);
+            boolean isWriter = coStudyMapper.isWriter(condition);
             List<CoRecruitOfStudy> applicants = this.coStudyMapper.getCoStudyApplicants(condition);
-            if (applicants.isEmpty())
-                return setResponse(200, "Complete", "지원자가 없습니다.");
-            else
-                return setResponse(200, "Complete", applicants);
+            if (isWriter) {
+                if (applicants.isEmpty())
+                    return setResponse(200, "Complete", "지원자가 없습니다.");
+                else
+                    return setResponse(200, "Complete", applicants);
+            } else {
+                return setResponse(403, "Forbidden", "권한이 없습니다.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
