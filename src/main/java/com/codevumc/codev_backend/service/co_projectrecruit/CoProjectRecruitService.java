@@ -6,5 +6,4 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 public interface CoProjectRecruitService {
     CoDevResponse insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject);
     CoDevResponse cancelCoRecruitOfProject(String co_email, long co_projectId);
-    CoDevResponse getCoApplicantsOfProject(String co_email, long co_projectId);
 }
