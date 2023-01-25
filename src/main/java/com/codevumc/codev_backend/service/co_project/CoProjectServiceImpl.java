@@ -127,22 +127,6 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         return null;
     }
 
-    private CoDevResponse insertCoLanguageAndCoPart(JSONArray co_languages, JSONArray co_parts, long co_projectId, Map<String, Object> coPartsDto) throws Exception{
-        for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
-            this.coProjectMapper.insertCoLanguageOfProject(co_projectId, co_languageId);
-        }
-        JSONObject jsonObj;
-        for (Object co_part : co_parts) {
-            jsonObj = (JSONObject) co_part;
-            coPartsDto.put("co_projectId", co_projectId);
-            coPartsDto.put("co_part", jsonObj.get("co_part").toString());
-            coPartsDto.put("co_limit", jsonObj.get("co_limit"));
-            this.coProjectMapper.insertCoPartOfProject(coPartsDto);
-        }
-        return setResponse(200, "message", "프로젝트 모집글이 수정되었습니다.");
-    }
-
     @Override
     public CoDevResponse updateCoProjectDeadLine(CoProject coProject) {
         try {
@@ -164,6 +148,22 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
             e.printStackTrace();
         }
         return null;
+    }
+
+    private CoDevResponse insertCoLanguageAndCoPart(JSONArray co_languages, JSONArray co_parts, long co_projectId, Map<String, Object> coPartsDto) throws Exception{
+        for (Object co_language : co_languages) {
+            long co_languageId = (long) co_language;
+            this.coProjectMapper.insertCoLanguageOfProject(co_projectId, co_languageId);
+        }
+        JSONObject jsonObj;
+        for (Object co_part : co_parts) {
+            jsonObj = (JSONObject) co_part;
+            coPartsDto.put("co_projectId", co_projectId);
+            coPartsDto.put("co_part", jsonObj.get("co_part").toString());
+            coPartsDto.put("co_limit", jsonObj.get("co_limit"));
+            this.coProjectMapper.insertCoPartOfProject(coPartsDto);
+        }
+        return setResponse(200, "message", "프로젝트 모집글이 작성/수정되었습니다.");
     }
 
 }
