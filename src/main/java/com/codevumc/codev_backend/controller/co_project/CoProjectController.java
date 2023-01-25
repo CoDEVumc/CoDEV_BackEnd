@@ -78,16 +78,16 @@ public class CoProjectController extends JwtController {
 
     //찜하기
     @PatchMapping("/heart/{coProjectId}")
-    public CoDevResponse heartOfProjectDelete(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId) throws Exception {
+    public CoDevResponse heartOfProjectDelete(HttpServletRequest request, @PathVariable("coProjectId") long coProjectId) throws Exception {
         String co_email = getCoUserEmail(request);
-        return coProjectHeartService.changeHeart(co_email,co_projectId);
+        return coProjectHeartService.changeHeart(co_email,coProjectId);
     }
 
     //수정하기
     @PutMapping(value = "/update/{coProjectId}", consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public CoDevResponse updateCoProject(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+    public CoDevResponse updateCoProject(HttpServletRequest request, @PathVariable("coProjectId") long coProjectId, @RequestPart Map<String, Object> project, @RequestPart(required = false) MultipartFile[] files) throws Exception {
         CoProject coProject = CoProject.builder()
-                .co_projectId(co_projectId)
+                .co_projectId(coProjectId)
                 .co_email(getCoUserEmail(request))
                 .co_title(project.get("co_title").toString())
                 .co_location(project.get("co_location").toString())
