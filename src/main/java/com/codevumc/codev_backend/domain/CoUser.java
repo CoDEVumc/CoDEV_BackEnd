@@ -61,4 +61,11 @@ public class CoUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getLoginJson(String co_email, String co_password) {
+        return "{\n" +
+                "    \"co_email\":\"" + co_email + "\",\n" +
+                "    \"co_password\":\"" + co_password + "\"\n" +
+                "}";
+    }
 }

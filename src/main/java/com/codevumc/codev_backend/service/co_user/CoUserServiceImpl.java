@@ -8,6 +8,9 @@ import com.codevumc.codev_backend.mapper.CoUserMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import com.codevumc.codev_backend.snslogin.GitHubApi;
 import com.codevumc.codev_backend.snslogin.GoogleApi;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +26,9 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,15 +40,13 @@ import java.util.regex.Pattern;
 @Service
 public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
-    private final GitHubApi gitHubApi;
-    private final GoogleApi googleApi;
+
     private final JavaMailSender javaMailSender;
 
     @Autowired
     public CoUserServiceImpl(CoUserMapper coUserMapper, GitHubApi gitHubApi, GoogleApi googleApi, JavaMailSender javaMailSender) {
         this.coUserMapper = coUserMapper;
-        this.gitHubApi = gitHubApi;
-        this.googleApi = googleApi;
+
         this.javaMailSender = javaMailSender;
     }
 
@@ -83,13 +86,16 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     }
 
     @Override
-    public CoDevResponse githubTest(String authorize_code) {
+    public CoDevResponse githubLogin(CoUser coUser, String userAgent, String pw) {
         try {
-            Map<String, Object> userInfo =  gitHubApi.getUserInfo(gitHubApi.getAccessTocken(authorize_code));
-            CoUser coUser = CoUser.builder()
-                    .co_email(userInfo.get("co_email").toString())
-                    .co_password(userInfo.get("co_password").toString())
-                    .build();
+            Optional<CoUser> coUserOptional = coUserMapper.findByEmail(coUser.getUsername());
+            if(coUserOptional.isPresent()) {
+                //이미 회원가입을 한 경우
+            } else {
+                //처음 회원가입 인 경우
+
+            }
+
             return setResponse(200, "success", coUser);
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,18 +104,23 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     }
 
     @Override
-    public CoDevResponse googleTest(String authorize_code){
+    public CoDevResponse googleLogin(CoUser coUser, String userAgent, String pw){
         try {
-            Map<String, Object> userInfo =  googleApi.getUserInfo(googleApi.getAccessToken(authorize_code));
-            CoUser coUser = CoUser.builder()
-                    .co_email(userInfo.get("co_email").toString())
-                    .co_password(userInfo.get("co_password").toString())
-                    .build();
-            return setResponse(200, "success", coUser);
+            Optional<CoUser> coUserOptional = coUserMapper.findByEmail(coUser.getUsername());
+            if(coUserOptional.isPresent()) {
+                Map<String, Object> map = connectLogin(coUser, userAgent, pw);
+                addResponse("accessToken", map.get("accessToken"));
+                addResponse("key", map.get("key"));
+                addResponse("refreshToken", map.get("refreshToken"));
+            }else {
+                addResponse("co_email", coUser.getUsername());
+                addResponse("co_password", pw);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return getResult();
     }
 
     @Override
@@ -189,4 +200,48 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         return err;
     }
 
+    private Map<String, Object> connectLogin(CoUser coUser, String userAgent, String pw) {
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            URL url = new URL("http://semtle.catholic.ac.kr:8080/codev/user/login");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("User-Agent", userAgent);
+
+            OutputStream os = conn.getOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(os);
+            System.out.println("coUSer toString() " + coUser.getLoginJson(coUser.getUsername(), pw));
+            writer.write(coUser.getLoginJson(coUser.getUsername(), pw));
+            writer.close();
+            os.flush();
+            os.close();
+
+            JsonParser parser = null;
+            JsonElement element = null;
+            int responseCode = conn.getResponseCode();
+            if(responseCode == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line = "";
+                StringBuffer result = new StringBuffer();
+
+                while ((line = br.readLine()) != null)
+                    result.append(line);
+
+                parser = new JsonParser();
+                element = parser.parse(result.toString());
+                conn.disconnect();
+                resultMap.put("accessToken", element.getAsJsonObject().get("result").getAsJsonObject().get("accessToken").getAsString());
+                resultMap.put("key", element.getAsJsonObject().get("result").getAsJsonObject().get("key").getAsString());
+                resultMap.put("refreshToken", element.getAsJsonObject().get("result").getAsJsonObject().get("refreshToken").getAsString());
+            }
+            return resultMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.UsernameOrPasswordNotFoundException);
+        }
+    }
 }
