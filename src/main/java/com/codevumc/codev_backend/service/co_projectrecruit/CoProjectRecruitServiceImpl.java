@@ -74,15 +74,15 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                     return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
                 List<CoApplicantInfo> coApplicantsOfProject = new ArrayList<>();
                 List<CoPartOfProject> coPartsOfProject = this.coProjectMapper.getCoPartList(co_projectId);
-                Map<String, Object> applicantDto = new HashMap<>();
+                Map<String, Object> coPartInfoDto = new HashMap<>();
                 // 파트 수 만큼 반복(추후 파트 변동 가능성)
                 for (CoPartOfProject coPartOfProject : coPartsOfProject) {
-                    applicantDto.put("co_projectId", co_projectId);
-                    applicantDto.put("co_part", coPartOfProject.getCo_part());
+                    coPartInfoDto.put("co_projectId", co_projectId);
+                    coPartInfoDto.put("co_part", coPartOfProject.getCo_part());
                     CoApplicantInfo coApplicantInfo = CoApplicantInfo.builder()
                             .co_part(coPartOfProject.getCo_part())
                             .co_limit(coPartOfProject.getCo_limit())
-                            .co_applicants(this.coProjectMapper.getCoApplicantsOfProject(applicantDto))
+                            .co_applicants(this.coProjectMapper.getCoApplicantsOfProject(coPartInfoDto))
                             .build();
                     coApplicantsOfProject.add(coApplicantInfo);
                 }
@@ -91,7 +91,6 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
