@@ -10,6 +10,8 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_user.CoUserServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import com.codevumc.codev_backend.snslogin.GitHubApi;
+import com.codevumc.codev_backend.snslogin.GoogleApi;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +28,16 @@ public class CoUserController extends JwtController {
     private final PasswordEncoder passwordEncoder;
     private final CoFileServiceImpl coFileService;
     private final CoUserServiceImpl coUserService;
+    private final GitHubApi gitHubApi;
+    private final GoogleApi googleApi;
 
-    public CoUserController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, PasswordEncoder passwordEncoder, CoFileServiceImpl coFileService, CoUserServiceImpl coUserService) {
+    public CoUserController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, PasswordEncoder passwordEncoder, CoFileServiceImpl coFileService, CoUserServiceImpl coUserService, GitHubApi gitHubApi, GoogleApi googleApi) {
         super(jwtTokenProvider, jwtService);
         this.passwordEncoder = passwordEncoder;
         this.coFileService = coFileService;
         this.coUserService = coUserService;
+        this.gitHubApi = gitHubApi;
+        this.googleApi = googleApi;
     }
 
 
@@ -45,7 +51,6 @@ public class CoUserController extends JwtController {
                 .co_name(user.get("co_name").toString())
                 .co_birth(user.get("co_birth").toString())
                 .co_gender(user.get("co_gender").toString())
-                //.profileImg(user.get("profileImg").toString())
                 .role(role)
                 .roles(Collections.singletonList(role.getValue())).build();
         CoDevResponse result = coUserService.signUpCoUser(coUser);
@@ -72,13 +77,35 @@ public class CoUserController extends JwtController {
     }
 
     @GetMapping("/github/login")
-    public CoDevResponse gitHubLogin(@RequestBody @RequestParam(value = "code") String code) throws Exception {
-        return coUserService.githubTest(code);
+    public CoDevResponse gitHubLogin(@RequestBody @RequestParam(value = "code") String code, @RequestHeader("User-Agent") String userAgent) throws Exception {
+        Map<String, Object> userInfo =  gitHubApi.getUserInfo(gitHubApi.getAccessTocken(code));
+        CoUser coUser = CoUser.builder()
+                .co_email(userInfo.get("co_email").toString())
+                .co_password(passwordEncoder.encode(userInfo.get("co_password").toString()))
+                .co_nickName("")
+                .co_name("")
+                .co_birth("")
+                .co_gender("")
+                .role(Role.USER)
+                .roles(Collections.singletonList(Role.USER.getValue()))
+                .build();
+        return coUserService.githubLogin(coUser, userAgent, userInfo.get("co_password").toString());
     }
 
     @GetMapping("/google/login")
-    public CoDevResponse googleLogin(@RequestBody @RequestParam(value = "code") String code) throws Exception{
-        return coUserService.googleTest(code);
+    public CoDevResponse googleLogin(@RequestBody @RequestParam(value = "code") String code, @RequestHeader("User-Agent") String userAgent) throws Exception{
+        Map<String, Object> userInfo =  googleApi.getUserInfo(googleApi.getAccessToken(code));
+        CoUser coUser = CoUser.builder()
+                .co_email(userInfo.get("co_email").toString())
+                .co_password(passwordEncoder.encode(userInfo.get("co_password").toString()))
+                .co_nickName("")
+                .co_name("")
+                .co_birth("")
+                .co_gender("")
+                .role(Role.USER)
+                .roles(Collections.singletonList(Role.USER.getValue()))
+                .build();
+        return coUserService.googleLogin(coUser, userAgent, userInfo.get("co_password").toString());
     }
 
     @GetMapping("/code/mail")

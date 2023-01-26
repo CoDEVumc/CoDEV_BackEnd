@@ -18,10 +18,14 @@ public abstract class ResponseService {
     }
 
     public CoDevResponse addResponse(String message, Object object) throws Exception {
+        if(result == null)
+            result = new CoDevResponse.ResponseMap();
         result.setResponseData(message, object);
         return result;
     }
 
-
+    public CoDevResponse getResult() {
+        return result;
+    }
 
 }
