@@ -35,7 +35,7 @@ public class GoogleApi {
             sb.append("&client_secret=" + clientSecret);
             sb.append("&code=" + authorize_code);
             sb.append("&grant_type=authorization_code");
-            sb.append("&redirect_uri=http://localhost:8080/codev/user/google/login");
+            sb.append("&redirect_uri=http://semtle.catholic.ac.kr:8080/codev/user/google/login");
             bw.write(sb.toString());
             bw.flush();
 
