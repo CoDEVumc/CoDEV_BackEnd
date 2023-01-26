@@ -15,9 +15,9 @@ public interface CoUserService {
 
     CoDevResponse signUpCoUser(CoUser coUser);
 
-    CoDevResponse githubTest(String authorize_code);
+    CoDevResponse githubLogin(CoUser coUser, String userAgent, String pw);
 
-    CoDevResponse googleTest(String authorize_code);
+    CoDevResponse googleLogin(CoUser coUser, String userAgent, String pw);
 
     MimeMessage createMessage(String to, String randomNumber) throws MessagingException, UnsupportedEncodingException;
 
