@@ -47,8 +47,6 @@ public class GoogleApi {
 
             while ((line = br.readLine()) != null)
                 result.append(line);
-
-            System.out.println("response body : " + result);
             //Gson 라이브러르에 포함된 클래스로 json파싱
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result.toString());

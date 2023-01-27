@@ -104,27 +104,21 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     }
 
     @Override
-    public CoDevResponse googleLogin(CoUser coUser, String userAgent, String pw){
+    public CoDevResponse googleLogin(CoUser coUser){
         try {
-            Optional<CoUser> coUserOptional = coUserMapper.findByEmail(coUser.getUsername());
-            if(coUserOptional.isPresent()) {
-                System.out.println("DB OK");
-                closeResult();
-                Map<String, Object> map = connectLogin(coUser, userAgent, pw);
-                addResponse("accessToken", map.get("accessToken"));
-                addResponse("key", map.get("key"));
-                addResponse("refreshToken", map.get("refreshToken"));
-            }else {
-                closeResult();
-                System.out.println("DB NO");
-                addResponse("co_email", coUser.getUsername());
-                addResponse("co_password", pw);
-            }
-
+            addResponse("co_email", coUser.getUsername());
+            addResponse("co_password", coUser.getPassword());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return getResult();
+    }
+
+    @Override
+    public boolean isSignup(String co_email) {
+        Optional<CoUser> coUser = this.coUserMapper.findByEmail(co_email);
+
+        return coUser.isPresent();
     }
 
     @Override
