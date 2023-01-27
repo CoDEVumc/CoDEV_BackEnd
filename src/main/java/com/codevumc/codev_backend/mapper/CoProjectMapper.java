@@ -23,7 +23,6 @@ public interface CoProjectMapper {
     void updateCoMainImg(@Param("co_mainImg") String co_mainImg, @Param("co_projectId") long co_projectId);
     List<CoProject> getCoProjects(Map<String, Object> condition);
     void insertCoHeartOfProject(String co_email, Long co_projectId);
-    Optional<CoHeartOfProject> getCoHeartOfProject(Long co_projectId);
     void deleteCoHeartOfProject(@Param("co_email") String co_email,@Param("co_projectId") Long co_projectId);
     Optional<CoProject> getCoProject(@Param("co_projectId") long co_projectId);
     List<CoPart> getCoPartList(long co_projectId);

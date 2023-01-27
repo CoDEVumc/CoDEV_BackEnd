@@ -51,10 +51,6 @@
         select * from CoProject where co_projectId = #{co_projectId}
     </select>
 
-    <select id ="getCoHeartOfProject" resultType="CoHeartOfProject">
-        SELECT status FROM CoHeartOfProject WHERE co_projectId = ${co_projectId}
-    </select>
-
     <select id="getCoProjects" parameterType="hashMap" resultType="CoProject">
         select distinct cp.co_projectId as 'co_projectId',
         cp.co_email as 'co_email',
