@@ -129,4 +129,27 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         this.coStudyMapper.insertCoPartOfStudy(coPartDto);
         return setResponse(200, "message", "스터디 모집글이 작성/수정되었습니다.");
     }
+
+    @Override
+    public CoDevResponse updateCoStudyDeadLine(CoStudy coStudy) {
+        try {
+            Optional<CoStudy> coStudyOptional = coStudyMapper.getCoStudy(coStudy.getCo_studyId());
+            boolean coStudyProcess = coStudyMapper.getCoStudyProcess(coStudy.getCo_studyId(), CoStudy.DevType.FIN.getValue());
+            if (coStudyOptional.isPresent()) {
+                if (!coStudy.getCo_email().equals(coStudyOptional.get().getCo_email())){
+                    return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+                } else {
+                    if (!coStudyProcess){
+                        this.coStudyMapper.updateCoStudyDeadLine(coStudy);
+                        return setResponse(200, "message", "기간이 연장되었습니다.");
+                    } else {
+                        return setResponse(446,"message","이미 모집 마감된 스터디입니다");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
