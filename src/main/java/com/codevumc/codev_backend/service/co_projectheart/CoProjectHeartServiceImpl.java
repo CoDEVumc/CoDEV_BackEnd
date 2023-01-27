@@ -20,17 +20,15 @@ public class CoProjectHeartServiceImpl extends ResponseService implements CoProj
     @Override
     public CoDevResponse changeHeart(String co_email, Long co_projectId){
         try{
-            Optional<CoHeartOfProject> coHeartOfProject = coProjectMapper.getCoHeartOfProject(co_projectId);
-            if(coHeartOfProject.isEmpty()) {
+
+            if(coProjectMapper.getCoHeartOfProjectEmail(co_projectId, co_email) == null) {
                 this.coProjectMapper.insertCoHeartOfProject(co_email,co_projectId);
                 return setResponse(200, "Complete", "찜등록이 완료되었습니다.");
             }
             //찜취소
             else {
-                if(Objects.equals(coProjectMapper.getCoHeartOfProjectEmail(co_projectId), co_email)) {
-                    this.coProjectMapper.deleteCoHeartOfProject(co_email, co_projectId);
-                    return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
-                }
+                this.coProjectMapper.deleteCoHeartOfProject(co_email, co_projectId);
+                return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
             }
 
         }catch(Exception e){
