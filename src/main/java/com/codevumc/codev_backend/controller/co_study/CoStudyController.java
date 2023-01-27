@@ -159,4 +159,14 @@ public class CoStudyController extends JwtController {
         coStudyService.updateMainImg(coFileService.getCo_MainImg("STUDY", co_targetId), Long.parseLong(co_targetId));
         return coPhotos;
     }
+
+    @PatchMapping("/recruitment/extension/{coStudyId}")
+    public CoDevResponse updateCoStudyDeadLine(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId, @RequestBody Map<String, Object> study) throws Exception {
+        CoStudy coStudy = CoStudy.builder()
+                .co_studyId(coStudyId)
+                .co_email(getCoUserEmail(request))
+                .co_deadLine(study.get("co_deadLine").toString())
+                .build();
+        return coStudyService.updateCoStudyDeadLine(coStudy);
+    }
 }

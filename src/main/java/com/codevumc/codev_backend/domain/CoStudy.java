@@ -33,6 +33,7 @@ public class CoStudy {
     private List<CoPhotos> co_photos;
     private List<CoLanguage> co_languageList;
 
+    @Getter
     @AllArgsConstructor
     public enum DevType {
         ING("ING"), TEST("TEST"), FIN("FIN");
