@@ -24,7 +24,6 @@ public interface CoStudyMapper {
     Optional<CoStudy> getCoStudy(long co_studyId);
     List<CoLanguage> getCoLanguageList(long co_studyId);
     long getCoHeartCount(long co_studyId);
-    Optional<CoHeartOfStudy> getCoHeartOfStudy(Long co_studyId);
     void insertCoHeartOfStudy(String co_email, Long co_studyId);
     void deleteCoHeartOfStudy(@Param("co_email") String co_email, @Param("co_studyId") Long co_studyId);
     List<CoStudy> getCoStudies(Map<String, Object> condition);

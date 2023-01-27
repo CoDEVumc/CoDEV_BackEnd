@@ -19,7 +19,6 @@ public class CoStudyHeartServiceImpl extends ResponseService implements CoStudyH
     @Override
     public CoDevResponse changeHeart(String co_email, Long co_studyId) {
         try{
-            Optional<CoHeartOfStudy> coHeartOfStudy = coStudyMapper.getCoHeartOfStudy(co_studyId);
 
             if(coStudyMapper.getCoHeartOfStudyEmail(co_studyId, co_email) == null) {
                 this.coStudyMapper.insertCoHeartOfStudy(co_email,co_studyId);
