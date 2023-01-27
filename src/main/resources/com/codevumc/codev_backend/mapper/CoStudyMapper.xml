@@ -105,7 +105,7 @@
 
     <delete id="deleteCoHeartOfStudy">
         DELETE FROM CoHeartOfStudy
-        WHERE co_studyId = ${co_studyId} AND co_email = #{co_email}
+        WHERE co_studyId = #{co_studyId} AND co_email = #{co_email}
     </delete>
 
     <insert id="insertCoStudy" parameterType="hashMap" useGeneratedKeys="true" keyProperty="co_studyId">
