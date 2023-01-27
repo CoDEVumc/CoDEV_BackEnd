@@ -108,11 +108,15 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         try {
             Optional<CoUser> coUserOptional = coUserMapper.findByEmail(coUser.getUsername());
             if(coUserOptional.isPresent()) {
+                System.out.println("DB OK");
+                closeResult();
                 Map<String, Object> map = connectLogin(coUser, userAgent, pw);
                 addResponse("accessToken", map.get("accessToken"));
                 addResponse("key", map.get("key"));
                 addResponse("refreshToken", map.get("refreshToken"));
             }else {
+                closeResult();
+                System.out.println("DB NO");
                 addResponse("co_email", coUser.getUsername());
                 addResponse("co_password", pw);
             }
@@ -203,7 +207,8 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     private Map<String, Object> connectLogin(CoUser coUser, String userAgent, String pw) {
         Map<String, Object> resultMap = new HashMap<>();
         try {
-            URL url = new URL("http://semtle.catholic.ac.kr:8080/codev/user/login");
+            System.out.println("@@@");
+            URL url = new URL("http://localhost:8080/codev/user/login");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
