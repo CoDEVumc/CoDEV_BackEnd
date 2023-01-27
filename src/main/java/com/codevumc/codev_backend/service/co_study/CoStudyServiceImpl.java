@@ -143,7 +143,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
                         this.coStudyMapper.updateCoStudyDeadLine(coStudy);
                         return setResponse(200, "message", "기간이 연장되었습니다.");
                     } else {
-                        return setResponse(446,"message","이미 모집된 스터디입니다");
+                        return setResponse(446,"message","이미 모집 마감된 스터디입니다");
                     }
                 }
             }
