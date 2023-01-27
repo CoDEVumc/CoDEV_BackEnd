@@ -134,6 +134,7 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
             map.put("profileImg", map.get("profileImg"));
             CoDevResponse result = setResponse(200, "Complete", map);
             if(coPortfolios != null) {
+
                 addResponse("Portfolio", coPortfolios);
             }
             return result;
