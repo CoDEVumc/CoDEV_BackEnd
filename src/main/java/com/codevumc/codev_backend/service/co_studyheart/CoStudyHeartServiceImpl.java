@@ -20,14 +20,13 @@ public class CoStudyHeartServiceImpl extends ResponseService implements CoStudyH
     public CoDevResponse changeHeart(String co_email, Long co_studyId) {
         try{
             Optional<CoHeartOfStudy> coHeartOfStudy = coStudyMapper.getCoHeartOfStudy(co_studyId);
-            if(coHeartOfStudy.isEmpty()) {
+
+            if(coStudyMapper.getCoHeartOfStudyEmail(co_studyId, co_email) == null) {
                 this.coStudyMapper.insertCoHeartOfStudy(co_email,co_studyId);
                 return setResponse(200, "Complete", "찜등록이 완료되었습니다.");
             }else{
-                if(Objects.equals(coStudyMapper.getCoHeartOfStudyEmail(co_studyId), co_email)){
-                    this.coStudyMapper.deleteCoHeartOfStudy(co_email,co_studyId);
-                    return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
-                }
+                this.coStudyMapper.deleteCoHeartOfStudy(co_email,co_studyId);
+                return setResponse(200, "Complete", "찜등록이 취소되었습니다.");
             }
         }catch(Exception e){
             e.printStackTrace();
