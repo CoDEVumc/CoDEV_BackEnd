@@ -136,16 +136,12 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             Optional<CoStudy> coStudyOptional = coStudyMapper.getCoStudy(coStudy.getCo_studyId());
             boolean coStudyProcess = coStudyMapper.getCoStudyProcess(coStudy.getCo_studyId(), CoStudy.DevType.FIN.getValue());
             if (coStudyOptional.isPresent()) {
-                if (!coStudyProcess){
-                    this.coStudyMapper.updateCoStudyDeadLine(coStudy);
-                    if (!coStudy.getCo_email().equals(coStudyOptional.get().getCo_email())){
-                        return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
-                    } else {
-                        return setResponse(200, "message", "기간이 연장되었습니다.");
-                    }
+                if (!coStudy.getCo_email().equals(coStudyOptional.get().getCo_email())){
+                    return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
                 } else {
-                    if (!coStudy.getCo_email().equals(coStudyOptional.get().getCo_email())) {
-                        return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+                    if (!coStudyProcess){
+                        this.coStudyMapper.updateCoStudyDeadLine(coStudy);
+                        return setResponse(200, "message", "기간이 연장되었습니다.");
                     } else {
                         return setResponse(446,"message","이미 모집된 스터디입니다");
                     }
