@@ -97,7 +97,7 @@ public class CoUserController extends JwtController {
         Map<String, Object> userInfo =  googleApi.getUserInfo(googleApi.getAccessToken(code));
         CoUser coUser = CoUser.builder()
                 .co_email(userInfo.get("co_email").toString())
-                .co_password(passwordEncoder.encode(userInfo.get("co_password").toString()))
+                .co_password(userInfo.get("co_password").toString())
                 .co_nickName("")
                 .co_name("")
                 .co_birth("")
@@ -105,7 +105,19 @@ public class CoUserController extends JwtController {
                 .role(Role.USER)
                 .roles(Collections.singletonList(Role.USER.getValue()))
                 .build();
-        return coUserService.googleLogin(coUser, userAgent, userInfo.get("co_password").toString());
+        return coUserService.googleLogin(coUser);
+    }
+
+    @PostMapping("/sns/login")
+    public CoDevResponse snsLogin(HttpServletRequest request, @RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent) {
+        if(coUserService.isSignup(user.get("co_email"))) {
+            //회원가입 되어있을때
+            System.out.println("already signup");
+        }else {
+            //회원가입이 안되어있을때
+            System.out.println("start signup");
+        }
+        return null;
     }
 
     @GetMapping("/code/mail")
