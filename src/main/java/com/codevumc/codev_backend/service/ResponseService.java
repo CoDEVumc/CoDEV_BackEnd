@@ -28,4 +28,8 @@ public abstract class ResponseService {
         return result;
     }
 
+    public void closeResult() {
+        if(result != null)
+            result.clear();
+    }
 }
