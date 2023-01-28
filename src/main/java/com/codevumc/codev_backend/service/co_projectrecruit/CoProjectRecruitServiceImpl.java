@@ -64,4 +64,24 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse closeCoProjectDeadLine(CoProject coProject) {
+        try {
+            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(coProject.getCo_projectId());
+            if (coProjectOptional.isPresent()) {
+                if (!coProject.getCo_email().equals(coProjectOptional.get().getCo_email())){
+                    return setResponse(403, "Forbidden", "권한이 없습니다.");
+                }
+                else {
+                    this.coProjectMapper.closeCoProjectDeadLine(coProject);
+                    return setResponse(200,"message","모집마감성공");
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
