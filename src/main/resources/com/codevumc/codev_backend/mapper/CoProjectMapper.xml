@@ -51,10 +51,6 @@
         select * from CoProject where co_projectId = #{co_projectId}
     </select>
 
-    <select id ="getCoHeartOfProject" resultType="CoHeartOfProject">
-        SELECT status FROM CoHeartOfProject WHERE co_projectId = ${co_projectId}
-    </select>
-
     <select id="getCoProjects" parameterType="hashMap" resultType="CoProject">
         select distinct cp.co_projectId as 'co_projectId',
         cp.co_email as 'co_email',
@@ -119,11 +115,11 @@
 
     <delete id="deleteCoHeartOfProject">
         DELETE FROM CoHeartOfProject
-        WHERE co_projectId = #{co_projectId}
+        WHERE co_projectId = #{co_projectId} AND co_email = #{co_email}
     </delete>
 
-    <select id ="getCoHeartOfProjectEmail" resultType="String">
-        SELECT co_email FROM CoHeartOfProject WHERE co_projectId = ${co_projectId}
+    <select id ="getCoHeartOfProjectEmail" resultType="Long">
+        SELECT co_hopId FROM CoHeartOfProject WHERE co_projectId = #{co_projectId} AND co_email = #{co_email}
     </select>
 
     <select id="getCoPartList" resultType="CoPartOfProject">
