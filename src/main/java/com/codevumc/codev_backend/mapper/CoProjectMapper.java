@@ -23,15 +23,14 @@ public interface CoProjectMapper {
     void updateCoMainImg(@Param("co_mainImg") String co_mainImg, @Param("co_projectId") long co_projectId);
     List<CoProject> getCoProjects(Map<String, Object> condition);
     void insertCoHeartOfProject(String co_email, Long co_projectId);
-    Optional<CoHeartOfProject> getCoHeartOfProject(Long co_projectId);
-    void deleteCoHeartOfProject(String co_email, Long co_projectId);
+    void deleteCoHeartOfProject(@Param("co_email") String co_email,@Param("co_projectId") Long co_projectId);
     Optional<CoProject> getCoProject(@Param("co_projectId") long co_projectId);
     List<CoPart> getCoPartList(long co_projectId);
     List<CoLanguage> getCoLanguageList(long co_projectId);
     long getCoHeartCount(long co_projectId);
     boolean deleteCoProject(Map<String, Object> coProjectDto);
     boolean getCoRecruitStatus(String co_viewer, long co_projectId);
-    String getCoHeartOfProjectEmail(Long co_projectId);
+    Long getCoHeartOfProjectEmail(@Param("co_projectId") Long co_projectId, @Param("co_email") String co_email);
     void insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject);
     boolean cancelCoRecruitOfProject(Map<String, Object> recruitDto);
     boolean getCoProjectProcess( long co_projectId, String co_process);

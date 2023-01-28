@@ -55,12 +55,8 @@
         #{limit} offset #{offset}
     </select>
 
-    <select id ="getCoHeartOfStudy" resultType="CoHeartOfStudy">
-        SELECT status FROM CoHeartOfStudy WHERE co_studyId = ${co_studyId}
-    </select>
-
-    <select id ="getCoHeartOfStudyEmail" resultType="String">
-        SELECT co_email FROM CoHeartOfStudy WHERE co_studyId = ${co_studyId}
+    <select id ="getCoHeartOfStudyEmail" resultType="Long">
+        SELECT co_hosId FROM CoHeartOfStudy WHERE co_studyId = #{co_studyId} AND co_email = #{co_email}
     </select>
 
     <select id="getCoStudy" resultType="CoStudy">
@@ -105,7 +101,7 @@
 
     <delete id="deleteCoHeartOfStudy">
         DELETE FROM CoHeartOfStudy
-        WHERE co_studyId = ${co_studyId}
+        WHERE co_studyId = #{co_studyId} AND co_email = #{co_email}
     </delete>
 
     <insert id="insertCoStudy" parameterType="hashMap" useGeneratedKeys="true" keyProperty="co_studyId">
