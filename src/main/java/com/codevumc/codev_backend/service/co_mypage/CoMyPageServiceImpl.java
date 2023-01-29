@@ -130,6 +130,8 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
             Map<String, String> map = this.coMyPageMapper.getUserProfile(co_email);
             map.put("co_email", map.get("co_email"));
             map.put("co_name", map.get("co_name"));
+            map.put("co_gender", map.get("co_gender"));
+            map.put("co_birth", map.get("co_birth"));
             map.put("co_nickName", map.get("co_nickName"));
             map.put("profileImg", map.get("profileImg"));
             CoDevResponse result = setResponse(200, "Complete", map);
