@@ -78,7 +78,7 @@
     </select>
 
     <select id="getUserProfile" resultType="Map">
-        select co_email, co_nickName, co_gender, co_birth,  co_name, profileImg from CoUser where co_email = #{co_email}
+        select co_email, co_nickName, co_gender, co_birth,  co_name, profileImg, co_loginType from CoUser where co_email = #{co_email}
     </select>
 
 
