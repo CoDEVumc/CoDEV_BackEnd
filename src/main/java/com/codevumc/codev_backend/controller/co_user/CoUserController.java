@@ -51,6 +51,7 @@ public class CoUserController extends JwtController {
                 .co_name(user.get("co_name").toString())
                 .co_birth(user.get("co_birth").toString())
                 .co_gender(user.get("co_gender").toString())
+                .co_loginType(user.get("co_loginType").toString())
                 .role(role)
                 .roles(Collections.singletonList(role.getValue())).build();
         CoDevResponse result = coUserService.signUpCoUser(coUser);
@@ -66,59 +67,27 @@ public class CoUserController extends JwtController {
         return getJwtService().login(request, user, userAgent);
     }
 
-    @RequestMapping("/testJWT")
-    public CoDevResponse getCoUserList(HttpServletRequest request) throws Exception {
-        return coUserService.findALlUser(getCoUserEmail(request));
-    }
 
     @PostMapping("/token/refresh")
     public CoDevResponse validateRefreshToken(@RequestBody RefreshToken bodyJson) throws Exception {
         return getJwtService().newAccessToken(bodyJson);
     }
 
-    @GetMapping("/github/login")
-    public CoDevResponse gitHubLogin(@RequestBody @RequestParam(value = "code") String code, @RequestHeader("User-Agent") String userAgent) throws Exception {
-        Map<String, Object> userInfo =  gitHubApi.getUserInfo(gitHubApi.getAccessTocken(code));
-        CoUser coUser = CoUser.builder()
-                .co_email(userInfo.get("co_email").toString())
-                .co_password(passwordEncoder.encode(userInfo.get("co_password").toString()))
-                .co_nickName("")
-                .co_name("")
-                .co_birth("")
-                .co_gender("")
-                .role(Role.USER)
-                .roles(Collections.singletonList(Role.USER.getValue()))
-                .build();
-        return coUserService.githubLogin(coUser, userAgent, userInfo.get("co_password").toString());
-    }
-
-    @GetMapping("/google/login")
-    public CoDevResponse googleLogin(@RequestBody @RequestParam(value = "code") String code, @RequestHeader("User-Agent") String userAgent) throws Exception{
-        Map<String, Object> userInfo =  googleApi.getUserInfo(googleApi.getAccessToken(code));
-        CoUser coUser = CoUser.builder()
-                .co_email(userInfo.get("co_email").toString())
-                .co_password(userInfo.get("co_password").toString())
-                .co_nickName("")
-                .co_name("")
-                .co_birth("")
-                .co_gender("")
-                .role(Role.USER)
-                .roles(Collections.singletonList(Role.USER.getValue()))
-                .build();
-        return coUserService.googleLogin(coUser);
-    }
-
     @PostMapping("/sns/login")
-    public CoDevResponse snsLogin(HttpServletRequest request, @RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent) {
-        if(coUserService.isSignup(user.get("co_email"))) {
-            //회원가입 되어있을때
-            System.out.println("already signup");
+    public CoDevResponse snsLogin(HttpServletRequest request, @RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent) throws Exception{
+        String co_loginType = user.get("co_loginType");
+        Map<String, Object> userInfo = co_loginType.equals(CoUser.loginType.GOOGLE.getValue()) ? googleApi.getUserInfo(user.get("accessToken")) : gitHubApi.getUserInfo(gitHubApi.getAccessTocken(user.get("code")));
+        if(coUserService.isSignup(userInfo.get("co_email").toString())) {
+            return getJwtService().snsLogin(request, userInfo.get("co_email").toString(), co_loginType, userAgent);
         }else {
-            //회원가입이 안되어있을때
-            System.out.println("start signup");
+            CoUser coUser = CoUser.builder()
+                    .co_email(userInfo.get("co_email").toString())
+                    .co_password(userInfo.get("co_password").toString())
+                    .build();
+            return coUserService.snsLoginMessage(coUser);
         }
-        return null;
     }
+
 
     @GetMapping("/code/mail")
     public CoDevResponse mailConfirm(@RequestParam String email) throws Exception {

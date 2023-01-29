@@ -12,52 +12,7 @@ import java.util.HashMap;
 @Controller
 public class GoogleApi {
 
-    final static String GOOGLE_TOKEN_BASE_URL = "https://oauth2.googleapis.com/token";
     final static String GOOGLE_USERINFO_REQUEST_URL="https://www.googleapis.com/oauth2/v1/userinfo";
-
-
-    String clientId = "413806176191-5ubglt67tr3gdl7u45l4qmepgcj5h71k.apps.googleusercontent.com";
-    String clientSecret = "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";
-
-    public String getAccessToken(String authorize_code) {
-        String access_Token = "";
-        String refresh_Token = "";
-
-        try {
-            URL url = new URL(GOOGLE_TOKEN_BASE_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
-            sb.append("client_id=" + clientId);
-            sb.append("&client_secret=" + clientSecret);
-            sb.append("&code=" + authorize_code);
-            sb.append("&grant_type=authorization_code");
-            sb.append("&redirect_uri=http://localhost:8080/codev/user/google/login");
-            bw.write(sb.toString());
-            bw.flush();
-
-            int responseCode = conn.getResponseCode();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            StringBuffer result = new StringBuffer();
-
-            while ((line = br.readLine()) != null)
-                result.append(line);
-            //Gson 라이브러르에 포함된 클래스로 json파싱
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result.toString());
-
-            access_Token = element.getAsJsonObject().get("access_token").getAsString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return access_Token;
-    }
-
 
     public HashMap<String, Object> getUserInfo(String id_token) {
         HashMap<String, Object> userInfo = new HashMap<>();

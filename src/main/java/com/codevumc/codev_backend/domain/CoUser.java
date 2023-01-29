@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.domain;
 
 import com.codevumc.codev_backend.domain.role.Role;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class CoUser implements UserDetails {
     private String co_gender;
     private Role role;
     private String profileImg;
+    private String co_loginType;
 
     @Builder.Default
     private List<String> roles = new ArrayList<>();
@@ -67,5 +70,16 @@ public class CoUser implements UserDetails {
                 "    \"co_email\":\"" + co_email + "\",\n" +
                 "    \"co_password\":\"" + co_password + "\"\n" +
                 "}";
+    }
+    @Getter
+    @AllArgsConstructor
+    public enum loginType {
+        CODEV("CODEV"), GOOGLE("GOOGLE"), GITHUB("GITHUB");
+        private String value;
+
+        @JsonCreator
+        public static CoUser.loginType from(String s) {
+            return CoUser.loginType.valueOf(s.toUpperCase());
+        }
     }
 }
