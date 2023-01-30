@@ -25,16 +25,22 @@ public class StompHandler implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
+        return message;
+    }
+
+    /*@Override
+    public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         try {
             if(accessor.getCommand() == StompCommand.CONNECT) {
                 if (!jwtTokenProvider.validateToken(accessor.getFirstNativeHeader("CoDev_Authorization"))) {
                     throw new IllegalArgumentException();
+
                 }
             }
         } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
             e.printStackTrace();
         }
         return message;
-    }
+    }*/
 }

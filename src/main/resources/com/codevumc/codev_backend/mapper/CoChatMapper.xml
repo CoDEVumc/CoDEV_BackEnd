@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.CoChatMapper">
+
+    <insert id="inviteUser" parameterType="CoChatOfUser">
+        INSERT INTO CoChatOfUser VALUES (#{roomId}, #{co_type}, #{co_mainImg}, #{co_email}, #{title}, '', true, false);
+    </insert>
+
+    <select id="getChatRoomList" resultType="CoChatOfUser">
+        SELECT roomId, co_type, co_mainImg, title,  co_email, last_content, isRead
+        FROM CoChatOfUser
+        WHERE co_email = #{co_email}
+    </select>
+
+    <select id="getChatRoom" resultType="CoChatOfUser">
+        SELECT roomId, co_type, co_mainImg, title, co_email, last_content,  isRead
+        FROM CoChatOfUser
+        WHERE roomId = #{roomId} AND co_type = #{co_type} AND co_email = #{co_email}
+    </select>
+
+    <delete id="exitChatRoom">
+        DELETE FROM CoChatOfUser
+        WHERE roomId = #{roomId} AND co_type = #{co_type} AND co_email = #{co_email}
+    </delete>
+
+    <update id="readMessage">
+        UPDATE CoChatOfUser
+        SET isRead = true,
+            status = true
+        WHERE roomId = #{roomId} AND co_type = #{co_type} AND co_email = #{co_email}
+    </update>
+
+    <update id="sendMessage">
+        UPDATE CoChatOfUser
+        SET isRead = false
+        WHERE roomId = #{roomId} AND co_type = #{co_type} AND status = false
+    </update>
+
+</mapper>
