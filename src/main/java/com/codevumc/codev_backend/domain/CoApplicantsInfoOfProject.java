@@ -10,7 +10,9 @@ import java.util.List;
 @Setter
 @Builder
 public class CoApplicantsInfoOfProject {
-    private List<CoPartOfProject> co_recruitmentStatus;
     private String co_part;
+    private int co_temporarySaveCount;
+    private List<CoPartOfProject> co_limitOfProject;  // 파트별 모집 인원 제한
+    private List<CoApplicantCount> co_applicantsCount;
     private List<CoApplicantInfo> co_appllicantsInfo;
 }
