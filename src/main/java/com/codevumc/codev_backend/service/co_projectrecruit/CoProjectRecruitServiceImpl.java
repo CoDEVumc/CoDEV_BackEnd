@@ -107,6 +107,9 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                 // 파트별 지원자수 저장
                 List<CoApplicantCount> coApplicantCountList = new ArrayList<>();
 
+
+                // TO-DO  임시저장 지원자 수 어떻게 저장할 것인가
+
                 for (CoPartOfProject coPartOfProject : coPartOfProjectList) {
                     Map<String, Object> coCountDto = new HashMap<>();
                     coCountDto.put("co_projectId", co_projectId);
@@ -118,7 +121,6 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
 
                 CoApplicantsInfoOfProject coApplicantsInfoOfProject = CoApplicantsInfoOfProject.builder()
                         .co_part(co_part)
-                        .co_temporarySaveCount(this.coProjectMapper.getTemporarySavedApplicantsCount())
                         .co_applicantsCount(coApplicantCountList)
                         .co_limitOfProject(coPartOfProjectList)
                         .co_appllicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))

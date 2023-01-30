@@ -36,5 +36,4 @@ public interface CoProjectMapper {
     void approveCoProjectMember(String co_email, Long co_projectId);
     List<CoApplicantInfo> getCoApplicantsInfo(Map<String, Object> coProjectDto);
     int getCoApplicantsCount(Map<String, Object> coCountDto);
-    int getTemporarySavedApplicantsCount();
 }
