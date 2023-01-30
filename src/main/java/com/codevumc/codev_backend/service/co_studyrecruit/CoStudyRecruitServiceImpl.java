@@ -96,12 +96,16 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if(coStudy.isPresent()) {
                 if(coStudy.get().getCo_email().equals(co_email)) {
-                    this.coStudyMapper.completeCoStudyRecruitment(condition);
                     List<CoRecruitOfStudy> applicants = co_applicantList.getCo_applicantList();
-                    for (CoRecruitOfStudy applicant : applicants) {
-                        this.coStudyMapper.updateCoStudyMemberApprove(applicant.getCo_email(), co_studyId);
+                    if (applicants.size() > coStudy.get().getCo_total()){
+                        return setResponse(446, "message", "지원 인원을 초과하였습니다.");
+                    } else {
+                        this.coStudyMapper.completeCoStudyRecruitment(condition);
+                        for (CoRecruitOfStudy applicant : applicants) {
+                            this.coStudyMapper.updateCoStudyMemberApprove(applicant.getCo_email(), co_studyId);
+                        }
+                        return setResponse(200, "message", "모집 마감되었습니다.");
                     }
-                    return setResponse(200, "message", "모집 마감되었습니다.");
                 }else
                     return setResponse(403, "Forbidden", "권한이 없습니다.");
             }
