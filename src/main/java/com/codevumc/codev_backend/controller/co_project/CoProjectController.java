@@ -2,7 +2,6 @@ package com.codevumc.codev_backend.controller.co_project;
 
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
-import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -135,6 +134,12 @@ public class CoProjectController extends JwtController {
                 .co_email(getCoUserEmail(request))
                 .co_deadLine(project.get("co_deadLine").toString()).build();
         return coProjectService.updateCoProjectDeadLine(coProject);
+    }
+
+    @GetMapping("/recruitment/{coProjectId}")
+    public CoDevResponse getCoApplicantsOfProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId, @RequestParam("co_part") String co_part) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coProjectRecruitService.getCoApplicantsOfProject(co_email, co_projectId, co_part);
     }
 
     private int getLimitCnt(int pageNum) {
