@@ -1,10 +1,7 @@
 package com.codevumc.codev_backend.mapper;
 
 
-import com.codevumc.codev_backend.domain.CoLanguage;
-import com.codevumc.codev_backend.domain.CoPartOfProject;
-import com.codevumc.codev_backend.domain.CoProject;
-import com.codevumc.codev_backend.domain.CoRecruitOfProject;
+import com.codevumc.codev_backend.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,5 +32,5 @@ public interface CoProjectMapper {
     boolean cancelCoRecruitOfProject(Map<String, Object> recruitDto);
     boolean getCoProjectProcess( long co_projectId, String co_process);
     void updateCoProjectdeadLine(CoProject coProject);
-
+    List<CoApplicantInfo> getCoApplicantsInfo(Map<String, Object> coProjectDto);
 }
