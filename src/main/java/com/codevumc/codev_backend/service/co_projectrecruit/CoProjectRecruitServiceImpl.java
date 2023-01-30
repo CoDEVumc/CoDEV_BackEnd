@@ -67,7 +67,7 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
     }
 
     @Override
-    public CoDevResponse closeCoProjectDeadLine(String co_email, Long co_projectId, CoProject co_applicantsList) {
+    public CoDevResponse closeCoProjectDeadLine(String co_email, Long co_projectId, CoProject co_applicantList) {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
@@ -76,7 +76,7 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
             if (coProjectOptional.isPresent()) {
                 if (coProjectOptional.get().getCo_email().equals(co_email)){
                     this.coProjectMapper.closeCoProjectDeadLine(condition);
-                    List<CoRecruitOfProject> applicants = co_applicantsList.getCo_applicantsList();
+                    List<CoRecruitOfProject> applicants = co_applicantList.getCo_applicantList();
                     for (CoRecruitOfProject applicant : applicants) {
                         this.coProjectMapper.approveCoProjectMember(applicant.getCo_email(), co_projectId);
                     }
