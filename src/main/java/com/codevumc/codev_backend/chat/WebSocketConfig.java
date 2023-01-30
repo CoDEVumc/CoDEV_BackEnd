@@ -10,12 +10,12 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class ChatConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompHandler stompHanlder;
 
     @Autowired
-    public ChatConfig(StompHandler stompHanlder) {
+    public WebSocketConfig(StompHandler stompHanlder) {
         this.stompHanlder = stompHanlder;
     }
 
@@ -30,7 +30,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
          * ERROR : 연결 실패  setAllowedOriginPatterns("*") CORS 설정
          *
          * */
-        registry.addEndpoint("/codev/chat").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*");
     }
 
     @Override
