@@ -80,7 +80,7 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                 List<CoPartOfProject> coPartsOfProject = this.coProjectMapper.getCoPartList(co_projectId);
                 Map<String, Object> coProjectDto = new HashMap<>();
                 coProjectDto.put("co_projectId", co_projectId);
-                coProjectDto.put("co_partId", co_part);
+                coProjectDto.put("co_partId", co_part.toUpperCase());
 
                 // 결과물 저장
                 CoApplicantsInfoOfProject coApplicantsInfoOfProject = CoApplicantsInfoOfProject.builder()

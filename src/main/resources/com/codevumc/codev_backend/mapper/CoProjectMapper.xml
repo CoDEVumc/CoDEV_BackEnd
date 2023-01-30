@@ -177,7 +177,14 @@
                  left join CoUser cu on cu.co_email = crp.co_email
                  left join CoPortfolio cp on crp.co_portfolioId = cp.co_portfolioId
         where crp.co_projectId = #{co_projectId}
-          and crp.co_partId = #{co_partId}
+          <choose>
+              <when test='co_partId.equals("TEMP")'>
+                  and crp.co_temporaryStorage = false
+              </when>
+              <otherwise>
+                  and crp.co_partId = #{co_partId}
+              </otherwise>
+          </choose>
         order by crp.createdAt asc;
     </select>
 
