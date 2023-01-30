@@ -88,7 +88,7 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
     }
 
     @Override
-    public CoDevResponse completeCoStudyRecruitment(String co_email, long co_studyId) {
+    public CoDevResponse completeCoStudyRecruitment(String co_email, long co_studyId, CoStudy co_applicantList) {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
@@ -96,8 +96,8 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if(coStudy.isPresent()) {
                 if(coStudy.get().getCo_email().equals(co_email)) {
-                    List<CoRecruitOfStudy> applicants = this.coStudyMapper.getCoStudyApplicants(condition);
                     this.coStudyMapper.completeCoStudyRecruitment(condition);
+                    List<CoRecruitOfStudy> applicants = co_applicantList.getCo_applicantList();
                     for (CoRecruitOfStudy applicant : applicants) {
                         this.coStudyMapper.updateCoStudyMemberApprove(applicant.getCo_email(), co_studyId);
                     }

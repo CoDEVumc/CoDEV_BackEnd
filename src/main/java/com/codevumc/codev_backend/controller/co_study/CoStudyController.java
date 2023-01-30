@@ -170,8 +170,11 @@ public class CoStudyController extends JwtController {
         return coStudyService.updateCoStudyDeadLine(coStudy);
     }
 
+    @ResponseBody
     @PatchMapping("/recruitment/completion/{coStudyId}")
-    public CoDevResponse completeCoStudyRecruitment(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
-        return coStudyRecruitService.completeCoStudyRecruitment(getCoUserEmail(request), coStudyId);
+    public CoDevResponse completeCoStudyRecruitment(HttpServletRequest request,
+                                                    @PathVariable("coStudyId") long coStudyId,
+                                                    @RequestBody CoStudy coApplicantList) throws Exception {
+        return coStudyRecruitService.completeCoStudyRecruitment(getCoUserEmail(request), coStudyId, coApplicantList);
     }
 }
