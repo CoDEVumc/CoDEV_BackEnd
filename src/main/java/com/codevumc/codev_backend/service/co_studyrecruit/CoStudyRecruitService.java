@@ -7,5 +7,5 @@ public interface CoStudyRecruitService {
     CoDevResponse cancelRecruitStudy(String co_email, long co_studyId);
     CoDevResponse submitCoStudy(CoRecruitOfStudy coRecruitOfStudy);
     CoDevResponse getCoStudyApplicants(String co_email, long co_studyId);
-
+    CoDevResponse completeCoStudyRecruitment(String co_email, long co_studyId);
 }
