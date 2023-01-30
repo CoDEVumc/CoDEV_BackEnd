@@ -30,6 +30,7 @@ public class CoProject {
     private String co_parts;
     private String co_languages;
     private boolean co_recruitStatus;
+    private List<CoRecruitOfProject> co_applicantsList;
     private List<CoPhotos> co_photos;
     private List<CoPart> co_partList;
     private List<CoLanguage> co_languageList;
