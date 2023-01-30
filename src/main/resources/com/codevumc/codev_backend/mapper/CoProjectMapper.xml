@@ -191,7 +191,7 @@
         where crp.co_projectId = #{co_projectId}
           <choose>
               <when test='co_partId.equals("TEMP")'>
-                  and crp.co_temporaryStorage = false
+                  and crp.co_temporaryStorage = true
               </when>
               <otherwise>
                   and crp.co_partId = #{co_partId}
