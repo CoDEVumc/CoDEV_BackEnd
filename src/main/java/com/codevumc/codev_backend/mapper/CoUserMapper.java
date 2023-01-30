@@ -14,4 +14,5 @@ public interface CoUserMapper {
     Optional<CoUser> findByEmail(String co_email);
     void insertCoUser(CoUser coUser);
     void updateProfileImg(@Param("profileImg") String profileImg, @Param("co_email") String co_email);
+    void updateLoginType(@Param("co_loginType") String co_loginType, @Param("co_email") String co_email);
 }
