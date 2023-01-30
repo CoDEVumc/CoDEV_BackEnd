@@ -1,19 +1,13 @@
 package com.codevumc.codev_backend.service.co_projectrecruit;
 
-import com.codevumc.codev_backend.domain.CoApplicantsInfoOfProject;
-import com.codevumc.codev_backend.domain.CoPartOfProject;
-import com.codevumc.codev_backend.domain.CoProject;
-import com.codevumc.codev_backend.domain.CoRecruitOfProject;
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -105,9 +99,28 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                 Map<String, Object> coProjectDto = new HashMap<>();
                 coProjectDto.put("co_projectId", co_projectId);
                 coProjectDto.put("co_partId", co_part.toUpperCase());
+
+                // 파트별 제한 인원
+                List<CoPartOfProject> coPartOfProjectList = this.coProjectMapper.getCoPartList(co_projectId);
+
+
+                // 파트별 지원자수 저장
+                List<CoApplicantCount> coApplicantCountList = new ArrayList<>();
+
+                for (CoPartOfProject coPartOfProject : coPartOfProjectList) {
+                    Map<String, Object> coCountDto = new HashMap<>();
+                    coCountDto.put("co_projectId", co_projectId);
+                    coCountDto.put("co_partId", coPartOfProject.getCo_part());
+                    coApplicantCountList.add(new CoApplicantCount(
+                                                    coPartOfProject.getCo_part(),
+                                                    this.coProjectMapper.getCoApplicantsCount(coCountDto)));
+                }
+
                 CoApplicantsInfoOfProject coApplicantsInfoOfProject = CoApplicantsInfoOfProject.builder()
-                        .co_recruitmentStatus(this.coProjectMapper.getCoPartList(co_projectId))
                         .co_part(co_part)
+                        .co_temporarySaveCount(this.coProjectMapper.getTemporarySavedApplicantsCount())
+                        .co_applicantsCount(coApplicantCountList)
+                        .co_limitOfProject(coPartOfProjectList)
                         .co_appllicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))
                         .build();
                 return setResponse(200, "message", coApplicantsInfoOfProject);
