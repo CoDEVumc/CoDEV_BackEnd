@@ -69,22 +69,44 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
     }
 
     @Override
+    public CoDevResponse closeCoProjectDeadLine(String co_email, Long co_projectId, CoProject co_applicantList) {
+        try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("co_projectId", co_projectId);
+            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(co_projectId);
+            if (coProjectOptional.isPresent()) {
+                if (coProjectOptional.get().getCo_email().equals(co_email)){
+                    this.coProjectMapper.closeCoProjectDeadLine(condition);
+                    List<CoRecruitOfProject> applicants = co_applicantList.getCo_applicantList();
+                    for (CoRecruitOfProject applicant : applicants) {
+                        this.coProjectMapper.approveCoProjectMember(applicant.getCo_email(), co_projectId);
+                    }
+                    return setResponse(200,"message","모집마감 되었습니다");
+                }
+                else {
+                    return setResponse(403,"message","권한이 없습니다");
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public CoDevResponse getCoApplicantsOfProject(String co_email, long co_projectId, String co_part) {
         try{
             Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(co_projectId);
-            if(coProjectOptional.isPresent()){  // 글 존재여부
-                if (!coProjectOptional.get().getCo_email().equals(co_email)) // pm이 아닌 경우
+            if(coProjectOptional.isPresent()){
+                if (!coProjectOptional.get().getCo_email().equals(co_email))
                     return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
-
-                // 파트별 모집인원 수 조회
-                List<CoPartOfProject> coPartsOfProject = this.coProjectMapper.getCoPartList(co_projectId);
                 Map<String, Object> coProjectDto = new HashMap<>();
                 coProjectDto.put("co_projectId", co_projectId);
                 coProjectDto.put("co_partId", co_part.toUpperCase());
-
-                // 결과물 저장
                 CoApplicantsInfoOfProject coApplicantsInfoOfProject = CoApplicantsInfoOfProject.builder()
-                        .co_recruitmentStatus(coPartsOfProject)
+                        .co_recruitmentStatus(this.coProjectMapper.getCoPartList(co_projectId))
                         .co_part(co_part)
                         .co_appllicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))
                         .build();
@@ -95,6 +117,5 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         }
         return null;
     }
-
 
 }
