@@ -18,14 +18,15 @@
             co_birth,
             co_gender,
             role,
-            profileImg
+            profileImg,
+            co_loginType
         from CoUser
         where co_email = #{co_email}
     </select>
 
     <insert id="insertCoUser" parameterType="CoUser">
-        insert into CoUser (co_email, co_password, co_nickName, co_name, co_birth, co_gender, role)
-        VALUES (#{co_email}, #{co_password}, #{co_nickName}, #{co_name}, #{co_birth}, #{co_gender}, #{role})
+        insert into CoUser (co_email, co_password, co_nickName, co_name, co_birth, co_gender, role, co_loginType)
+        VALUES (#{co_email}, #{co_password}, #{co_nickName}, #{co_name}, #{co_birth}, #{co_gender}, #{role}, #{co_loginType})
     </insert>
 
     <update id="updateProfileImg">
@@ -34,5 +35,10 @@
         WHERE `co_email` = #{co_email};
     </update>
 
+    <update id="updateLoginType">
+        UPDATE CoUser
+        SET co_loginType = #{co_loginType}
+        WHERE `co_email` = #{co_email};
+    </update>
 
 </mapper>
