@@ -35,4 +35,6 @@ public interface CoStudyMapper {
     List<CoRecruitOfStudy> getCoStudyApplicants(Map<String, Object> condition);
     boolean getCoStudyProcess(long co_studyId, String co_process);
     void updateCoStudyDeadLine(CoStudy coStudy);
+    void updateCoStudyMemberApprove(String co_email, long co_studyId);
+    void completeCoStudyRecruitment(Map<String, Object> condition);
 }

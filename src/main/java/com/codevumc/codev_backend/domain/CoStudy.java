@@ -32,7 +32,7 @@ public class CoStudy {
     private boolean co_recruitStatus;
     private List<CoPhotos> co_photos;
     private List<CoLanguage> co_languageList;
-
+    private List<CoRecruitOfStudy> co_applicantList;
     @Getter
     @AllArgsConstructor
     public enum DevType {
