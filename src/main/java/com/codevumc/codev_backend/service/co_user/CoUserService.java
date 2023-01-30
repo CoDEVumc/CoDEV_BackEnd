@@ -23,4 +23,5 @@ public interface CoUserService {
 
     CoDevResponse sendSimpleMessage(String to)throws Exception;
 
+    CoDevResponse isExistedEmail(String co_email);
 }
