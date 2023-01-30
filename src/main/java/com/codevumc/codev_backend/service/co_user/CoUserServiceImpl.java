@@ -5,6 +5,7 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoUserMapper;
+import com.codevumc.codev_backend.mapper.TokenMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import com.codevumc.codev_backend.snslogin.GitHubApi;
 import com.codevumc.codev_backend.snslogin.GoogleApi;
@@ -40,13 +41,13 @@ import java.util.regex.Pattern;
 @Service
 public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
-
+    private final TokenMapper tokenMapper;
     private final JavaMailSender javaMailSender;
 
     @Autowired
-    public CoUserServiceImpl(CoUserMapper coUserMapper, GitHubApi gitHubApi, GoogleApi googleApi, JavaMailSender javaMailSender) {
+    public CoUserServiceImpl(CoUserMapper coUserMapper, TokenMapper tokenMapper, JavaMailSender javaMailSender) {
         this.coUserMapper = coUserMapper;
-
+        this.tokenMapper = tokenMapper;
         this.javaMailSender = javaMailSender;
     }
 
@@ -86,32 +87,17 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     }
 
     @Override
-    public CoDevResponse githubLogin(CoUser coUser, String userAgent, String pw) {
+    public CoDevResponse snsLoginMessage(CoUser coUser) {
+        CoDevResponse result = null;
         try {
-            Optional<CoUser> coUserOptional = coUserMapper.findByEmail(coUser.getUsername());
-            if(coUserOptional.isPresent()) {
-                //이미 회원가입을 한 경우
-            } else {
-                //처음 회원가입 인 경우
-
-            }
-
-            return setResponse(200, "success", coUser);
+            result = setResponse(505, "message", "/join 으로 이동하여 추가정보를 입력해주세요.");
+            addResponse("co_email", coUser.getCo_email());
+            addResponse("co_password", coUser.getCo_password());
         } catch (Exception e) {
             e.printStackTrace();
+            throw new IllegalArgumentException();
         }
-        return null;
-    }
-
-    @Override
-    public CoDevResponse googleLogin(CoUser coUser){
-        try {
-            addResponse("co_email", coUser.getUsername());
-            addResponse("co_password", coUser.getPassword());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return getResult();
+        return result;
     }
 
     @Override

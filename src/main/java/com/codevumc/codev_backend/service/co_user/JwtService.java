@@ -36,25 +36,9 @@ public class JwtService {
                     new UsernamePasswordAuthenticationToken(user.get("co_email"), user.get("co_password"))
             );
 
-            CoUser userinfo = coUserMapper.findByEmail(user.get("co_email")).get();
-            Token token = jwtTokenProvider.createToken(user.get("co_email"));
-            //RefreshToken을 DB에 저장
-            RefreshToken refreshToken = RefreshToken.builder()
-                    .keyId(token.getKey())
-                    .refreshToken(token.getRefreshToken()).
-                    userAgent(userAgent).build();
+            coUserMapper.updateLoginType(CoUser.loginType.CODEV.getValue(), user.get("co_email"));
 
-            Optional<RefreshToken> tokenOptional = tokenMapper.findByKeyId(user.get("co_email"));
-
-            if(tokenOptional.isPresent()) {
-                if(!tokenOptional.get().getUserAgent().equals(userAgent)) {
-                    tokenMapper.deleteByKeyId(user.get("co_email"));
-                    tokenMapper.insertRefreshToken(refreshToken);
-                }
-            }else {
-                tokenMapper.insertRefreshToken(refreshToken);
-            }
-//            String loginUserId = refreshToken.getKeyId();
+            Token token = getCoDevToken(user.get("co_email"), userAgent);
 
             result.setResponseData("accessToken", token.getAccessToken());
             result.setResponseData("refreshToken", token.getRefreshToken());
@@ -66,6 +50,48 @@ public class JwtService {
         }
         return result;
     }
+
+    @Transactional
+    public CoDevResponse snsLogin(HttpServletRequest request, String co_email, String loginType, String userAgent) {
+
+        CoDevResponse.ResponseMap result = new CoDevResponse.ResponseMap();
+        try {
+            coUserMapper.updateLoginType(CoUser.loginType.from(loginType).getValue(), co_email);
+
+            Token token = getCoDevToken(co_email, userAgent);
+
+            result.setResponseData("accessToken", token.getAccessToken());
+            result.setResponseData("refreshToken", token.getRefreshToken());
+            result.setResponseData("key", token.getKey());
+        }catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("exception", "UsernameOrPasswordNotFoundException");
+            throw new AuthenticationCustomException(ErrorCode.UsernameOrPasswordNotFoundException);
+        }
+        return result;
+    }
+
+    private Token getCoDevToken(String co_email, String userAgent) {
+        Token token = jwtTokenProvider.createToken(co_email);
+        //RefreshToken을 DB에 저장
+        RefreshToken refreshToken = RefreshToken.builder()
+                .keyId(token.getKey())
+                .refreshToken(token.getRefreshToken()).
+                userAgent(userAgent).build();
+
+        Optional<RefreshToken> tokenOptional = tokenMapper.findByKeyId(co_email);
+
+        if(tokenOptional.isPresent()) {
+            if(!tokenOptional.get().getUserAgent().equals(userAgent)) {
+                tokenMapper.deleteByKeyId(co_email);
+                tokenMapper.insertRefreshToken(refreshToken);
+            }
+        }else {
+            tokenMapper.insertRefreshToken(refreshToken);
+        }
+        return token;
+    }
+
 
     public CoDevResponse newAccessToken(RefreshToken refreshToken) {
         CoDevResponse.ResponseMap result = new CoDevResponse.ResponseMap();

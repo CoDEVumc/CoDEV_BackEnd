@@ -71,14 +71,14 @@
 
 
     <select id="getPortfolioByCo_email" resultType="CoPortfolio">
-        SELECT co_portfolioId, cu.co_email, cu.co_nickName, cu.co_name, cu.profileImg, co_title, co_rank, co_headLine, cp.updatedAt
+        SELECT co_portfolioId, cu.co_email, cu.co_nickName, cu.co_name, cu.profileImg, co_title, co_rank, co_headLine, cp.updatedAt, cu.co_gender, cu.co_birth
         FROM CoPortfolio cp
                  JOIN CoUser cu on cp.co_email = cu.co_email
         WHERE cu.co_email = #{co_email}
     </select>
 
     <select id="getUserProfile" resultType="Map">
-        select co_email, co_nickName, co_name, profileImg from CoUser where co_email = #{co_email}
+        select co_email, co_nickName, co_gender, co_birth,  co_name, profileImg, co_loginType from CoUser where co_email = #{co_email}
     </select>
 
 

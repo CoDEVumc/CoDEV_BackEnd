@@ -71,9 +71,10 @@ public class CoFileServiceImpl implements CoFileService{
     @Override
     public ResponseEntity<Resource> loadFileAsResource(HttpServletRequest request, String fileName) {
         try {
-            Path filePath = this.fileLocation.resolve(fileName).normalize();
-            String originFileName = getOriginFileName(fileName);
-            Resource resource = new UrlResource(filePath.toUri());
+            //Path filePath = this.fileLocation.resolve(fileName).normalize();
+            CoPhotos File = getFile(fileName);
+            //Resource resource = new UrlResource(filePath.toUri());
+            Resource resource = new UrlResource(File.getCo_fileUrl());
 
             if(resource.exists()) {
                 String contentType = getContentType(request, resource);
@@ -83,7 +84,7 @@ public class CoFileServiceImpl implements CoFileService{
 
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originFileName + "\"")
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + File.getCo_fileName() + "\"")
                         .body(resource);
             }
         } catch (MalformedURLException e) {
@@ -184,10 +185,10 @@ public class CoFileServiceImpl implements CoFileService{
         return sb.toString();
     }
 
-    private String getOriginFileName(String uuId) {
+    private CoPhotos getFile(String uuId) {
         Optional<CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(uuId);
         if(coPhotoOfProject.isPresent())
-            return coPhotoOfProject.get().getCo_fileName();
+            return coPhotoOfProject.get();
         return null;
     }
 
