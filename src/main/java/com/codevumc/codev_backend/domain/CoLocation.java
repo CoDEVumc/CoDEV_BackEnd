@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class CoLocation {
     private String co_location;
+    private boolean status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }
