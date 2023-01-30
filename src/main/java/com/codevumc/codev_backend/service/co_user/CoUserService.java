@@ -15,11 +15,9 @@ public interface CoUserService {
 
     CoDevResponse signUpCoUser(CoUser coUser);
 
-    CoDevResponse githubLogin(CoUser coUser, String userAgent, String pw);
-
-    CoDevResponse googleLogin(CoUser coUser);
-
     boolean isSignup(String co_email);
+
+    CoDevResponse snsLoginMessage(CoUser coUser);
 
     MimeMessage createMessage(String to, String randomNumber) throws MessagingException, UnsupportedEncodingException;
 
