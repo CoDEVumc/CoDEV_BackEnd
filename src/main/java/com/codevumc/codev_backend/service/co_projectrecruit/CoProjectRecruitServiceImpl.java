@@ -1,5 +1,7 @@
 package com.codevumc.codev_backend.service.co_projectrecruit;
 
+import com.codevumc.codev_backend.domain.CoApplicantsInfoOfProject;
+import com.codevumc.codev_backend.domain.CoPartOfProject;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -8,9 +10,7 @@ import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -64,4 +64,35 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse getCoApplicantsOfProject(String co_email, long co_projectId, String co_part) {
+        try{
+            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(co_projectId);
+            if(coProjectOptional.isPresent()){  // 글 존재여부
+                if (!coProjectOptional.get().getCo_email().equals(co_email)) // pm이 아닌 경우
+                    return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
+                List<CoApplicantsInfoOfProject> coApplicantsOfProject = new ArrayList<>();
+                // 파트별 모집인원 수 조회
+                List<CoPartOfProject> coPartsOfProject = this.coProjectMapper.getCoPartList(co_projectId);
+                Map<String, Object> coPartInfoDto = new HashMap<>();
+                // 파트 수 만큼 반복(추후 파트 변동 가능성)
+                for (CoPartOfProject coPartOfProject : coPartsOfProject) {
+                    coPartInfoDto.put("co_projectId", co_projectId);
+                    coPartInfoDto.put("co_part", coPartOfProject.getCo_part());
+                    CoApplicantInfo coApplicantInfo = CoApplicantInfo.builder()
+                            .co_part(coPartOfProject.getCo_part())
+                            .co_limit(coPartOfProject.getCo_limit())
+                            .co_applicants(this.coProjectMapper.getCoApplicantsOfProject(coPartInfoDto))
+                            .build();
+                }
+                return setResponse(200, "message", coApplicantsOfProject);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
