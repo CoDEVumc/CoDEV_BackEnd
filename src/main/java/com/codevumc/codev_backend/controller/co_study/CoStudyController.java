@@ -110,7 +110,6 @@ public class CoStudyController extends JwtController {
         return coStudyService.deleteStudy(co_email, coStudyId);
     }
 
-    @ResponseBody
     @PostMapping("/submission/{coStudyId}")
     public CoDevResponse submitCoStudy(HttpServletRequest request,
                                        @PathVariable("coStudyId") long coStudyId,
@@ -170,7 +169,6 @@ public class CoStudyController extends JwtController {
         return coStudyService.updateCoStudyDeadLine(coStudy);
     }
 
-    @ResponseBody
     @PatchMapping("/recruitment/completion/{coStudyId}")
     public CoDevResponse completeCoStudyRecruitment(HttpServletRequest request,
                                                     @PathVariable("coStudyId") long coStudyId,
