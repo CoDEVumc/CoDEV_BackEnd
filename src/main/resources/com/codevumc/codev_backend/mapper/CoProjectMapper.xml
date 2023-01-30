@@ -200,4 +200,18 @@
         order by crp.createdAt asc;
     </select>
 
+    <select id="getCoApplicantsCount" parameterType="hashMap" resultType="Integer">
+        select count(co_ropId) as 'co_count'
+        from CoRecruitOfProject as crp
+        where crp.co_projectId = #{co_projectId}
+        <choose>
+            <when test='co_partId.equals("TEMP")'>
+                and crp.co_temporaryStorage = true
+            </when>
+            <otherwise>
+                and co_partId = #{co_partId};
+            </otherwise>
+        </choose>
+    </select>
+
 </mapper>
