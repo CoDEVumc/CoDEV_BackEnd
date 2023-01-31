@@ -68,26 +68,6 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
     }
 
     @Override
-    public CoDevResponse getCoStudyApplicants(String co_email, long co_studyId) {
-        try {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("co_email", co_email);
-            condition.put("co_studyId", co_studyId);
-            Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
-            if(coStudy.isPresent()) {
-                if(coStudy.get().getCo_email().equals(co_email)) {
-                    List<CoRecruitOfStudy> applicants = this.coStudyMapper.getCoStudyApplicants(condition);
-                    return setResponse(200, "Complete", applicants);
-                }else
-                    return setResponse(403, "Forbidden", "권한이 없습니다.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
     public CoDevResponse completeCoStudyRecruitment(String co_email, long co_studyId, CoStudy co_applicantList) {
         try {
             Map<String, Object> condition = new HashMap<>();

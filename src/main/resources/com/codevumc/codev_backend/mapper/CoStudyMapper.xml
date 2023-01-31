@@ -156,12 +156,6 @@
         values (#{co_email}, #{co_studyId}, #{co_portfolioId}, #{co_motivation})
     </insert>
 
-    <select id="getCoStudyApplicants" resultType="CoRecruitOfStudy">
-        select cos.* from CoRecruitOfStudy cos
-        left join CoStudy cs on cs.co_studyId = cos.co_studyId
-        where cs.co_email = #{co_email} and cos.co_studyId = #{co_studyId}
-    </select>
-
     <select id="getCoStudyProcess" resultType="boolean">
         select exists(select co_process from CoStudy where co_studyId = #{co_studyId} and co_process = #{co_process}) as co_process
     </select>
