@@ -7,4 +7,14 @@
         select * from CoLocation
     </select>
 
+    <select id="getParts" resultType="CoPart">
+        select * from CoPart
+    </select>
+    
+    <select id="getLanguageOfPart" resultType="CoLanguage">
+        select co_language, createdAt, updatedAt
+        from CoLanguage
+        where co_part = #{co_part}
+    </select>
+
 </mapper>
