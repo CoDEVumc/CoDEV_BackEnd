@@ -20,7 +20,8 @@ public class ChatMessage {
     public enum MessageType {
         ENTER("ENTER"),
         TALK("TALK"),
-        LEAVE("LEAVE");
+        LEAVE("LEAVE"),
+        EXIT("EXIT");
 
         private String value;
 
