@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_studyrecruit;
 
+import com.codevumc.codev_backend.domain.CoApplicantsInfoOfStudy;
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -118,6 +119,17 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                 if (!coStudyOptional.get().getCo_email().equals(co_email))
                     return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
 
+                Map<String, Object> coStudyDto = new HashMap<>();
+                coStudyDto.put("co_studyId", co_studyId);
+                coStudyDto.put("co_part", co_part.toUpperCase());
+
+                CoApplicantsInfoOfStudy coApplicantsInfoOfStudy = CoApplicantsInfoOfStudy.builder()
+                        .co_part(co_part.toUpperCase())
+                        .co_tempSavedApplicantsCount(this.coStudyMapper.getTempsavedApplicantsCount(co_studyId))
+                        .co_applicantCount(this.coStudyMapper.getCoApplicantCount(co_studyId))
+                        .co_applicantsInfo(this.coStudyMapper.getCoApplicantsInfo(coStudyDto))
+                        .build();
+                return setResponse(200, "message", coApplicantsInfoOfStudy);
             }
         } catch (Exception e) {
             e.printStackTrace();
