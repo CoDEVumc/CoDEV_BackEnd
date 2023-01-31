@@ -128,11 +128,6 @@ public class CoStudyController extends JwtController {
         return coStudyRecruitService.cancelRecruitStudy(getCoUserEmail(request), coStudyId);
     }
 
-    @GetMapping("/recruitment/{coStudyId}")
-    public CoDevResponse getCoStudyApplicants(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
-        return coStudyRecruitService.getCoStudyApplicants(getCoUserEmail(request), coStudyId);
-    }
-
     private int getLimitCnt(int pageNum) {
         int limit = SHOW_COUNT;
         for (int i = 0; i <= pageNum; i++) {
@@ -174,5 +169,13 @@ public class CoStudyController extends JwtController {
                                                     @PathVariable("coStudyId") long coStudyId,
                                                     @RequestBody CoStudy coApplicantList) throws Exception {
         return coStudyRecruitService.completeCoStudyRecruitment(getCoUserEmail(request), coStudyId, coApplicantList);
+    }
+
+    @GetMapping("/recruitment/{coStudyId}")
+    public CoDevResponse getCoApplicantsOfStudy(HttpServletRequest request,
+                                                @PathVariable("coStudyId") long co_studyId,
+                                                @RequestParam("coPart") String co_part) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coStudyRecruitService.getCoApplicantsOfStudy(co_email, co_studyId, co_part);
     }
 }
