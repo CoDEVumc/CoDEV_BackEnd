@@ -184,4 +184,46 @@
         where co_email = #{co_email} and co_studyId = #{co_studyId};
     </update>
 
+    <select id="getCoApplicantsInfo" parameterType="hashMap" resultType="CoApplicantInfo">
+        select cros.co_portfolioId      as 'co_portfolioId',
+               cros.co_email            as 'co_email',
+               cu.co_name               as 'co_name',
+               cu.profileImg            as 'profileImg',
+               cp.co_title              as 'co_title',
+               cpos.co_part             as 'co_part',
+               cros.co_temporaryStorage as 'co_temporaryStorage',
+               cros.createdAt           as 'createdAt'
+        from CoRecruitOfStudy as cros
+                 left join CoUser cu on cros.co_email = cu.co_email
+                 left join CoPortfolio cp on cros.co_portfolioId = cp.co_portfolioId
+                 left join CoPartOfStudy cpos on cros.co_studyId = cpos.co_studyId
+        <choose>
+            <when test='co_part.equals("TEMP")'>
+                where cros.co_temporaryStorage = true
+            </when>
+            <otherwise>
+                where cros.co_studyId = #{co_studyId}
+            </otherwise>
+        </choose>
+        order by cros.createdAt asc;
+    </select>
+
+    <select id="getCoApplicantCount" parameterType="Long" resultType="CoApplicantCount">
+        select cpos.co_part           as 'co_part',
+               cpos.co_total          as 'co_limit',
+               cros.co_applicantCount as 'co_applicantCount'
+        from CoPartOfStudy cpos
+                 left join (select cros.co_studyId as 'co_studyId', count(*) as 'co_applicantCount'
+                            from CoRecruitOfStudy cros
+                            where cros.co_studyId = #{co_studyId}) cros on cros.co_studyId = cpos.co_studyId
+        where cpos.co_studyId = #{co_studyId};
+    </select>
+
+    <select id="getTempsavedApplicantsCount" parameterType="Long" resultType="Integer">
+        select count(*) as 'co_tempSavedApplicantsCount'
+        from CoRecruitOfStudy
+        where co_studyId = #{co_studyId}
+          and co_temporaryStorage = true;
+    </select>
+
 </mapper>
