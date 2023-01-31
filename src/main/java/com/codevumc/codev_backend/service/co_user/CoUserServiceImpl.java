@@ -52,6 +52,21 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
     }
 
     @Override
+    public CoDevResponse isExistedEmail(String co_email) {
+        try {
+            boolean isExisted = coUserMapper.isExistedEmail(co_email);
+            if (isExisted) {
+                return setResponse(402, "message", "이미 가입된 이메일입니다.");
+            } else {
+                return setResponse(200, "message", "가입 가능한 아이디입니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String co_email) throws UsernameNotFoundException {
         Optional<CoUser> coUser = coUserMapper.findByEmail(co_email);
 
