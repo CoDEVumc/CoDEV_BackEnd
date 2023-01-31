@@ -200,18 +200,23 @@
         order by crp.createdAt asc;
     </select>
 
-    <select id="getCoApplicantsCount" parameterType="hashMap" resultType="Integer">
-        select count(co_ropId) as 'co_count'
-        from CoRecruitOfProject as crp
-        where crp.co_projectId = #{co_projectId}
-        <choose>
-            <when test='co_partId.equals("TEMP")'>
-                and crp.co_temporaryStorage = true
-            </when>
-            <otherwise>
-                and co_partId = #{co_partId};
-            </otherwise>
-        </choose>
+    <select id="getTempsavedApplicantsCount" parameterType="Long" resultType="Integer">
+        select count(co_ropId) as 'co_tempSavedApplicantsCount'
+        from CoRecruitOfProject
+        where co_projectId = #{co_projectId}
+          and co_temporaryStorage = true;
+    </select>
+
+    <select id="getCoApplicantsCount" parameterType="Long" resultType="CoApplicantCount">
+        select cpop.co_part as 'co_part',
+               cpop.co_limit as 'co_limit',
+               IFNULL(crop.co_recruitCount, 0) as 'co_applicantsCount'
+        from CoPartOfProject as cpop
+                 left join (select crop.co_projectId, crop.co_partId, count(*) as co_recruitCount
+                            from CoRecruitOfProject crop
+                            where co_projectId = #{co_projectId}
+                            group by crop.co_partId) crop on crop.co_partId = cpop.co_part
+        where cpop.co_projectId = #{co_projectId};
     </select>
 
 </mapper>

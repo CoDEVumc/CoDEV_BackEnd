@@ -35,5 +35,6 @@ public interface CoProjectMapper {
     void closeCoProjectDeadLine(Map<String, Object> condition);
     void approveCoProjectMember(String co_email, Long co_projectId);
     List<CoApplicantInfo> getCoApplicantsInfo(Map<String, Object> coProjectDto);
-    int getCoApplicantsCount(Map<String, Object> coCountDto);
+    int getTempsavedApplicantsCount(long co_projectId);
+    List<CoApplicantCount> getCoApplicantsCount(long co_projectId);
 }
