@@ -98,7 +98,8 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             if (coStudyOptional.isPresent()) {
                 if (!coStudyOptional.get().getCo_email().equals(co_email))
                     return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
-
+                if (!coStudyOptional.get().getCo_part().equals(co_part) && !co_part.equalsIgnoreCase("temp"))
+                    return setResponse(400, "Bad Request", "모집중인 파트가 아닙니다.");
                 Map<String, Object> coStudyDto = new HashMap<>();
                 coStudyDto.put("co_studyId", co_studyId);
                 coStudyDto.put("co_part", co_part.toUpperCase());
