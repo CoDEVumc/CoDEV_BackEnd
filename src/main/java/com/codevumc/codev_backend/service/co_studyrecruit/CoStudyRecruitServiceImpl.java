@@ -6,7 +6,6 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
-import org.apache.ibatis.binding.BindingException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -104,6 +103,21 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                     return setResponse(200, "message", "모집 마감되었습니다.");
                 }else
                     return setResponse(403, "Forbidden", "권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getCoApplicantsOfStudy(String co_email, long co_studyId, String co_part) {
+        try {
+            Optional<CoStudy> coStudyOptional = coStudyMapper.getCoStudy(co_studyId);
+            if (coStudyOptional.isPresent()) {
+                if (!coStudyOptional.get().getCo_email().equals(co_email))
+                    return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
+
             }
         } catch (Exception e) {
             e.printStackTrace();
