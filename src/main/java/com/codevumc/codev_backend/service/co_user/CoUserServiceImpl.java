@@ -56,7 +56,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         try {
             boolean isExisted = coUserMapper.isExistedEmail(co_email);
             if (isExisted) {
-                return setResponse(200, "message", "이미 가입된 이메일입니다.");
+                return setResponse(402, "message", "이미 가입된 이메일입니다.");
             } else {
                 return setResponse(200, "message", "가입 가능한 아이디입니다.");
             }
