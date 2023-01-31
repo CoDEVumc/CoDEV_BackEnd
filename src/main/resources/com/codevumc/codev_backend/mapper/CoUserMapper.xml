@@ -41,4 +41,8 @@
         WHERE `co_email` = #{co_email};
     </update>
 
+    <select id="isExistedEmail" resultType="boolean">
+        select exists(select co_email from CoUser where co_email = #{co_email})
+    </select>
+
 </mapper>

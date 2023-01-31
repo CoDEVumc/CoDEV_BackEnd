@@ -88,6 +88,10 @@ public class CoUserController extends JwtController {
         }
     }
 
+    @PostMapping("/duplication")
+    public CoDevResponse checkEmail(@RequestParam String email) throws Exception {
+        return coUserService.isExistedEmail(email);
+    }
 
     @GetMapping("/code/mail")
     public CoDevResponse mailConfirm(@RequestParam String email) throws Exception {
