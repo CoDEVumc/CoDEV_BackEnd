@@ -9,5 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CoApplicantCount {
     private String co_part;
-    private int co_count;
+    private int co_limit;
+    private int co_applicantsCount;
 }
