@@ -1,8 +1,8 @@
 package com.codevumc.codev_backend.service.co_projectrecruit;
 
+import com.codevumc.codev_backend.domain.CoApplicantCount;
 import com.codevumc.codev_backend.domain.CoApplicantInfo;
 import com.codevumc.codev_backend.domain.CoApplicantsInfoOfProject;
-import com.codevumc.codev_backend.domain.CoPartOfProject;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,8 +35,15 @@ class CoProjectRecruitServiceImplTest {
         coProjectDto.put("co_projectId", co_projectId);
         coProjectDto.put("co_partId", co_part);
 
-        List<CoPartOfProject> co_recruitmentStatus =  new ArrayList<>();
-        co_recruitmentStatus.add(new CoPartOfProject("백엔드", 1));
+        int co_tempSavedApplicantsCount = 1;
+
+        List<CoApplicantCount> co_applicantsCount = new ArrayList<>();
+        CoApplicantCount coApplicantCount = CoApplicantCount.builder()
+                .co_part("백엔드")
+                .co_limit(2)
+                .co_applicantsCount(10)
+                .build();
+        co_applicantsCount.add(coApplicantCount);
 
         List<CoApplicantInfo> coApplicantsInfo = new ArrayList<>();
         CoApplicantInfo coApplicantInfo = CoApplicantInfo.builder()
@@ -52,20 +59,27 @@ class CoProjectRecruitServiceImplTest {
         coApplicantsInfo.add(coApplicantInfo);
 
         // when
-        when(coProjectMapper.getCoPartList(co_projectId)).thenReturn(co_recruitmentStatus);
+        when(coProjectMapper.getTempsavedApplicantsCount(co_projectId)).thenReturn(co_tempSavedApplicantsCount);
+        when(coProjectMapper.getCoApplicantsCount(co_projectId)).thenReturn(co_applicantsCount);
         when(coProjectMapper.getCoApplicantsInfo(coProjectDto)).thenReturn(coApplicantsInfo);
 
         CoApplicantsInfoOfProject coApplicantsInfoOfProject = CoApplicantsInfoOfProject.builder()
-                .co_recruitmentStatus(this.coProjectMapper.getCoPartList(co_projectId))
-                .co_part(co_part)
+                .co_part(co_part.toUpperCase())
+                .co_tempSavedApplicantsCount(this.coProjectMapper.getTempsavedApplicantsCount(co_projectId))
+                .co_applicantsCount(this.coProjectMapper.getCoApplicantsCount(co_projectId))
                 .co_appllicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))
                 .build();
 
         // then
         assertAll(
-                () -> assertEquals("백엔드", coApplicantsInfoOfProject.getCo_recruitmentStatus().get(0).getCo_part()),
-                () -> assertEquals(1, coApplicantsInfoOfProject.getCo_recruitmentStatus().get(0).getCo_limit()),
                 () -> assertEquals("백엔드", coApplicantsInfoOfProject.getCo_part()),
+
+                () -> assertEquals(1, coApplicantsInfoOfProject.getCo_tempSavedApplicantsCount()),
+
+                () -> assertEquals("백엔드", coApplicantsInfoOfProject.getCo_applicantsCount().get(0).getCo_part()),
+                () -> assertEquals(2, coApplicantsInfoOfProject.getCo_applicantsCount().get(0).getCo_limit()),
+                () -> assertEquals(10, coApplicantsInfoOfProject.getCo_applicantsCount().get(0).getCo_applicantsCount()),
+
                 () -> assertEquals(1, coApplicantsInfoOfProject.getCo_appllicantsInfo().get(0).getCo_portfolioId()),
                 () -> assertEquals("simhani1@naver.com", coApplicantsInfoOfProject.getCo_appllicantsInfo().get(0).getCo_email()),
                 () -> assertEquals( "title", coApplicantsInfoOfProject.getCo_appllicantsInfo().get(0).getCo_title()),
