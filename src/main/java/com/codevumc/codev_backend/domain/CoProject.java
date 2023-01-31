@@ -32,7 +32,7 @@ public class CoProject {
     private boolean co_recruitStatus;
     private List<CoRecruitOfProject> co_applicantList;
     private List<CoPhotos> co_photos;
-    private List<CoPart> co_partList;
+    private List<CoPartOfProject> co_partList;
     private List<CoLanguage> co_languageList;
 
     @Getter
