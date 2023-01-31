@@ -5,11 +5,12 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoCategoryMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class CoCategoryServiceImpl extends ResponseService implements CoCategoryService {
     private final CoCategoryMapper coCategoryMapper;
