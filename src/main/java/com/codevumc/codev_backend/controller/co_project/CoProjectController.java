@@ -143,7 +143,7 @@ public class CoProjectController extends JwtController {
     }
 
     @GetMapping("/recruitment/{coProjectId}")
-    public CoDevResponse getCoApplicantsOfProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId, @RequestParam("co_part") String co_part) throws Exception {
+    public CoDevResponse getCoApplicantsOfProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId, @RequestParam("coPart") String co_part) throws Exception {
         String co_email = getCoUserEmail(request);
         return coProjectRecruitService.getCoApplicantsOfProject(co_email, co_projectId, co_part);
     }
