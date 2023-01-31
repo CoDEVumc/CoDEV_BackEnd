@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
          * ERROR : 연결 실패  setAllowedOriginPatterns("*") CORS 설정
          *
          * */
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*");
+        registry.addEndpoint("/ws-codev").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
@@ -48,6 +48,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
          * */
 
         registry.enableSimpleBroker("/queue", "/topic");
+        //메시지 보내기 요청
+        //registry.enableSimpleBroker("sub");
+        //메시지 구독 요청
         registry.setApplicationDestinationPrefixes("/app");
     }
 
