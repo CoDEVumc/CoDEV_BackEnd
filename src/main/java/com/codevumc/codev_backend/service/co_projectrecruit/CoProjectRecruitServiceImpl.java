@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_projectrecruit;
 
+import com.codevumc.codev_backend.domain.CoApplicantsInfoOfProject;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -92,4 +93,29 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse getCoApplicantsOfProject(String co_email, long co_projectId, String co_part) {
+        try{
+            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(co_projectId);
+            if(coProjectOptional.isPresent()){
+                if (!coProjectOptional.get().getCo_email().equals(co_email))
+                    return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
+                Map<String, Object> coProjectDto = new HashMap<>();
+                coProjectDto.put("co_projectId", co_projectId);
+                coProjectDto.put("co_partId", co_part.toUpperCase());
+                CoApplicantsInfoOfProject coApplicantsInfoOfProject = CoApplicantsInfoOfProject.builder()
+                        .co_part(co_part.toUpperCase())
+                        .co_tempSavedApplicantsCount(this.coProjectMapper.getTempsavedApplicantsCount(co_projectId))
+                        .co_applicantsCount(this.coProjectMapper.getCoApplicantsCount(co_projectId))
+                        .co_appllicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))
+                        .build();
+                return setResponse(200, "message", coApplicantsInfoOfProject);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
