@@ -38,4 +38,6 @@ public interface CoStudyMapper {
     void updateCoStudyDeadLine(CoStudy coStudy);
     void updateCoStudyMemberApprove(String co_email, long co_studyId);
     void completeCoStudyRecruitment(Map<String, Object> condition);
+    boolean getCoHeartOfStudyCheck(String co_viewer, long co_studyId);
+    String getCoUserNickName(@Param("co_email") String co_email);
 }
