@@ -122,12 +122,12 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
     @Override
     public CoDevResponse getCoPortfolioOfApplicant(String co_email, long co_projectId, long co_portfolioId) {
         try {
-            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(co_projectId);
+            Optional<CoProject> coProjectOptional = this.coProjectMapper.getCoProject(co_projectId);
             if (coProjectOptional.isPresent()) {
                 if (!coProjectOptional.get().getCo_email().equals(co_email))
                     return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
-                CoPortfolio coPortfolio = this.coProjectMapper.getCoPortfolioOfApplicant(co_portfolioId);
-                return setResponse(200, "message", coPortfolio);
+                Optional<CoPortfolio> coPortfolioOptional = this.coProjectMapper.getCoPortfolioOfApplicant(co_portfolioId);
+                return coPortfolioOptional.isPresent() ? setResponse(200, "message", coPortfolioOptional.get()) : setResponse(400, "Bad Request", "존재하지 않는 포트폴리오입니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();

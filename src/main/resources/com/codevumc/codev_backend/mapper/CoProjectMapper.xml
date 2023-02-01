@@ -223,9 +223,10 @@
         select cp.co_portfolioId  as 'co_portfolioId',
                cp.co_title        as 'co_title',
                cp.co_email        as 'co_email',
-               CU.co_name         as 'co_name',
-               CU.co_birth        as 'co_birth',
-               CU.co_gender       as 'co_gender',
+               cu.co_name         as 'co_name',
+               cu.profileImg       as 'profileImg',
+               cu.co_birth        as 'co_birth',
+               cu.co_gender       as 'co_gender',
                cp.co_rank         as 'co_rank',
                clap.co_languages  as 'co_languages',
                cp.co_headLine     as 'co_headLine',
@@ -234,7 +235,7 @@
                cp.createdAt       as 'createdAt',
                cp.updatedAt       as 'updatedAt'
         from CoPortfolio as cp
-                 left join CoUser CU on cp.co_email = CU.co_email
+                 left join CoUser cu on cp.co_email = cu.co_email
                  left join (select co_portfolioId, GROUP_CONCAT(cl.co_language SEPARATOR ',') as co_languages
                             from CoLanguageOfPortfolio as clop
                                      join CoLanguage as cl on clop.co_languageId = cl.co_languageId
