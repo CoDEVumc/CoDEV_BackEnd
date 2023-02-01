@@ -7,7 +7,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoChatOfProject {
+public class CoChatOfUser {
+    private String roomId;
+    private String co_type;
+    private String co_mainImg;
+    private String title;
     private String co_email;
-    private String co_chatName;
+    private boolean isRead;
+    private boolean status;
 }

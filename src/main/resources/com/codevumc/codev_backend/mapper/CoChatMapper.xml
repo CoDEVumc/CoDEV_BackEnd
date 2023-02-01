@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.CoChatMapper">
+
+    <!--채팅방 만들기-->
+    <insert id="createChatRoom" parameterType="ChatRoom">
+        INSERT INTO ChatRoom (roomId, room_type, room_title, room_mainImg)
+        VALUES (#{roomId}, #{room_type}, #{room_title}, #{room_mainImg});
+    </insert>
+
+    <!--채팅방 목록 조회-->
+    <select id="getChatRooms" resultType="ChatRoom">
+        SELECT CR.roomId, CR.room_type, CR.room_title, CR.room_mainImg, CROU.isRead, CROU.status, CROU.updatedAt
+        FROM ChatRoom CR
+        JOIN ChatRoomOfUser CROU on CR.roomId = CROU.roomId
+        WHERE CROU.co_email = #{co_email}
+        ORDER BY CROU.updatedAt DESC
+    </select>
+
+    <!--채팅방 초대-->
+    <insert id="inviteUser">
+        INSERT INTO ChatRoomOfUser (roomId, co_email)
+        VALUES (#{roomId}, #{co_email})
+    </insert>
+
+    <!--채팅방 입장-->
+    <update id="readMessage">
+        UPDATE ChatRoomOfUser
+        SET isRead = true
+        WHERE roomId = #{roomId} AND co_email = #{co_email}
+    </update>
+
+    <!--채팅방 입장-->
+    <update id="enterChatRoom">
+        UPDATE ChatRoomOfUser
+        SET status = true
+        WHERE roomId = #{roomId} AND co_email = #{co_email}
+    </update>
+
+    <!--채팅방 퇴장-->
+    <update id="closeChatRoom">
+        UPDATE ChatRoomOfUser
+        SET status = false
+        WHERE roomId = #{roomId} AND co_email = #{co_email}
+    </update>
+
+    <!--메세지 보내기-->
+    <update id="sendMessage">
+        UPDATE ChatRoomOfUser
+        SET isRead = false
+        WHERE status = false AND roomId = #{roomId}
+    </update>
+
+    <select id="getChatRoom" resultType="ChatRoomOfUser">
+        SELECT crou.roomId, crou.co_email, cu.co_nickName, cu.profileImg
+        FROM ChatRoomOfUser crou
+        JOIN CoUser cu on crou.co_email = cu.co_email
+        WHERE crou.roomId = #{roomId}
+    </select>
+
+    <delete id="exitChatRoom">
+        DELETE FROM ChatRoomOfUser WHERE co_email = #{co_email} AND roomId = #{roomId}
+    </delete>
+
+
+</mapper>
