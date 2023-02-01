@@ -67,7 +67,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if (coStudy.isPresent()) {
                 coStudy.get().setCo_viewer(co_viewer);
-                coStudy.get().setCo_email(coStudyMapper.getCoUserNickName(coStudy.get().getCo_email()));
+                coStudy.get().setCo_nickName(coStudyMapper.getCoUserNickName(coStudy.get().getCo_email()));
                 coStudy.get().setCo_recruitStatus(coStudyMapper.getCoRecruitStatus(co_viewer, co_studyId));
                 coStudy.get().setCo_languageList(coStudyMapper.getCoLanguageList(co_studyId));
                 coStudy.get().setCo_heartCount(coStudyMapper.getCoHeartCount(co_studyId));
