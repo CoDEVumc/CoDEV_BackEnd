@@ -74,8 +74,8 @@ public class CoChatController extends JwtController {
     }
 
     @PostMapping("/invite")
-    public CoDevResponse inviteUser(@RequestBody Map<String, Object> user) throws Exception{
-        return coChatService.inviteUser(user.get("roomId").toString(), getJSONArray(user.get("co_emails")));
+    public CoDevResponse inviteUser(HttpServletRequest request, @RequestBody Map<String, Object> user) throws Exception{
+        return coChatService.inviteUser(user.get("roomId").toString(), getJSONArray(user.get("co_emails")), getCoUserEmail(request));
     }
 
     @GetMapping("/room/{roomId}")

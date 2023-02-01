@@ -7,7 +7,7 @@ import org.json.simple.JSONArray;
 public interface CoChatService {
     CoDevResponse createChatRoom(ChatRoom chatRoom);
     CoDevResponse getChatRooms(String co_email);
-    CoDevResponse inviteUser(String roomId, JSONArray co_emails);
+    CoDevResponse inviteUser(String roomId, JSONArray co_emails, String self_email);
     void enterChatRoom(String roomId, String co_email);
     void closeChatRoom(String roomId, String co_email);
     CoDevResponse getChatRoom(String roomId);
