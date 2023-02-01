@@ -9,8 +9,9 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoPart {
-    private String co_part;
+public class CoLocation {
+    private String co_location;
+    private boolean status;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }
