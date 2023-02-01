@@ -19,7 +19,6 @@ public interface CoStudyMapper {
     void insertCoPartOfStudy(Map<String, Object> coPartDto);
     Optional<CoStudy> getCoStudy(long co_studyId);
     List<CoLanguage> getCoLanguageList(long co_studyId);
-    long getCoHeartCount(long co_studyId);
     void insertCoHeartOfStudy(String co_email, Long co_studyId);
     void deleteCoHeartOfStudy(@Param("co_email") String co_email, @Param("co_studyId") Long co_studyId);
     List<CoStudy> getCoStudies(Map<String, Object> condition);
@@ -32,6 +31,7 @@ public interface CoStudyMapper {
     void updateCoStudyDeadLine(CoStudy coStudy);
     void updateCoStudyMemberApprove(String co_email, long co_studyId);
     void completeCoStudyRecruitment(Map<String, Object> condition);
+    Optional<CoStudy> getCoStudyViewer(String co_viewer, long co_studyId);
     List<CoApplicantInfo> getCoApplicantsInfo(Map<String, Object> coStudyDto);
     CoApplicantCount getCoApplicantCount(long co_studyId);
     int getTempsavedApplicantsCount(long co_studyId);

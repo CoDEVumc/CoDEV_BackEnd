@@ -1,7 +1,6 @@
 package com.codevumc.codev_backend.service.co_project;
 
 import com.codevumc.codev_backend.domain.CoProject;
-import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
@@ -109,13 +108,14 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     @Override
     public CoDevResponse getCoProject(String co_viewer, long co_projectId) {
         try {
-            Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
+            Map<String, Object> coProjectDto = new HashMap<>();
+            coProjectDto.put("co_viewer", co_viewer);
+            coProjectDto.put("co_projectId", co_projectId);
+            Optional<CoProject> coProject = coProjectMapper.getCoProjectByViewer(coProjectDto);
             if(coProject.isPresent()) {
                 coProject.get().setCo_viewer(co_viewer);
-                coProject.get().setCo_recruitStatus(coProjectMapper.getCoRecruitStatus(co_viewer, co_projectId));
                 coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
-                coProject.get().setCo_heartCount(coProjectMapper.getCoHeartCount(co_projectId));
                 coProject.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_projectId), "PROJECT"));
             }
                 return setResponse(200, "Complete", coProject);
