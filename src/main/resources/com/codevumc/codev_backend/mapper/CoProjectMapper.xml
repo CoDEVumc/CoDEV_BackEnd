@@ -219,4 +219,40 @@
         where cpop.co_projectId = #{co_projectId};
     </select>
 
+    <select id="getCoProjectByViewer" parameterType="hashMap" resultType="CoProject">
+        select cp.co_projectId                                                as 'co_projectId',
+               cp.co_email                                                    as 'co_email',
+               cu.co_nickName                                                 as 'co_nickname',
+               cp.co_title                                                    as 'co_title',
+               cp.co_location                                                 as 'co_location',
+               cp.co_content                                                  as 'co_content',
+               cp.co_mainImg                                                  as 'co_mainImg',
+               cp.co_process                                                  as 'co_process',
+               cp.co_deadLine                                                 as 'co_deadLine',
+               cp.createdAt                                                   as 'createdAt',
+               cp.updatedAt                                                   as 'updatedAt',
+               (select count(*) from CoHeartOfProject where co_projectId = #{co_projectId}) as 'co_heartCount',
+               cpop.co_total                                                  as 'co_total',
+               if(chop.co_hopId, 1, 0)                                        as 'co_heart',
+               if(crop.co_ropId, 1, 0)                                        as 'co_recruitStatus'
+        from CoProject cp
+                 left join CoUser cu on cp.co_email = cu.co_email
+                 left join (select co_projectId as 'co_projectId',
+                                   co_hopId     as 'co_hopId'
+                            from CoHeartOfProject
+                            where co_projectId = #{co_projectId}
+                              and co_email = #{co_viewer}) chop on cp.co_projectId = chop.co_projectId
+                 left join (select co_projectId as 'co_projectId',
+                                   co_ropId     as 'co_ropId'
+                            from CoRecruitOfProject
+                            where co_projectId = #{co_projectId}
+                              and co_email = #{co_viewer}) crop on cp.co_projectId = crop.co_projectId
+                 left join (select co_projectId as 'co_projectId',
+                                   sum(co_limit)     as 'co_total'
+                            from CoPartOfProject
+                            where co_projectId = #{co_projectId}
+                            group by co_projectId) cpop on cp.co_projectId = cpop.co_projectId
+        where cp.co_projectId = #{co_projectId};
+    </select>
+
 </mapper>
