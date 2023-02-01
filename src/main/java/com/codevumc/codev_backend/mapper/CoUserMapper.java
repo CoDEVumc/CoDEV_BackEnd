@@ -15,4 +15,5 @@ public interface CoUserMapper {
     void insertCoUser(CoUser coUser);
     void updateProfileImg(@Param("profileImg") String profileImg, @Param("co_email") String co_email);
     void updateLoginType(@Param("co_loginType") String co_loginType, @Param("co_email") String co_email);
+    boolean isExistedEmail(String co_email);
 }

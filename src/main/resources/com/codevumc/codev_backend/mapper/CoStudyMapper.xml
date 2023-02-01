@@ -125,6 +125,10 @@
         delete from CoLanguageOfStudy where co_studyId = #{co_studyId}
     </delete>
 
+    <delete id="deleteCoPartOfStudy">
+        delete from CoPartOfStudy where co_studyId = #{co_studyId}
+    </delete>
+
     <insert id="insertCoLanguageOfStudy">
         INSERT INTO CoLanguageOfStudy
             (co_studyId, co_languageId)
@@ -170,6 +174,18 @@
         update CoStudy
         set co_deadLine = #{co_deadLine}
         where co_studyId = #{co_studyId} and co_email = #{co_email}
+    </update>
+
+    <update id="completeCoStudyRecruitment" parameterType="hashMap">
+        update CoStudy
+        set co_process = 'FIN'
+        where co_email = #{co_email} and co_studyId = #{co_studyId}
+    </update>
+
+    <update id="updateCoStudyMemberApprove">
+        update CoRecruitOfStudy
+        set isApproved = true
+        where co_email = #{co_email} and co_studyId = #{co_studyId};
     </update>
 
 </mapper>
