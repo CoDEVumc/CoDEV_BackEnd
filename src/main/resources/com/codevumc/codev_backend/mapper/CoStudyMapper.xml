@@ -86,7 +86,9 @@
             cs.co_studyId as co_studyId,
             cs.co_email as co_email,
             cu.co_nickName as co_nickName,
-            if (chos.status, true, false) as co_heart,
+            if (chos.co_hosId, 1, 0) as co_heart,
+            (select count(*) from CoHeartOfStudy chost where chost.co_studyId = cs.co_studyId) as co_heartCount,
+            if (cros.co_rosId, true, false) as co_recruitStatus,
             cs.co_title as co_title,
             cs.co_location as co_location,
             cs.co_content as co_content,
@@ -101,8 +103,9 @@
         from CoStudy cs
                  left join CoPartOfStudy cpos on cs.co_studyId = cpos.co_studyId
                  left join CoUser cu on cs.co_email = cu.co_email
-                 left join CoHeartOfStudy chos on cs.co_studyId = chos.co_studyId and chos.co_email = #{co_viewer}
-        where cs.co_studyId = #{co_studyId}
+                 left join (select co_studyId, co_hosId from CoHeartOfStudy where co_email = #{co_viewer}) chos on cs.co_studyId = chos.co_studyId
+                 left join (select co_studyId, co_rosId from CoRecruitOfStudy where co_email = #{co_viewer}) cros on cs.co_studyId = cros.co_studyId
+        where cs.co_studyId = #{co_studyId};
     </select>
 
     <select id="getCoLanguageList" resultType="CoLanguageOfStudy">
@@ -110,10 +113,6 @@
         from CoLanguageOfStudy cop
         join CoLanguage cl on cl.co_languageId = cop.co_languageId
         where cop.co_studyId = #{co_studyId}
-    </select>
-
-    <select id="getCoHeartCount" resultType="Long">
-        select count(*) as coHeartCount from CoHeartOfStudy where co_studyId = #{co_studyId}
     </select>
 
     <select id="getCoRecruitStatus" resultType="boolean">
