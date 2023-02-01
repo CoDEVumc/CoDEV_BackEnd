@@ -19,6 +19,7 @@ public interface CoStudyMapper {
     void updateCoStudy(CoStudy coStudy);
     void insertCoLanguageOfStudy(long co_studyId, long co_languageId);
     void deleteCoLanguageOfStudy(long co_studyId);
+    void deleteCoPartOfStudy(long co_studyId);
     void updateCoMainImg(@Param("co_mainImg") String co_mainImg, @Param("co_studyId") long co_studyId);
     void insertCoPartOfStudy(Map<String, Object> coPartDto);
     Optional<CoStudy> getCoStudy(long co_studyId);

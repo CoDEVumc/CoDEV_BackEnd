@@ -53,6 +53,7 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             }
             this.coStudyMapper.updateCoStudy(coStudy);
             this.coStudyMapper.deleteCoLanguageOfStudy(coStudy.getCo_studyId());
+            this.coStudyMapper.deleteCoPartOfStudy(coStudy.getCo_studyId());
             return insertCoLanguageAndCoPart(co_languages, coStudy);
         } catch (Exception e) {
             e.printStackTrace();
