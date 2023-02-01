@@ -14,6 +14,7 @@ import java.util.List;
 public class CoProject {
     private long co_projectId;
     private String co_email;
+    private String co_nickname;
     private String co_viewer;
     private String co_title;
     private String co_location;
@@ -23,7 +24,6 @@ public class CoProject {
     private String co_deadLine;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private boolean status;
     private long co_heartCount;
     private int co_total;
     private boolean co_heart;
