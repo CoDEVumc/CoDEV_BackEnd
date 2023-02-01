@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.service.co_projectrecruit;
 
 import com.codevumc.codev_backend.domain.CoApplicantsInfoOfProject;
+import com.codevumc.codev_backend.domain.CoPortfolio;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -111,6 +112,23 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                         .co_appllicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))
                         .build();
                 return setResponse(200, "message", coApplicantsInfoOfProject);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public CoDevResponse getCoPortfolioOfApplicant(String co_email, long co_projectId, long co_portfolioId) {
+        try {
+            Optional<CoProject> coProjectOptional = coProjectMapper.getCoProject(co_projectId);
+            if (coProjectOptional.isPresent()) {
+                if (!coProjectOptional.get().getCo_email().equals(co_email))
+                    return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
+                CoPortfolio coPortfolio = this.coProjectMapper.getCoPortfolioOfApplicant(co_portfolioId);
+                return setResponse(200, "message", coPortfolio);
             }
         } catch (Exception e) {
             e.printStackTrace();
