@@ -119,7 +119,6 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         return null;
     }
 
-
     @Override
     public CoDevResponse getCoPortfolioOfApplicant(String co_email, long co_projectId, long co_portfolioId) {
         try {

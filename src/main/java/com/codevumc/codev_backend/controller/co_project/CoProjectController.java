@@ -148,6 +148,14 @@ public class CoProjectController extends JwtController {
         return coProjectRecruitService.getCoApplicantsOfProject(co_email, co_projectId, co_part);
     }
 
+    @GetMapping("/recruitment/portfolio/{coProjectId}/{coPortfolioId}")
+    public CoDevResponse getCoPortfolioOfApplicant(HttpServletRequest request,
+                                                   @PathVariable("coProjectId") long co_projectId,
+                                                   @PathVariable("coPortfolioId") long co_portfolioId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coProjectRecruitService.getCoPortfolioOfApplicant(co_email, co_projectId, co_portfolioId);
+    }
+
     private int getLimitCnt(int pageNum) {
         int limit = SHOW_COUNT;
         for(int i = 0; i <= pageNum; i++) {
