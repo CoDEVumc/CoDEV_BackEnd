@@ -12,7 +12,7 @@
     </select>
     
     <select id="getLanguageOfPart" resultType="CoLanguage">
-        select co_language, createdAt, updatedAt
+        select co_languageId, co_language, createdAt, updatedAt
         from CoLanguage
         where co_part = #{co_part}
     </select>
