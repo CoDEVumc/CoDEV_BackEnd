@@ -1,11 +1,10 @@
 package com.codevumc.codev_backend.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
-
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

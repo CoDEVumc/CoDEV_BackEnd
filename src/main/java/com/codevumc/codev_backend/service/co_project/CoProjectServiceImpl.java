@@ -92,6 +92,20 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         return null;
     }
 
+    //채팅 테스트
+    public List<CoProject> getCoProjectsTest(String co_email, String co_locationTag, String co_partTag, String co_keyword, String co_sortingTag, String co_processTag, int limit, int offset, int page) {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("co_email", co_email);
+        condition.put("co_locationTag", co_locationTag);
+        condition.put("co_partTag", setting(co_partTag));
+        condition.put("co_keyword", setting(co_keyword));
+        condition.put("co_sortingTag", co_sortingTag);
+        condition.put("co_processTag", co_processTag);
+        condition.put("limit", limit);
+        condition.put("offset", offset);
+        return this.coProjectMapper.getCoProjects(condition);
+    }
+
     @Override
     public CoDevResponse getCoProject(String co_viewer, long co_projectId) {
         try {
@@ -108,6 +122,13 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public CoProject getCoProjectTest(long co_projectId) {
+        Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
+        if(coProject.isPresent())
+            return coProject.get();
         return null;
     }
 

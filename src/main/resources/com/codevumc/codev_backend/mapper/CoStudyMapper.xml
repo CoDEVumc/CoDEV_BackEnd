@@ -125,6 +125,10 @@
         delete from CoLanguageOfStudy where co_studyId = #{co_studyId}
     </delete>
 
+    <delete id="deleteCoPartOfStudy">
+        delete from CoPartOfStudy where co_studyId = #{co_studyId}
+    </delete>
+
     <insert id="insertCoLanguageOfStudy">
         INSERT INTO CoLanguageOfStudy
             (co_studyId, co_languageId)
