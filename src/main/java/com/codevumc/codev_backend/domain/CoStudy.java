@@ -14,6 +14,7 @@ import java.util.List;
 public class CoStudy {
     private long co_studyId;
     private String co_email;
+    private String co_nickName;
     private String co_viewer;
     private String co_title;
     private String co_location;
