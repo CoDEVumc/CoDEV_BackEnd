@@ -108,6 +108,14 @@ public class JwtTokenProvider {
         return false;
     }
 
+    public boolean validateToken(String jwtToken) throws SignatureException, MalformedJwtException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(accessSecretKey).parseClaimsJws(jwtToken);
+        if(claims != null) {
+            return !claims.getBody().getExpiration().before(new Date());
+        }
+        return false;
+    }
+
     // RefreshToken 유효성 검증 메소드
     public String validateRefreshToken(RefreshToken refreshTokenObj) {
         String refreshToken = refreshTokenObj.getRefreshToken();
