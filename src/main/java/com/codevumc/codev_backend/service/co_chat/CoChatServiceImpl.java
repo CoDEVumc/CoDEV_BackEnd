@@ -44,8 +44,9 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public CoDevResponse inviteUser(String roomId, JSONArray co_emails) {
+    public CoDevResponse inviteUser(String roomId, JSONArray co_emails, String self_email) {
         try {
+            coChatMapper.inviteUser(roomId, self_email);
             for(Object email : co_emails) {
                 String co_email = (String) email;
                 coChatMapper.inviteUser(roomId, co_email);

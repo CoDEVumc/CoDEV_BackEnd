@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
          * ERROR : 연결 실패  setAllowedOriginPatterns("*") CORS 설정
          *
          * */
-        registry.addEndpoint("/ws-codev").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws-codev").setAllowedOriginPatterns("*");
     }
 
     @Override
