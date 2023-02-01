@@ -63,6 +63,8 @@
         select
             cs.co_studyId as co_studyId,
             cs.co_email as co_email,
+            cu.co_nickName as co_nickName,
+            if (chos.status, true, false) as co_heart,
             cs.co_title as co_title,
             cs.co_location as co_location,
             cs.co_content as co_content,
@@ -75,10 +77,25 @@
             cs.updatedAt as updatedAt,
             cs.status as status
         from CoStudy cs
-        left join CoPartOfStudy cpos on cs.co_studyId = cpos.co_studyId
+                 left join CoPartOfStudy cpos on cs.co_studyId = cpos.co_studyId
+                 left join CoUser cu on cs.co_email = cu.co_email
+                 left join CoHeartOfStudy chos on cs.co_studyId = chos.co_studyId and chos.co_email = #{co_email}
         where cs.co_studyId = #{co_studyId}
     </select>
 
+    <select id ="getCoHeartOfStudyCheck"  resultType="boolean">
+        select
+        chs.status as co_heart
+        from CoHeartOfStudy as chs
+        where chs.co_studyId = #{co_studyId} and chs.co_email = #{co_viewer}
+    </select>
+
+    <select id ="getCoUserNickName" parameterType="String" resultType="String">
+        select
+        cu.co_nickName
+        from CoUser as cu
+        where cu.co_email = #{co_email}
+    </select>
     <select id="getCoLanguageList" resultType="CoLanguageOfStudy">
         select cl.co_languageId, cl.co_language, cl.co_logo
         from CoLanguageOfStudy cop

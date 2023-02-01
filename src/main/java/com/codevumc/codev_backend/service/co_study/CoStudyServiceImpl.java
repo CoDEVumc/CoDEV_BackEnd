@@ -67,10 +67,16 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if (coStudy.isPresent()) {
                 coStudy.get().setCo_viewer(co_viewer);
+                coStudy.get().setCo_nickName(coStudyMapper.getCoUserNickName(coStudy.get().getCo_email()));
                 coStudy.get().setCo_recruitStatus(coStudyMapper.getCoRecruitStatus(co_viewer, co_studyId));
                 coStudy.get().setCo_languageList(coStudyMapper.getCoLanguageList(co_studyId));
                 coStudy.get().setCo_heartCount(coStudyMapper.getCoHeartCount(co_studyId));
                 coStudy.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_studyId), "STUDY"));
+                if(coStudyMapper.getCoHeartOfStudyCheck(co_viewer,co_studyId).isEmpty()){
+                    coStudy.get().setCo_heart(false);
+                }else{
+                    coStudy.get().setCo_heart(true);
+                }
                 return setResponse(200, "Complete", coStudy);
             } else {
                 return setResponse(403, "Forbidden", "불러오기 실패하였습니다.");
