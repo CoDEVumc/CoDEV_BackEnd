@@ -28,7 +28,6 @@ public class CoMyPageController extends JwtController {
         this.coMyPageService = coMyPagePortfolioService;
     }
 
-    @ResponseBody
     @PostMapping(value = "/portfolio")
     public CoDevResponse write(HttpServletRequest request, @RequestBody Map<String, Object> portfolio) throws Exception {
         CoPortfolio coPortfolio = CoPortfolio.builder()
@@ -53,7 +52,6 @@ public class CoMyPageController extends JwtController {
         return coMyPageService.getCoPortfolio(co_portfolioId, co_email);
     }
 
-    @ResponseBody
     @PatchMapping("/portfolio/{coPortfolioId}")
     public CoDevResponse updateCoPortfolio(HttpServletRequest request, @PathVariable("coPortfolioId") Long co_portfolioId, @RequestBody Map<String, Object> portfolio) throws Exception {
         CoPortfolio coPortfolio = CoPortfolio.builder()

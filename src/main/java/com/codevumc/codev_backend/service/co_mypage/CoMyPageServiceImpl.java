@@ -40,13 +40,14 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
     }
 
     @Override
-    public CoDevResponse getCoPortfolio(long co_portfolioId,String co_email) {
+    public CoDevResponse getCoPortfolio(long co_portfolioId, String co_email) {
         Map<String, Object> coPortfolioDto = new HashMap<>();
         coPortfolioDto.put("co_email",co_email);
         coPortfolioDto.put("co_portfolioId",co_portfolioId);
         try {
             Optional<CoPortfolio> coPortfolio = coMyPagePortfolioMapper.getCoPortfolio(coPortfolioDto);
             if (coPortfolio.isPresent()){
+                coPortfolio.get().setCo_languageList(coMyPagePortfolioMapper.getCoLanguageOfPortfolio(co_portfolioId));
                 return setResponse(200,"Complete", coPortfolio);
             }
         } catch (Exception e) {
