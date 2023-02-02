@@ -15,6 +15,8 @@ public interface CoPhotosMapper {
 
     List<CoPhotos> findByCoTargetId(@Param("co_targetId") String co_targetId, @Param("co_type") String co_type);
 
+    List<CoPhotos> findByFileUrl(@Param("co_fileUrl") String co_fileUrl);
+
     Optional<CoPhotos> findByCo_uuId(String co_uuId);
 
     Optional<CoPhotos> findByCo_mainImg(@Param("co_type") String co_type, @Param("co_targetId") String co_targetId);
