@@ -69,6 +69,9 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
                 coStudy.get().setCo_viewer(co_viewer);
                 coStudy.get().setCo_languageList(coStudyMapper.getCoLanguageList(co_studyId));
                 coStudy.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_studyId), "STUDY"));
+                if(coStudy.get().getCo_photos() != null) 
+                    coStudy.get().setCo_photos(coPhotosMapper.findByFileUrl(coStudy.get().getCo_mainImg()));
+
                 return setResponse(200, "Complete", coStudy);
             } else {
                 return setResponse(403, "Forbidden", "불러오기 실패하였습니다.");
