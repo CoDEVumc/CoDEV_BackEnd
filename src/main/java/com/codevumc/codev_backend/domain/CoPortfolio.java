@@ -28,5 +28,4 @@ public class CoPortfolio {
     private List<CoLinkOfPortfolio> co_linkList;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private boolean status;
 }

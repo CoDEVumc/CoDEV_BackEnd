@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,7 +46,7 @@ public class CoStudyController extends JwtController {
     public CoDevResponse getCoStudies(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String coLocationTag, @RequestParam("coPartTag") String coPartTag, @RequestParam("coKeyword") String coKeyword, @RequestParam("coSortingTag") String co_sortingTag, @RequestParam("coProcessTag") String coProcessTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coStudyService.getCoStudies(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, co_sortingTag.toUpperCase(), coProcessTag, limit, offset, pageNum);
+        return coStudyService.getCoStudies(getCoUserEmail(request), coLocationTag, coPartTag, coKeyword, co_sortingTag.toUpperCase(), coProcessTag, SHOW_COUNT, offset, pageNum);
     }
 
     @PatchMapping("/heart/{coStudyId}")
@@ -129,15 +128,10 @@ public class CoStudyController extends JwtController {
         return coStudyRecruitService.cancelRecruitStudy(getCoUserEmail(request), coStudyId);
     }
 
-    @GetMapping("/recruitment/{coStudyId}")
-    public CoDevResponse getCoStudyApplicants(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
-        return coStudyRecruitService.getCoStudyApplicants(getCoUserEmail(request), coStudyId);
-    }
-
     @GetMapping("/recruitment/portfolio/{coStudyId}/{coPortfolioId}")
-    public CoDevResponse getCoRecruitOfStudyPortfolio(HttpServletRequest request, @PathVariable("coStudyId") long co_studyId, @PathVariable("coPortfolioId") long co_portfolioId) throws Exception {
+    public CoDevResponse getCoPortfolioOfApplicant(HttpServletRequest request, @PathVariable("coStudyId") long co_studyId, @PathVariable("coPortfolioId") long co_portfolioId) throws Exception {
         String co_email = getCoUserEmail(request);
-        return coStudyRecruitService.getCoRecruitOfStudyPortfolio(co_email,co_studyId,co_portfolioId);
+        return coStudyRecruitService.getCoPortfolioOfApplicant(co_email,co_studyId,co_portfolioId);
     }
 
     private int getLimitCnt(int pageNum) {
@@ -181,5 +175,13 @@ public class CoStudyController extends JwtController {
                                                     @PathVariable("coStudyId") long coStudyId,
                                                     @RequestBody CoStudy coApplicantList) throws Exception {
         return coStudyRecruitService.completeCoStudyRecruitment(getCoUserEmail(request), coStudyId, coApplicantList);
+    }
+
+    @GetMapping("/recruitment/{coStudyId}")
+    public CoDevResponse getCoApplicantsOfStudy(HttpServletRequest request,
+                                                @PathVariable("coStudyId") long co_studyId,
+                                                @RequestParam("coPart") String co_part) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coStudyRecruitService.getCoApplicantsOfStudy(co_email, co_studyId, co_part);
     }
 }
