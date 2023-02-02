@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.service.co_studyrecruit;
 
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
+import com.codevumc.codev_backend.domain.CoRecruitOfStudyPortfolio;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
@@ -106,6 +107,26 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                     return setResponse(403, "Forbidden", "권한이 없습니다.");
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getCoRecruitOfStudyPortfolio(String co_email, long co_studyId, long co_portfolioId) {
+        try{
+            Optional<CoStudy> coStudyOptional = coStudyMapper.getCoStudy(co_studyId);
+            if(coStudyOptional.isPresent()){
+                if(!coStudyOptional.get().getCo_email().equals(co_email)) {
+                    return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
+                }
+                else{
+                    CoRecruitOfStudyPortfolio coRecruitOfStudyPortfolio = this.coStudyMapper.getCoRecruitOfStudyPortfolio(co_portfolioId);
+                    return setResponse(200,"message",coRecruitOfStudyPortfolio);
+                }
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;

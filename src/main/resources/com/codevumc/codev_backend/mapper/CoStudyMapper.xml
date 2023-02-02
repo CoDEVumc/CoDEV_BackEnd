@@ -217,6 +217,7 @@
 
     <select id="getCoRecruitOfStudyPortfolio" resultType="CoRecruitOfStudyPortfolio">
         select
+        cros.co_studyId as 'co_studyId',
         cp.co_portfolioId as 'co_portfolioId',
         cp.co_email as 'co_email',
         CU.profileImg as 'profileImg',
@@ -228,23 +229,21 @@
         cp.co_headLine as 'co_headLine',
         cp.co_introduction as 'co_introduction',
         cros.co_motivation as 'co_motivation',
+        clap.co_languages as 'co_languages',
         clop.co_links as 'co_links',
         cros.createdAt as 'createdAt',
         cros.updatedAt as 'updatedAt'
         from CoPortfolio as cp
-        left join CoRecruitOfStudy cros on cp.co_portfolidId = cros.co_portfolidId
+        left join CoRecruitOfStudy cros on cp.co_portfolioId = cros.co_portfolioId
         left join CoUser CU on cp.co_email = CU.co_email
         left join (select co_portfolioId, GROUP_CONCAT(clop.co_link SEPARATOR ',') as co_links
         from CoLinkOfPortfolio as clop
         group by co_portfolioId) as clop on cp.co_portfolioId = clop.co_portfolioId
-        where cp.co_email=#{co_email} and cp.co_portfolioId = #{co_portfolioId}
-    </select>
-
-    <select id="getCoLanguageOfPortfolio" resultType="CoLanguage">
-        select clop.co_languageId, cl.co_language, cl.co_logo
-        from CoLanguageOfPortfolio clop
-        join CoLanguage cl on clop.co_languageId = cl.co_languageId
-        where co_portfolioId = #{co_portfolioId}
+        left join (select co_portfolioId, GROUP_CONCAT(cl.co_language SEPARATOR ',') as co_languages
+        from CoLanguageOfPortfolio as claop
+        join CoLanguage as cl on claop.co_languageId = cl.co_languageId
+        group by co_portfolioId) as clap on cp.co_portfolioId = clap.co_portfolioId
+        where cp.co_portfolioId = #{co_portfolioId}
     </select>
 
 </mapper>
