@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -131,6 +132,12 @@ public class CoStudyController extends JwtController {
     @GetMapping("/recruitment/{coStudyId}")
     public CoDevResponse getCoStudyApplicants(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
         return coStudyRecruitService.getCoStudyApplicants(getCoUserEmail(request), coStudyId);
+    }
+
+    @GetMapping("/recruitment/portfolio/{coStudyId}/{coPortfolioId}")
+    public CoDevResponse getCoRecruitOfStudyPortfolio(HttpServletRequest request, @PathVariable("coStudyId") long co_studyId, @PathVariable("coPortfolioId") long co_portfolioId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coStudyRecruitService.getCoRecruitOfStudyPortfolio(co_email,co_studyId,co_portfolioId);
     }
 
     private int getLimitCnt(int pageNum) {
