@@ -219,12 +219,13 @@
         where cpop.co_projectId = #{co_projectId};
     </select>
 
-    <select id="getCoPortfolioOfApplicant" parameterType="Long" resultType="CoPortfolio">
+    <select id="getCoPortfolioOfApplicant" parameterType="hashMap" resultType="CoPortfolioOfApplicant">
         select cp.co_portfolioId  as 'co_portfolioId',
                cp.co_title        as 'co_title',
+               crop.co_motivation as 'co_motivation',
                cp.co_email        as 'co_email',
                cu.co_name         as 'co_name',
-               cu.profileImg       as 'profileImg',
+               cu.profileImg      as 'profileImg',
                cu.co_birth        as 'co_birth',
                cu.co_gender       as 'co_gender',
                cp.co_rank         as 'co_rank',
@@ -243,6 +244,11 @@
                  left join (select co_portfolioId, GROUP_CONCAT(clop.co_link SEPARATOR ',') as co_links
                             from CoLinkOfPortfolio as clop
                             group by co_portfolioId) as clop on cp.co_portfolioId = clop.co_portfolioId
+                 left join (select co_portfolioId as 'co_portfolioId',
+                                   co_motivation  as 'co_motivation'
+                            from CoRecruitOfProject
+                            where co_projectId = #{co_projectId}
+                              and co_portfolioId = #{co_portfolioId}) as crop on cp.co_portfolioId = crop.co_portfolioId
         where cp.co_portfolioId = #{co_portfolioId};
     </select>
 
