@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_project;
 
+import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -109,6 +110,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     public CoDevResponse getCoProject(String co_viewer, long co_projectId) {
         try {
             Map<String, Object> coProjectDto = new HashMap<>();
+            List<CoPhotos> coPhotosList = coPhotosList = coPhotosMapper.findByCoTargetId(String.valueOf(co_projectId), "PROJECT");
             coProjectDto.put("co_viewer", co_viewer);
             coProjectDto.put("co_projectId", co_projectId);
             Optional<CoProject> coProject = coProjectMapper.getCoProjectByViewer(coProjectDto);
@@ -116,10 +118,7 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
                 coProject.get().setCo_viewer(co_viewer);
                 coProject.get().setCo_partList(coProjectMapper.getCoPartList(co_projectId));
                 coProject.get().setCo_languageList(coProjectMapper.getCoLanguageList(co_projectId));
-                coProject.get().setCo_photos(coPhotosMapper.findByCoTargetId(String.valueOf(co_projectId), "PROJECT"));
-                if(coProject.get().getCo_photos() != null)
-                    coProject.get().setCo_photos(coPhotosMapper.findByFileUrl(coProject.get().getCo_mainImg()));
-
+                coProject.get().setCo_photos(coPhotosList.isEmpty() ? coPhotosMapper.findByFileUrl(coProject.get().getCo_mainImg()) : coPhotosMapper.findByCoTargetId(String.valueOf(co_projectId), "PROJECT"));
             }
                 return setResponse(200, "Complete", coProject);
         } catch (Exception e) {
