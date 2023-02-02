@@ -1,9 +1,6 @@
 package com.codevumc.codev_backend.mapper;
 
-import com.codevumc.codev_backend.domain.CoHeartOfStudy;
-import com.codevumc.codev_backend.domain.CoLanguage;
-import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
-import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.domain.CoLanguage;
 import com.codevumc.codev_backend.domain.CoHeartOfStudy;
 import org.apache.ibatis.annotations.Mapper;
@@ -38,4 +35,6 @@ public interface CoStudyMapper {
     void updateCoStudyMemberApprove(String co_email, long co_studyId);
     void completeCoStudyRecruitment(Map<String, Object> condition);
     Optional<CoStudy> getCoStudyViewer(String co_viewer, long co_studyId);
+    CoRecruitOfStudyPortfolio getCoRecruitOfStudyPortfolio(long co_portfolioId);
+
 }

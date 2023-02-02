@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CoRecruitOfStudyPortfolio {
+    private long co_studyId;
     private long co_portfolioId;
     private String co_email;
     private String profileImg;
@@ -23,7 +24,7 @@ public class CoRecruitOfStudyPortfolio {
     private String co_introduction;
     private String co_motivation;
     private String co_links;
-    private List<CoLanguage> co_languageList;
+    private String co_languages;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }
