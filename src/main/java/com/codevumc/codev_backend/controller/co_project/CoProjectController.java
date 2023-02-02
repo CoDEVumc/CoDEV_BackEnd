@@ -72,7 +72,9 @@ public class CoProjectController extends JwtController {
     public CoDevResponse getAllProjects(HttpServletRequest request, @PathVariable(name = "page") int pageNum, @RequestParam("coLocationTag") String co_locationTag, @RequestParam("coPartTag") String co_partTag, @RequestParam("coKeyword") String co_keyword, @RequestParam("coSortingTag") String co_sortingTag, @RequestParam("coProcessTag") String co_processTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coProjectService.getCoProjects(getCoUserEmail(request), co_locationTag, co_partTag, co_keyword, co_sortingTag.toUpperCase(), co_processTag, limit, offset, pageNum);
+        System.out.println("LIMIT  = " + limit);
+        System.out.println("offset  = " + offset);
+        return coProjectService.getCoProjects(getCoUserEmail(request), co_locationTag, co_partTag, co_keyword, co_sortingTag.toUpperCase(), co_processTag, SHOW_COUNT, offset, pageNum);
     }
 
     //찜하기
@@ -148,12 +150,21 @@ public class CoProjectController extends JwtController {
         return coProjectRecruitService.getCoApplicantsOfProject(co_email, co_projectId, co_part);
     }
 
+    @GetMapping("/recruitment/portfolio/{coProjectId}/{coPortfolioId}")
+    public CoDevResponse getCoPortfolioOfApplicant(HttpServletRequest request,
+                                                   @PathVariable("coProjectId") long co_projectId,
+                                                   @PathVariable("coPortfolioId") long co_portfolioId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coProjectRecruitService.getCoPortfolioOfApplicant(co_email, co_projectId, co_portfolioId);
+    }
+
     private int getLimitCnt(int pageNum) {
         int limit = SHOW_COUNT;
         for(int i = 0; i <= pageNum; i++) {
             if(i != 0)
                 limit += SHOW_COUNT;
         }
+
         return limit;
     }
 

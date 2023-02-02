@@ -52,4 +52,17 @@
         order by createdAt asc limit 1;
     </select>
 
+    <select id="findByFileUrl" resultType="CoPhotos">
+        select co_photoId,
+               co_targetId,
+               co_type,
+               co_uuId,
+               co_fileName,
+               co_filePath,
+               co_fileUrl,
+               co_fileDownloadPath,
+               co_fileSize
+        from CoPhotos
+        where co_fileUrl = #{co_fileUrl}
+    </select>
 </mapper>

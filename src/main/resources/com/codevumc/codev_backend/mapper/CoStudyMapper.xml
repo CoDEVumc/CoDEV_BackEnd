@@ -215,35 +215,79 @@
         where co_email = #{co_email} and co_studyId = #{co_studyId};
     </update>
 
-    <select id="getCoRecruitOfStudyPortfolio" resultType="CoRecruitOfStudyPortfolio">
-        select
-        cros.co_studyId as 'co_studyId',
-        cp.co_portfolioId as 'co_portfolioId',
-        cp.co_email as 'co_email',
-        CU.profileImg as 'profileImg',
-        CU.co_name   as 'co_name',
-        CU.co_birth  as 'co_birth',
-        CU.co_gender as 'co_gender',
-        cp.co_title as 'co_title',
-        cp.co_rank as 'co_rank',
-        cp.co_headLine as 'co_headLine',
-        cp.co_introduction as 'co_introduction',
+    <select id="getCoApplicantsInfo" parameterType="hashMap" resultType="CoApplicantInfo">
+        select cros.co_portfolioId      as 'co_portfolioId',
+               cros.co_email            as 'co_email',
+               cu.co_name               as 'co_name',
+               cu.profileImg            as 'profileImg',
+               cp.co_title              as 'co_title',
+               cpos.co_part             as 'co_part',
+               cros.co_temporaryStorage as 'co_temporaryStorage',
+               cros.createdAt           as 'createdAt'
+        from CoRecruitOfStudy as cros
+                 left join CoUser cu on cros.co_email = cu.co_email
+                 left join CoPortfolio cp on cros.co_portfolioId = cp.co_portfolioId
+                 left join CoPartOfStudy cpos on cros.co_studyId = cpos.co_studyId
+        <choose>
+            <when test='co_part.equals("TEMP")'>
+                where cros.co_temporaryStorage = true
+            </when>
+            <otherwise>
+                where cros.co_studyId = #{co_studyId} and cpos.co_part = #{co_part}
+            </otherwise>
+        </choose>
+        order by cros.createdAt asc;
+    </select>
+
+    <select id="getCoApplicantCount" parameterType="Long" resultType="CoApplicantCount">
+        select cpos.co_part           as 'co_part',
+               cpos.co_total          as 'co_limit',
+               cros.co_applicantCount as 'co_applicantCount'
+        from CoPartOfStudy cpos
+                 left join (select cros.co_studyId as 'co_studyId', count(*) as 'co_applicantCount'
+                            from CoRecruitOfStudy cros
+                            where cros.co_studyId = #{co_studyId}) cros on cros.co_studyId = cpos.co_studyId
+        where cpos.co_studyId = #{co_studyId};
+    </select>
+
+    <select id="getTempsavedApplicantsCount" parameterType="Long" resultType="Integer">
+        select count(*) as 'co_tempSavedApplicantsCount'
+        from CoRecruitOfStudy
+        where co_studyId = #{co_studyId}
+          and co_temporaryStorage = true;
+    </select>
+
+    <select id="getCoPortfolioOfApplicant" parameterType="hashMap" resultType="CoPortfolioOfApplicant">
+        select cp.co_portfolioId  as 'co_portfolioId',
+        cp.co_title        as 'co_title',
         cros.co_motivation as 'co_motivation',
-        clap.co_languages as 'co_languages',
-        clop.co_links as 'co_links',
-        cros.createdAt as 'createdAt',
-        cros.updatedAt as 'updatedAt'
+        cp.co_email        as 'co_email',
+        cu.co_name         as 'co_name',
+        cu.profileImg      as 'profileImg',
+        cu.co_birth        as 'co_birth',
+        cu.co_gender       as 'co_gender',
+        cp.co_rank         as 'co_rank',
+        clap.co_languages  as 'co_languages',
+        cp.co_headLine     as 'co_headLine',
+        cp.co_introduction as 'co_introduction',
+        clop.co_links      as 'co_links',
+        cp.createdAt       as 'createdAt',
+        cp.updatedAt       as 'updatedAt'
         from CoPortfolio as cp
-        left join CoRecruitOfStudy cros on cp.co_portfolioId = cros.co_portfolioId
-        left join CoUser CU on cp.co_email = CU.co_email
+        left join CoUser cu on cp.co_email = cu.co_email
+        left join (select co_portfolioId, GROUP_CONCAT(cl.co_language SEPARATOR ',') as co_languages
+        from CoLanguageOfPortfolio as clop
+        join CoLanguage as cl on clop.co_languageId = cl.co_languageId
+        group by co_portfolioId) as clap on cp.co_portfolioId = clap.co_portfolioId
         left join (select co_portfolioId, GROUP_CONCAT(clop.co_link SEPARATOR ',') as co_links
         from CoLinkOfPortfolio as clop
         group by co_portfolioId) as clop on cp.co_portfolioId = clop.co_portfolioId
-        left join (select co_portfolioId, GROUP_CONCAT(cl.co_language SEPARATOR ',') as co_languages
-        from CoLanguageOfPortfolio as claop
-        join CoLanguage as cl on claop.co_languageId = cl.co_languageId
-        group by co_portfolioId) as clap on cp.co_portfolioId = clap.co_portfolioId
-        where cp.co_portfolioId = #{co_portfolioId}
+        left join (select co_portfolioId as 'co_portfolioId',
+        co_motivation  as 'co_motivation'
+        from CoRecruitOfStudy
+        where co_studyId = #{co_studyId}
+        and co_portfolioId = #{co_portfolioId}) as cros on cp.co_portfolioId = cros.co_portfolioId
+        where cp.co_portfolioId = #{co_portfolioId};
     </select>
 
 </mapper>

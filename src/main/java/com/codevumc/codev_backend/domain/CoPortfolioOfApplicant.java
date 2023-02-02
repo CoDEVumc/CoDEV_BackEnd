@@ -1,16 +1,13 @@
 package com.codevumc.codev_backend.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class CoRecruitOfStudyPortfolio {
+public class CoPortfolioOfApplicant {
     private long co_studyId;
     private long co_portfolioId;
     private String co_email;
