@@ -37,5 +37,6 @@ public interface CoProjectMapper {
     List<CoApplicantInfo> getCoApplicantsInfo(Map<String, Object> coProjectDto);
     int getTempsavedApplicantsCount(long co_projectId);
     List<CoApplicantCount> getCoApplicantsCount(long co_projectId);
+    Optional<CoProject> getCoProjectByViewer(Map<String, Object> coProjectDto);
     Optional<CoPortfolioOfApplicant> getCoPortfolioOfApplicant(Map<String, Object> coPortfolioDro);
 }
