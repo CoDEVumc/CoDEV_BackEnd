@@ -145,13 +145,9 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                 Map<String, Object> coApplicantsInfoDto = new HashMap<>();
                 coApplicantsInfoDto.put("co_emails", coTempSaveApplicants.getCo_emails());
                 coApplicantsInfoDto.put("co_projectId", co_projectId);
-
                 if (!coTempSaveApplicants.checkAllTempSave(this.coProjectMapper.getCoTemporaryStorage(coApplicantsInfoDto))) {
                     return setResponse(400, "message", "임시저장 여부가 다른 지원자가 존재합니다.");
                 }
-
-                System.out.println("조회 성공");
-
                 if (this.coProjectMapper.updateCoTemporaryStorage(coApplicantsInfoDto)) {
                     return setResponse(200, "message", "일괄 처리 되었습니다.");
                 }
