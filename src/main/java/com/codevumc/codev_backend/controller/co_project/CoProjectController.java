@@ -164,12 +164,8 @@ public class CoProjectController extends JwtController {
                                                      @PathVariable("coProjectId") long co_projectId,
                                                      @RequestBody CoTempSaveApplicants coTempSaveApplicants) throws Exception {
         String co_eamil = getCoUserEmail(request);
-        for (String s : coTempSaveApplicants.getCo_emails()) {
-            System.out.println(s);
-        }
         return coProjectRecruitService.saveCoApplicantsTemporarily(co_eamil, co_projectId, coTempSaveApplicants);
     }
-
 
     private int getLimitCnt(int pageNum) {
         int limit = SHOW_COUNT;
