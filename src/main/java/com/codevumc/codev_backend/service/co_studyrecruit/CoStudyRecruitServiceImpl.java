@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.service.co_studyrecruit;
 
 import com.codevumc.codev_backend.domain.CoApplicantsInfoOfStudy;
+import com.codevumc.codev_backend.domain.CoPortfolioOfApplicant;
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -113,6 +114,27 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                 return setResponse(200, "message", coApplicantsInfoOfStudy);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getCoPortfolioOfApplicant(String co_email, long co_studyId, long co_portfolioId) {
+        try{
+            Optional<CoStudy> coStudyOptional = coStudyMapper.getCoStudy(co_studyId);
+            if(coStudyOptional.isPresent()){
+                if(!coStudyOptional.get().getCo_email().equals(co_email))
+                    return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
+                Map<String, Object> coPortfolioDto = new HashMap<>();
+                coPortfolioDto.put("co_studyId", co_studyId);
+                coPortfolioDto.put("co_portfolioId", co_portfolioId);
+                Optional<CoPortfolioOfApplicant> coPortfolioOptional = this.coStudyMapper.getCoPortfolioOfApplicant(coPortfolioDto);
+                return coPortfolioOptional.isPresent() ? setResponse(200, "message", coPortfolioOptional.get()) : setResponse(400, "Bad Request", "존재하지 않는 포트폴리오입니다.");
+
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;
