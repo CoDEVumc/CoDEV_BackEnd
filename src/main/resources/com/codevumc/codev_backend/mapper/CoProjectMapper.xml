@@ -288,4 +288,12 @@
         where cp.co_portfolioId = #{co_portfolioId};
     </select>
 
+    <select id="getCoTemporaryStorage" parameterType="List" resultType="Boolean">
+        select
+        from CoRecruitOfProject
+        where co_email in
+        <foreach collection="List" item="co_email" index="index" open="(" separator="or" close=")">
+            #{co_email}
+        </foreach>
+    </select>
 </mapper>

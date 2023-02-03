@@ -163,5 +163,4 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
         return null;
     }
 
-
 }
