@@ -128,6 +128,12 @@ public class CoStudyController extends JwtController {
         return coStudyRecruitService.cancelRecruitStudy(getCoUserEmail(request), coStudyId);
     }
 
+    @GetMapping("/recruitment/portfolio/{coStudyId}/{coPortfolioId}")
+    public CoDevResponse getCoPortfolioOfApplicant(HttpServletRequest request, @PathVariable("coStudyId") long co_studyId, @PathVariable("coPortfolioId") long co_portfolioId) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coStudyRecruitService.getCoPortfolioOfApplicant(co_email,co_studyId,co_portfolioId);
+    }
+
     private int getLimitCnt(int pageNum) {
         int limit = SHOW_COUNT;
         for (int i = 0; i <= pageNum; i++) {
