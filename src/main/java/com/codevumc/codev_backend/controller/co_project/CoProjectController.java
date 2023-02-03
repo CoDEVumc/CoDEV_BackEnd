@@ -161,14 +161,13 @@ public class CoProjectController extends JwtController {
 
     @PatchMapping("/recruitment/pick/{coProjectId}")
     public CoDevResponse saveCoApplicantsTemporarily(HttpServletRequest request,
-                                                     @PathVariable("co_projectId") long co_projectId,
+                                                     @PathVariable("coProjectId") long co_projectId,
                                                      @RequestBody CoTempSaveApplicants coTempSaveApplicants) throws Exception {
         String co_eamil = getCoUserEmail(request);
         for (String s : coTempSaveApplicants.getCo_emails()) {
             System.out.println(s);
         }
-        coProjectRecruitService.saveCoApplicantsTemporarily(co_eamil, co_projectId, coTempSaveApplicants);
-        return null;
+        return coProjectRecruitService.saveCoApplicantsTemporarily(co_eamil, co_projectId, coTempSaveApplicants);
     }
 
 
