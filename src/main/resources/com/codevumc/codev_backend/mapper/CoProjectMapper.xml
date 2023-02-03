@@ -288,4 +288,24 @@
         where cp.co_portfolioId = #{co_portfolioId};
     </select>
 
+    <select id="getCoTemporaryStorage" parameterType="hashMap" resultType="Boolean">
+        select
+            crop.co_temporaryStorage
+        from CoRecruitOfProject crop
+        where crop.co_projectId = #{co_projectId}
+            and crop.co_email in
+        <foreach collection="co_emails" item="co_email" index="index" open="(" separator="," close=")">
+            #{co_email}
+        </foreach>
+    </select>
+
+    <update id="updateCoTemporaryStorage" parameterType="hashMap">
+        update CoRecruitOfProject crop
+        set crop.co_temporaryStorage = !crop.co_temporaryStorage
+        where crop.co_projectId = #{co_projectId}
+            and crop.co_email in
+        <foreach collection="co_emails" item="co_email" index="index" open="(" separator="," close=")">
+            #{co_email}
+        </foreach>
+    </update>
 </mapper>

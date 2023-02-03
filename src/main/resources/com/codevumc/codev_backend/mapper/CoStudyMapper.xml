@@ -247,4 +247,37 @@
           and co_temporaryStorage = true;
     </select>
 
+    <select id="getCoPortfolioOfApplicant" parameterType="hashMap" resultType="CoPortfolioOfApplicant">
+        select cp.co_portfolioId  as 'co_portfolioId',
+        cp.co_title        as 'co_title',
+        cros.co_motivation as 'co_motivation',
+        cp.co_email        as 'co_email',
+        cu.co_name         as 'co_name',
+        cu.profileImg      as 'profileImg',
+        cu.co_birth        as 'co_birth',
+        cu.co_gender       as 'co_gender',
+        cp.co_rank         as 'co_rank',
+        clap.co_languages  as 'co_languages',
+        cp.co_headLine     as 'co_headLine',
+        cp.co_introduction as 'co_introduction',
+        clop.co_links      as 'co_links',
+        cp.createdAt       as 'createdAt',
+        cp.updatedAt       as 'updatedAt'
+        from CoPortfolio as cp
+        left join CoUser cu on cp.co_email = cu.co_email
+        left join (select co_portfolioId, GROUP_CONCAT(cl.co_language SEPARATOR ',') as co_languages
+        from CoLanguageOfPortfolio as clop
+        join CoLanguage as cl on clop.co_languageId = cl.co_languageId
+        group by co_portfolioId) as clap on cp.co_portfolioId = clap.co_portfolioId
+        left join (select co_portfolioId, GROUP_CONCAT(clop.co_link SEPARATOR ',') as co_links
+        from CoLinkOfPortfolio as clop
+        group by co_portfolioId) as clop on cp.co_portfolioId = clop.co_portfolioId
+        left join (select co_portfolioId as 'co_portfolioId',
+        co_motivation  as 'co_motivation'
+        from CoRecruitOfStudy
+        where co_studyId = #{co_studyId}
+        and co_portfolioId = #{co_portfolioId}) as cros on cp.co_portfolioId = cros.co_portfolioId
+        where cp.co_portfolioId = #{co_portfolioId};
+    </select>
+
 </mapper>
