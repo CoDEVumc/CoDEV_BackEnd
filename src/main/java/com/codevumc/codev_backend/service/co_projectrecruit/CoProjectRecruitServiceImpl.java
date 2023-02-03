@@ -153,7 +153,7 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                        return setResponse(400, "message", "임시저장 여부가 다른 지원자가 존재합니다.");
                 }
 
-                if (this.coProjectMapper.updateCoTemporaryStorage()) {
+                if (this.coProjectMapper.updateCoTemporaryStorage(coTempSaveApplicants.getCoApplicantInfos())) {
                     return setResponse(200, "message", "일괄 처리 되었습니다.");
                 }
             }
