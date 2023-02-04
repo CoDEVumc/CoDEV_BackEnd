@@ -23,17 +23,19 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
     @Override
     public CoDevResponse insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject){
         try {
-            boolean coRecruitOfStatus = coProjectMapper.getCoRecruitStatus(coRecruitOfProject.getCo_email(),coRecruitOfProject.getCo_projectId());
-            Optional<CoProject> coProject = coProjectMapper.getCoProject(coRecruitOfProject.getCo_projectId());
+            Map<String, Object> coProjectRecruitDto = new HashMap<>();
+            coProjectRecruitDto.put("co_viewer", coRecruitOfProject.getCo_email());
+            coProjectRecruitDto.put("co_projectId", coRecruitOfProject.getCo_projectId());
+            Optional<CoProject> coProject = coProjectMapper.getCoProjectByViewer(coProjectRecruitDto);
             if(coProject.isPresent()) {
                 if(coProject.get().getCo_email().equals(coRecruitOfProject.getCo_email()))
                     return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
-                if(!coRecruitOfStatus){
+                if(((CoProject.DevType.ING.equals(coProject.get().getCo_process())) || (CoProject.DevType.ING.equals(coProject.get().getCo_process()))) && !coProject.get().isCo_recruitStatus()){
                     this.coProjectMapper.insertCoRecruitOfProject(coRecruitOfProject);
                     return setResponse(200, "message", "지원되었습니다");
                 }
                 else {
-                    return setResponse(445,"message","이미 지원한 프로젝트입니다");
+                    return setResponse(445,"message","이미 지원했거나 마감된 프로젝트입니다");
                 }
             }
         }
@@ -45,20 +47,19 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
 
     @Override
     public CoDevResponse cancelCoRecruitOfProject(String co_email, long co_projectId) {
-        Map<String, Object> recruitDto = new HashMap<>();
-        recruitDto.put("co_email", co_email);
-        recruitDto.put("co_projectId", co_projectId);
         try {
-            boolean coRecruitStatus = coProjectMapper.getCoRecruitStatus(co_email, co_projectId);
-            Optional<CoProject> coProject = coProjectMapper.getCoProject(co_projectId);
+            Map<String, Object> coProjectRecruitDto = new HashMap<>();
+            coProjectRecruitDto.put("co_email", co_email);
+            coProjectRecruitDto.put("co_projectId", co_projectId);
+            Optional<CoProject> coProject = coProjectMapper.getCoProjectByViewer(coProjectRecruitDto);
             if(coProject.isPresent()) {
                 if(coProject.get().getCo_email().equals(co_email))
                     return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
-                if (coRecruitStatus) {
-                    this.coProjectMapper.cancelCoRecruitOfProject(recruitDto);
+                if (((CoProject.DevType.ING.equals(coProject.get().getCo_process())) || (CoProject.DevType.ING.equals(coProject.get().getCo_process()))) && !coProject.get().isCo_recruitStatus()) {
+                    this.coProjectMapper.cancelCoRecruitOfProject(coProjectRecruitDto);
                     return setResponse(200, "message", "지원 취소되었습니다.");
                 } else {
-                    return setResponse(445, "message", "이미 지원이 취소되었습니다.");
+                    return setResponse(445, "message", "이미 지원이 취소했너나 마감된 프로젝트입니다.");
                 }
             }
 
