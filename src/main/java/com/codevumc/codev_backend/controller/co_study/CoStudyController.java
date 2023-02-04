@@ -117,9 +117,10 @@ public class CoStudyController extends JwtController {
         CoRecruitOfStudy coRecruitOfStudy = CoRecruitOfStudy.builder()
                 .co_email(getCoUserEmail(request))
                 .co_studyId(coStudyId)
-                .co_portfolioId(Long.parseLong(recruitStudy.get("co_portfolioId").toString()))
                 .co_motivation(recruitStudy.get("co_motivation").toString())
                 .build();
+        if (recruitStudy.get("co_portfolioId") != null)
+            coRecruitOfStudy.setCo_portfolioId(Long.parseLong(recruitStudy.get("co_portfolioId").toString()));
         return coStudyRecruitService.submitCoStudy(coRecruitOfStudy);
     }
 
