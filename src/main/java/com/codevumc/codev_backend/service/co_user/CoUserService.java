@@ -11,17 +11,13 @@ import java.io.UnsupportedEncodingException;
 public interface CoUserService {
     UserDetails loadUserByUsername(String co_email);
 
-    CoDevResponse findALlUser(String email);
-
     CoDevResponse signUpCoUser(CoUser coUser);
+
+    CoDevResponse updateProfile(CoUser coUser);
 
     boolean isSignup(String co_email);
 
     CoDevResponse snsLoginMessage(CoUser coUser);
-
-    MimeMessage createMessage(String to, String randomNumber) throws MessagingException, UnsupportedEncodingException;
-
-    CoDevResponse sendSimpleMessage(String to)throws Exception;
 
     CoDevResponse isExistedEmail(String co_email);
 }
