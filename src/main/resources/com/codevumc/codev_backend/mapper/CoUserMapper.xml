@@ -35,6 +35,13 @@
         WHERE `co_email` = #{co_email};
     </update>
 
+    <update id="updateProfile">
+        UPDATE CoUser
+        SET co_name = #{co_name},
+            co_nickName = #{co_nickName}
+        WHERE co_email = #{co_email}
+    </update>
+
     <update id="updateLoginType">
         UPDATE CoUser
         SET co_loginType = #{co_loginType}
