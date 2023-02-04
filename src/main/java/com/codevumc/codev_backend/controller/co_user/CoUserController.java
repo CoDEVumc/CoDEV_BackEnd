@@ -24,7 +24,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/codev/user")
 public class CoUserController extends JwtController {
-    //사용자가 프로필이미지를 직접 주입 안하면, 이 이미지로 프론트가 처리 해준다.
     private final PasswordEncoder passwordEncoder;
     private final CoFileServiceImpl coFileService;
     private final CoUserServiceImpl coUserService;
@@ -62,6 +61,22 @@ public class CoUserController extends JwtController {
         return result;
     }
 
+    @PutMapping(value = "/update/profile", consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public CoDevResponse updateProfile(HttpServletRequest request, @RequestPart Map<String, Object> user, @RequestPart(required = false) MultipartFile file) throws Exception {
+        CoUser coUser = CoUser.builder()
+                .co_email(getCoUserEmail(request))
+                .co_name(user.get("co_name").toString())
+                .co_nickName(user.get("co_nickName").toString()).build();
+        CoDevResponse result = coUserService.updateProfile(coUser);
+
+        if(file != null) {
+            coFileService.deleteFile(coUser.getCo_email(), "USER");
+            coFileService.storeFile(file, user.get("co_email").toString(), "USER");
+            coUserService.updateProfileImg(coFileService.getCo_MainImg("USER", user.get("co_email").toString()), user.get("co_email").toString());
+        }
+        return result;
+    }
+
     @PostMapping("/login")
     public CoDevResponse login(HttpServletRequest request, @RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent) {
         return getJwtService().login(request, user, userAgent);
@@ -93,10 +108,6 @@ public class CoUserController extends JwtController {
         return coUserService.isExistedEmail(email);
     }
 
-    @GetMapping("/code/mail")
-    public CoDevResponse mailConfirm(@RequestParam String email) throws Exception {
-        return coUserService.sendSimpleMessage(email);
-    }
 
 
 }
