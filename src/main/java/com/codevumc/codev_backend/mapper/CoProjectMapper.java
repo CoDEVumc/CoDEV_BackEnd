@@ -28,7 +28,7 @@ public interface CoProjectMapper {
     boolean deleteCoProject(Map<String, Object> coProjectDto);
     Long getCoHeartOfProjectEmail(@Param("co_projectId") Long co_projectId, @Param("co_email") String co_email);
     void insertCoRecruitOfProject(CoRecruitOfProject coRecruitOfProject);
-    boolean cancelCoRecruitOfProject(Map<String, Object> recruitDto);
+    boolean cancelCoRecruitOfProject(Map<String, Object> coProjectRecruitDto);
     boolean getCoProjectProcess( long co_projectId, String co_process);
     void updateCoProjectdeadLine(CoProject coProject);
     void closeCoProjectDeadLine(Map<String, Object> condition);
