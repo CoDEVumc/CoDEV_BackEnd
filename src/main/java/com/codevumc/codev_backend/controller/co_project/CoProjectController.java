@@ -4,6 +4,7 @@ import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.domain.CoRecruitOfProject;
+import com.codevumc.codev_backend.domain.CoTempSaveApplicants;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
@@ -158,6 +159,14 @@ public class CoProjectController extends JwtController {
                                                    @PathVariable("coPortfolioId") long co_portfolioId) throws Exception {
         String co_email = getCoUserEmail(request);
         return coProjectRecruitService.getCoPortfolioOfApplicant(co_email, co_projectId, co_portfolioId);
+    }
+
+    @PatchMapping("/recruitment/pick/{coProjectId}")
+    public CoDevResponse saveCoApplicantsTemporarily(HttpServletRequest request,
+                                                     @PathVariable("coProjectId") long co_projectId,
+                                                     @RequestBody CoTempSaveApplicants coTempSaveApplicants) throws Exception {
+        String co_eamil = getCoUserEmail(request);
+        return coProjectRecruitService.saveCoApplicantsTemporarily(co_eamil, co_projectId, coTempSaveApplicants);
     }
 
     private int getLimitCnt(int pageNum) {

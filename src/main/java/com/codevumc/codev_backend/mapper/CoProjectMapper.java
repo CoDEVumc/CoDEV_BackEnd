@@ -38,4 +38,6 @@ public interface CoProjectMapper {
     List<CoApplicantCount> getCoApplicantsCount(long co_projectId);
     Optional<CoProject> getCoProjectByViewer(Map<String, Object> coProjectDto);
     Optional<CoPortfolioOfApplicant> getCoPortfolioOfApplicant(Map<String, Object> coPortfolioDro);
+    List<Boolean> getCoTemporaryStorage(Map<String, Object> coApplicantsInfoDto);
+    boolean updateCoTemporaryStorage(Map<String, Object> coApplicantsInfoDto);
 }
