@@ -143,7 +143,7 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                 if (!coProjectOptional.get().getCo_email().equals(co_email))
                     return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
                 Map<String, Object> coApplicantsInfoDto = new HashMap<>();
-                coApplicantsInfoDto.put("co_emails", c);
+                coApplicantsInfoDto.put("co_emails", coTempSaveApplicants.getCo_emails());
                 coApplicantsInfoDto.put("co_projectId", co_projectId);
                 if (!coTempSaveApplicants.checkAllTempSave(this.coProjectMapper.getCoTemporaryStorage(coApplicantsInfoDto))) {
                     return setResponse(400, "message", "임시저장 여부가 다른 지원자가 존재합니다.");
