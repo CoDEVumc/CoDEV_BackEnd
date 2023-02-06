@@ -284,4 +284,25 @@
         where cp.co_portfolioId = #{co_portfolioId};
     </select>
 
+    <select id="getCoTemporaryStorage" parameterType="hashMap" resultType="Boolean">
+        select
+        cros.co_temporaryStorage
+        from CoRecruitOfStudy cros
+        where cros.co_studyId = #{co_studyId}
+        and cros.co_email in
+        <foreach collection="co_emails" item="co_email" index="index" open="(" separator="," close=")">
+            #{co_email}
+        </foreach>
+    </select>
+
+    <update id="updateCoTemporaryStorage" parameterType="hashMap">
+        update CoRecruitOfStudy cros
+        set cros.co_temporaryStorage = !cros.co_temporaryStorage
+        where cros.co_studyId = #{co_studyId}
+        and cros.co_email in
+        <foreach collection="co_emails" item="co_email" index="index" open="(" separator="," close=")">
+            #{co_email}
+        </foreach>
+    </update>
+
 </mapper>
