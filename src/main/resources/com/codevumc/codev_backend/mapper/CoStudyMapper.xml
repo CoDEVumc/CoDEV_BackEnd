@@ -179,14 +179,8 @@
     </delete>
 
     <insert id="insertCoRecruitOfStudy">
-        insert into CoRecruitOfStudy(co_email, co_studyId,
-        <if test="co_portfolioId != 0">
-            co_portfolioId,
-        </if> co_motivation)
-        values (#{co_email}, #{co_studyId},
-        <if test="co_portfolioId != 0">
-            #{co_portfolioId},
-        </if> #{co_motivation})
+        insert into CoRecruitOfStudy(co_email, co_studyId, co_portfolioId, co_motivation)
+        values (#{co_email}, #{co_studyId}, #{co_portfolioId}, #{co_motivation})
     </insert>
 
     <select id="getCoStudyProcess" resultType="boolean">
