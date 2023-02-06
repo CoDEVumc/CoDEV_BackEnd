@@ -1,9 +1,6 @@
 package com.codevumc.codev_backend.service.co_studyrecruit;
 
-import com.codevumc.codev_backend.domain.CoApplicantsInfoOfStudy;
-import com.codevumc.codev_backend.domain.CoPortfolioOfApplicant;
-import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
-import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
@@ -139,4 +136,27 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse saveCoApplicantsTemporarily(String co_email, long co_studyId, CoTempSaveApplicants coTempSaveApplicants) {
+        try {
+            Optional<CoStudy> coStudyOptional = this.coStudyMapper.getCoStudy(co_studyId);
+            if (!coStudyOptional.get().getCo_email().equals(co_email)) {
+                return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
+            }
+            Map<String, Object> coApplicantsInfoDto = new HashMap<>();
+            coApplicantsInfoDto.put("co_emails", co_email);
+            coApplicantsInfoDto.put("co_studyId", co_studyId);
+            if (!coTempSaveApplicants.checkAllTempSave(this.coStudyMapper.getCoTemporaryStorage(coApplicantsInfoDto))) {
+                return setResponse(400, "message", "임시저장 여부가 다른 지원자가 존재합니다.");
+            }
+            if (this.coStudyMapper.updateCoTemporaryStorage(coApplicantsInfoDto)) {
+                return setResponse(200, "message", "일괄 처리 되었습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
