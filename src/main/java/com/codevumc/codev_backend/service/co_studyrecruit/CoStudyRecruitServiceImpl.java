@@ -30,7 +30,7 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             if(coStudy.isPresent()) {
                 if(coStudy.get().getCo_email().equals(coRecruitOfStudy.getCo_email()))
                     return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
-                if ((CoStudy.DevType.ING.equals(coStudy.get().getCo_process()) || CoStudy.DevType.TEST.equals(coStudy.get().getCo_process())) && !coStudy.get().isCo_recruitStatus()) {
+                if (!CoStudy.DevType.FIN.equals(coStudy.get().getCo_process()) && !coStudy.get().isCo_recruitStatus()) {
                     this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
                     return setResponse(200, "message", "지원 완료되었습니다.");
                 }
@@ -52,7 +52,7 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             if(coStudy.isPresent()) {
                 if(coStudy.get().getCo_email().equals(co_email))
                     return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
-                if ((CoStudy.DevType.ING.equals(coStudy.get().getCo_process()) || CoStudy.DevType.TEST.equals(coStudy.get().getCo_process())) && coStudy.get().isCo_recruitStatus()) {
+                if (!CoStudy.DevType.FIN.equals(coStudy.get().getCo_process()) && coStudy.get().isCo_recruitStatus()) {
                     this.coStudyMapper.deleteRecruitOfStudy(recruitDto);
                     return setResponse(200, "message", "지원 취소되었습니다.");
                 }
