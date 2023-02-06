@@ -190,8 +190,8 @@ public class CoStudyController extends JwtController {
     public CoDevResponse saveCoApplicantsTemporarily(HttpServletRequest request,
                                                      @PathVariable("coStudyId") long co_studyId,
                                                      @RequestBody CoTempSaveApplicants coTempSaveApplicants) throws Exception {
-        String co_eamil = getCoUserEmail(request);
-        return coStudyRecruitService.saveCoApplicantsTemporarily(co_eamil, co_studyId, coTempSaveApplicants);
+        String co_email = getCoUserEmail(request);
+        return coStudyRecruitService.saveCoApplicantsTemporarily(co_email, co_studyId, coTempSaveApplicants);
     }
 
 }

@@ -145,7 +145,7 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
                 return setResponse(403, "Forbidden", "조회 권한이 없습니다.");
             }
             Map<String, Object> coApplicantsInfoDto = new HashMap<>();
-            coApplicantsInfoDto.put("co_emails", co_email);
+            coApplicantsInfoDto.put("co_emails", coTempSaveApplicants.getCo_emails());
             coApplicantsInfoDto.put("co_studyId", co_studyId);
             if (!coTempSaveApplicants.checkAllTempSave(this.coStudyMapper.getCoTemporaryStorage(coApplicantsInfoDto))) {
                 return setResponse(400, "message", "임시저장 여부가 다른 지원자가 존재합니다.");
