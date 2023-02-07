@@ -4,6 +4,7 @@ import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.domain.CoTempSaveApplicants;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
@@ -184,4 +185,13 @@ public class CoStudyController extends JwtController {
         String co_email = getCoUserEmail(request);
         return coStudyRecruitService.getCoApplicantsOfStudy(co_email, co_studyId, co_part);
     }
+
+    @PatchMapping("/recruitment/pick/{coStudyId}")
+    public CoDevResponse saveCoApplicantsTemporarily(HttpServletRequest request,
+                                                     @PathVariable("coStudyId") long co_studyId,
+                                                     @RequestBody CoTempSaveApplicants coTempSaveApplicants) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coStudyRecruitService.saveCoApplicantsTemporarily(co_email, co_studyId, coTempSaveApplicants);
+    }
+
 }
