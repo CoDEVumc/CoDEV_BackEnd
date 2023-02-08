@@ -12,13 +12,17 @@
 
     <!--채팅방 목록 조회-->
     <select id="getChatRooms" resultType="ChatRoom">
-        SELECT CR.roomId, CR.room_type, CR.room_title, CROU.isRead, CROU.status, pinfo.co_email as receiverCo_email, pinfo.co_nickName as receiverCo_nickName, pinfo.profileImg as receiverProfileImg
+        SELECT CR.roomId, CR.room_type, CR.room_title, CROU.isRead, CROU.status, pinfo.co_email as receiverCo_email, pinfo.co_nickName as receiverCo_nickName, pinfo.profileImg as receiverProfileImg, cnt.people as people
         FROM ChatRoom CR
-                 JOIN (select crou.roomId, cu.co_email, cu.co_nickName,cu.profileImg
+                 JOIN (select crou.roomId,cu.co_email, cu.co_nickName, cu.profileImg
                        from ChatRoomOfUser crou
                                 join CoUser cu on cu.co_email = crou.co_email
                        where cu.co_email != #{co_email}) pinfo ON CR.roomId = pinfo.roomId
                  JOIN ChatRoomOfUser CROU on CROU.roomId = CR.roomId
+                 JOIN (
+            select roomId, count(*) as people
+            from ChatRoomOfUser
+            group by roomId) as cnt on cnt.roomId = CR.roomId
         WHERE CROU.co_email = #{co_email}
         ORDER BY CROU.updatedAt DESC
     </select>

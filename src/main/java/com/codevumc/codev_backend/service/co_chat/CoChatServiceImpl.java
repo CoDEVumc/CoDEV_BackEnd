@@ -40,6 +40,13 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     public CoDevResponse getChatRooms(String co_email) {
         try {
             List<ChatRoom> chatRooms = coChatMapper.getChatRooms(co_email);
+            ChatMessage chatMessage;
+            for(ChatRoom chatRoom : chatRooms) {
+                chatMessage = chatMessageRepository.findTopByRoomIdOrderByCreatedDateDesc(chatRoom.getRoomId());
+                if(chatMessage != null)
+                    chatRoom.setLatestconv(chatMessage.getContent());
+
+            }
             return setResponse(200, "complete", chatRooms);
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,9 +114,9 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     @Override
     public CoDevResponse getChatLog(String roomId) {
         try {
-            List<ChatMessage> chatMessageList = chatMessageRepository.findByRoomId(roomId);
-            if(!chatMessageList.isEmpty())
-                return setResponse(200, "chatLog", chatMessageList);
+            //List<ChatMessage> chatMessageList = chatMessageRepository.findByRoomId(roomId);
+            //if(!chatMessageList.isEmpty())
+              //  return setResponse(200, "chatLog", chatMessageList);
             return setResponse(200, "chatLog", "");
         } catch (Exception e) {
             e.printStackTrace();

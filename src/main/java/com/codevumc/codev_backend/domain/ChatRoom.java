@@ -1,12 +1,12 @@
 package com.codevumc.codev_backend.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChatRoom {
     private String roomId;
     private RoomType room_type;
@@ -16,6 +16,8 @@ public class ChatRoom {
     private String receiverCo_email;
     private String receiverCo_nickName;
     private String receiverProfileImg;
+    private int people;
+    private String latestconv;
 
     public enum RoomType {
         OTO("OTO"),// One To One

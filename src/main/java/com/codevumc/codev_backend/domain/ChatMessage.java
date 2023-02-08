@@ -17,7 +17,7 @@ public class ChatMessage {
     private String roomId;
     private String sender;
     private String content;
-    private Timestamp createdDate;
+    private String createdDate;
 
     public enum MessageType {
         ENTER("ENTER"),
