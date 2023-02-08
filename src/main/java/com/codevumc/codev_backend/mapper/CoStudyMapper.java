@@ -1,7 +1,6 @@
 package com.codevumc.codev_backend.mapper;
 
 import com.codevumc.codev_backend.domain.*;
-import com.codevumc.codev_backend.domain.CoLanguage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,7 +23,6 @@ public interface CoStudyMapper {
     void deleteCoHeartOfStudy(@Param("co_email") String co_email, @Param("co_studyId") Long co_studyId);
     List<CoStudy> getCoStudies(Map<String, Object> condition);
     boolean deleteCoStudy(Map<String, Object> studyDto);
-    boolean getCoRecruitStatus(String co_email, long co_studyId);
     void insertCoRecruitOfStudy(CoRecruitOfStudy coRecruitOfStudy);
     void deleteRecruitOfStudy(Map<String, Object> recruitDto);
     Long getCoHeartOfStudyEmail(@Param("co_studyId") Long co_studyId, @Param("co_email") String co_email);
@@ -37,4 +35,7 @@ public interface CoStudyMapper {
     List<CoApplicantInfo> getCoApplicantsInfo(Map<String, Object> coStudyDto);
     CoApplicantCount getCoApplicantCount(long co_studyId);
     int getTempsavedApplicantsCount(long co_studyId);
+    Optional<CoStudy> getCoStudyViewer(Map<String, Object> coStudyDto);
+    List<Boolean> getCoTemporaryStorage(Map<String, Object> coApplicantsInfoDto);
+    boolean updateCoTemporaryStorage(Map<String, Object> coApplicantsInfoDto);
 }
