@@ -43,8 +43,8 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
             ChatMessage chatMessage;
             for(ChatRoom chatRoom : chatRooms) {
                 chatMessage = chatMessageRepository.findTopByRoomIdOrderByCreatedDateDesc(chatRoom.getRoomId());
-                if(chatMessage != null)
-                    chatRoom.setLatestconv(chatMessage.getContent());
+                chatRoom.setLatestconv(chatMessage != null ? chatMessage.getContent() : null);
+                chatRoom.setLatestDate(chatMessage != null ? chatMessage.getCreatedDate() : null);
 
             }
             return setResponse(200, "complete", chatRooms);
