@@ -8,8 +8,11 @@ import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_chat.CoChatServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
+import groovyjarjarantlr4.v4.runtime.misc.ParseCancellationException;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -18,9 +21,10 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
-@RequestMapping("/codev/chat")
 @RestController
 public class CoChatController extends JwtController {
     private final SimpMessageSendingOperations sendingOperations;
@@ -34,17 +38,18 @@ public class CoChatController extends JwtController {
     }
 
     @MessageMapping("/chat/message")
-    public ChatMessage message(@Payload ChatMessage chatMessage) {
+    public ChatMessage message(@Payload String data) throws ParseException{
+        ChatMessage chatMessage = getChatMessage(data);
         if(ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             coChatService.enterChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
         }else if(ChatMessage.MessageType.TALK.equals(chatMessage.getType())) {
-            coChatService.sendMessage(chatMessage.getRoomId());
+            coChatService.sendMessage(chatMessage);
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
         }
 
-        sendingOperations.convertAndSend("/sub/chat/room/"+chatMessage.getRoomId(), chatMessage);
+        sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);
         return chatMessage;
     }
 
@@ -59,11 +64,11 @@ public class CoChatController extends JwtController {
 
     @PostMapping("/create/room")
     public CoDevResponse createChatRoom(HttpServletRequest request, @RequestBody Map<String, String> chat) {
+
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(chat.get("roomId"))
                 .room_type(ChatRoom.RoomType.valueOf(chat.get("room_type")))
                 .room_title(chat.get("co_title"))
-                .room_mainImg(chat.get("co_mainImg"))
                 .build();
         return coChatService.createChatRoom(chatRoom);
     }
@@ -94,6 +99,18 @@ public class CoChatController extends JwtController {
         //해당 채팅방에다가 나갔다는 메시지 전달
         sendingOperations.convertAndSend("/sub/chat/room/"+roomId, chatMessage);
         return coChatService.exitChatRoom(co_email, roomId);
+    }
+
+    private ChatMessage getChatMessage(String data) throws ParseException{
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) parser.parse(data);
+        return ChatMessage.builder()
+                .type(ChatMessage.MessageType.valueOf(jsonObject.get("type").toString()))
+                .roomId(jsonObject.get("roomId").toString())
+                .sender(jsonObject.get("sender").toString())
+                .content(jsonObject.get("content").toString())
+                .createdDate(timestamp).build();
     }
 
     private JSONArray getJSONArray(Object object) throws Exception{
