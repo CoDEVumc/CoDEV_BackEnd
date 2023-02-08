@@ -17,6 +17,9 @@ public interface CoChatMapper {
     //채팅방 목록 조회
     List<ChatRoom> getChatRooms(@Param("co_email") String co_email);
 
+    //채팅방 안에 사람 조회
+    List<ChatRoomOfUser> getChatRoomUser(@Param("roomId") String roomId);
+
     //채팅방 초대
     void inviteUser(@Param("roomId") String roomId, @Param("co_email") String co_email);
 
