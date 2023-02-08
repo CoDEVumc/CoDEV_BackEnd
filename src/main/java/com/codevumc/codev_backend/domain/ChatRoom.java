@@ -4,9 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 @Setter
 @Getter
 @Builder
@@ -16,8 +13,9 @@ public class ChatRoom {
     private String room_title;
     private boolean isRead;
     private boolean status;
-    private Timestamp createdDate;
-    private List<ChatRoomOfUser> coChatOfUserList;
+    private String receiverCo_email;
+    private String receiverCo_nickName;
+    private String receiverProfileImg;
 
     public enum RoomType {
         OTO("OTO"),// One To One
