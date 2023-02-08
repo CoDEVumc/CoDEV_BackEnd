@@ -18,6 +18,7 @@ public class ChatRoom {
     private String receiverProfileImg;
     private int people;
     private String latestconv;
+    private String latestDate;
 
     public enum RoomType {
         OTO("OTO"),// One To One
