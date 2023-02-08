@@ -25,6 +25,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
+@RequestMapping("/codev/chat")
 @RestController
 public class CoChatController extends JwtController {
     private final SimpMessageSendingOperations sendingOperations;
@@ -103,6 +104,7 @@ public class CoChatController extends JwtController {
 
     private ChatMessage getChatMessage(String data) throws ParseException{
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(data);
         return ChatMessage.builder()
@@ -110,7 +112,7 @@ public class CoChatController extends JwtController {
                 .roomId(jsonObject.get("roomId").toString())
                 .sender(jsonObject.get("sender").toString())
                 .content(jsonObject.get("content").toString())
-                .createdDate(timestamp).build();
+                .createdDate(sdf.format(timestamp)).build();
     }
 
     private JSONArray getJSONArray(Object object) throws Exception{
