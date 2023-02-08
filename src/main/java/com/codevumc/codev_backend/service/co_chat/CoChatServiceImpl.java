@@ -40,9 +40,6 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     public CoDevResponse getChatRooms(String co_email) {
         try {
             List<ChatRoom> chatRooms = coChatMapper.getChatRooms(co_email);
-//            for(ChatRoom chatRoom: chatRooms) {
-//                chatRoom.setCoChatOfUserList(coChatMapper.getChatRoomUser(chatRoom.getRoomId()));
-//            }
             return setResponse(200, "complete", chatRooms);
         } catch (Exception e) {
             e.printStackTrace();
