@@ -98,7 +98,6 @@ public class CoFileServiceImpl implements CoFileService{
         Optional<com.codevumc.codev_backend.domain.CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(param.get("name"));
         if(coPhotoOfProject.isPresent()) {
             String fileUrl = coPhotoOfProject.get().getCo_filePath().replace("\\", "/");
-            System.out.println("fileUrl = " + fileUrl);
 
             Resource resource = new FileSystemResource(fileUrl);
             if(!resource.exists())
