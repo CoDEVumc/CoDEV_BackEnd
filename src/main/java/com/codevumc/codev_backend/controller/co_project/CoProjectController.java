@@ -115,17 +115,27 @@ public class CoProjectController extends JwtController {
         CoRecruitOfProject coRecruitOfProject = CoRecruitOfProject.builder()
                 .co_projectId(co_projectId)
                 .co_email(getCoUserEmail(request))
-                .co_portfolioId(Long.parseLong(portfolio.get("co_portfolioId").toString()))
+                .co_writer(portfolio.get("co_writer").toString())
                 .co_partId(portfolio.get("co_partId").toString())
+                .co_recruitStatus(Boolean.parseBoolean(portfolio.get("co_recruitStatus").toString()))
+                .co_process(CoProject.DevType.valueOf(portfolio.get("co_process").toString()))
                 .co_motivation(portfolio.get("co_motivation").toString()).build();
+        if(portfolio.get("co_portfolioId")!=null){
+            coRecruitOfProject.setCo_portfolioId(Long.parseLong(portfolio.get("co_portfolioId").toString()));
+        }
         return coProjectRecruitService.insertCoRecruitOfProject(coRecruitOfProject);
 
     }
 
     @DeleteMapping("/recruitment/{coProjectId}")
-    public CoDevResponse cancelCoRecruitOfProject(HttpServletRequest request, @PathVariable("coProjectId") long co_projectId) throws Exception {
-        String co_email = getCoUserEmail(request);
-        return coProjectRecruitService.cancelCoRecruitOfProject(co_email,co_projectId);
+    public CoDevResponse cancelCoRecruitOfProject(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestBody Map<String, Object> portfolio) throws Exception {
+        CoRecruitOfProject coRecruitOfProject = CoRecruitOfProject.builder()
+                .co_projectId(co_projectId)
+                .co_email(getCoUserEmail(request))
+                .co_writer(portfolio.get("co_writer").toString())
+                .co_process(CoProject.DevType.valueOf(portfolio.get("co_process").toString()))
+                .co_recruitStatus(Boolean.parseBoolean(portfolio.get("co_recruitStatus").toString())).build();
+        return coProjectRecruitService.cancelCoRecruitOfProject(coRecruitOfProject);
     }
 
     @PatchMapping("/recruitment/extension/{coProjectId}")

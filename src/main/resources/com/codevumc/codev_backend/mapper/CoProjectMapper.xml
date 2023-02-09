@@ -136,21 +136,22 @@
         select count(*) as coHeartCount from CoHeartOfProject where co_projectId = #{co_projectId}
     </select>
 
-    <select id="getCoRecruitStatus" resultType="boolean">
-        select EXISTS(select * from CoRecruitOfProject where co_email = #{co_viewer} and co_projectId = #{co_projectId}) as co_recruitStatus
-    </select>
-
     <delete id="deleteCoProject" parameterType="hashMap">
         delete from CoProject where co_email = #{co_email} and co_projectId = #{co_projectId}
     </delete>
     
     <insert id="insertCoRecruitOfProject" parameterType="CoRecruitOfProject">
-        insert into CoRecruitOfProject
-            (co_email, co_projectId, co_portfolioId, co_partId, co_motivation)
-        VALUES(#{co_email}, #{co_projectId}, #{co_portfolioId}, #{co_partId}, #{co_motivation})
+        insert into CoRecruitOfProject(co_email, co_projectId, co_partId,
+        <if test="co_portfolioId != 0">
+            co_portfolioId,
+        </if> co_motivation)
+        values (#{co_email}, #{co_projectId}, #{co_partId},
+        <if test="co_portfolioId != 0">
+            #{co_portfolioId},
+        </if> #{co_motivation})
     </insert>
 
-    <delete id="cancelCoRecruitOfProject" parameterType="hashMap">
+    <delete id="cancelCoRecruitOfProject" parameterType="CoRecruitOfProject">
         delete from CoRecruitOfProject where co_email = #{co_email} and co_projectId = #{co_projectId}
     </delete>
 
@@ -160,7 +161,7 @@
 
     <update id="updateCoProjectdeadLine" parameterType="CoProject">
         UPDATE CoProject
-        SET co_deadLine = #{co_deadLine}
+        SET co_deadLine = #{co_deadLine}, co_process = 'ING'
         WHERE co_projectId = #{co_projectId} and co_email = #{co_email}
     </update>
 

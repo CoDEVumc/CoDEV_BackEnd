@@ -17,4 +17,5 @@ public interface CoUserMapper {
     void updateProfile(@Param("co_email") String co_email, @Param("co_name") String co_name, @Param("co_nickName") String co_nickName);
     void updateLoginType(@Param("co_loginType") String co_loginType, @Param("co_email") String co_email);
     boolean isExistedEmail(String co_email);
+    void updatePassword(CoUser coUser);
 }

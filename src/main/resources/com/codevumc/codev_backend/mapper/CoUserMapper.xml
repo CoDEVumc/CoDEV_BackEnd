@@ -52,4 +52,10 @@
         select exists(select co_email from CoUser where co_email = #{co_email})
     </select>
 
+    <update id="updatePassword" parameterType="CoUser">
+        UPDATE CoUser
+        SET co_password = #{co_newPassword}
+        where co_email = #{co_email}
+    </update>
+
 </mapper>
