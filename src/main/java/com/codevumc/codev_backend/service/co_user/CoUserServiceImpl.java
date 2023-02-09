@@ -22,6 +22,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -119,6 +120,23 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         Optional<CoUser> coUser = this.coUserMapper.findByEmail(co_email);
 
         return coUser.isPresent();
+    }
+
+    @Override
+    public CoDevResponse updatePassword(CoUser coUser) {
+        try {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            Optional<CoUser> coUserDto = this.coUserMapper.findByEmail(coUser.getCo_email());
+            if (encoder.matches(coUser.getCo_password(),coUserDto.get().getCo_password())){
+                this.coUserMapper.updatePassword(coUser);
+                return setResponse(200,"message","비밀번호가 변경되었습니다");
+            } else {
+                return setResponse(445,"message","비밀번호가 틀렸습니다");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
