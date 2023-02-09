@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class CoUser implements UserDetails {
     private String co_email;
     private String co_password;
+    private String co_newPassword;
     private String co_nickName;
     private String co_name;
     private String co_birth;

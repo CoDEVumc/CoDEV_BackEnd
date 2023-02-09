@@ -20,4 +20,6 @@ public interface CoUserService {
     CoDevResponse snsLoginMessage(CoUser coUser);
 
     CoDevResponse isExistedEmail(String co_email);
+
+    CoDevResponse updatePassword(CoUser coUser);
 }
