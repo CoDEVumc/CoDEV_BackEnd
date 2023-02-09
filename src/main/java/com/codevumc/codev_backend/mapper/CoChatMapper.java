@@ -3,6 +3,7 @@ package com.codevumc.codev_backend.mapper;
 import com.codevumc.codev_backend.domain.ChatRoom;
 import com.codevumc.codev_backend.domain.ChatRoomOfUser;
 import com.codevumc.codev_backend.domain.CoChatOfUser;
+import com.codevumc.codev_backend.domain.CoUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -40,4 +41,7 @@ public interface CoChatMapper {
 
     //채팅방 나가기
     void exitChatRoom(@Param("co_email") String co_email, @Param("roomId") String roomId);
+
+    //프로필 가져오기
+    CoUser getUserInfo(@Param("co_email") String co_email);
 }
