@@ -3,6 +3,7 @@ package com.codevumc.codev_backend.controller.co_chat;
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.ChatMessage;
 import com.codevumc.codev_backend.domain.ChatRoom;
+import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_chat.CoChatServiceImpl;
@@ -107,10 +108,13 @@ public class CoChatController extends JwtController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(data);
+        CoUser coUser = coChatService.getUserInfo(jsonObject.get("sender").toString());
         return ChatMessage.builder()
                 .type(ChatMessage.MessageType.valueOf(jsonObject.get("type").toString()))
                 .roomId(jsonObject.get("roomId").toString())
                 .sender(jsonObject.get("sender").toString())
+                .co_nickName(coUser.getCo_nickName())
+                .profileImg(coUser.getProfileImg())
                 .content(jsonObject.get("content").toString())
                 .createdDate(sdf.format(timestamp)).build();
     }

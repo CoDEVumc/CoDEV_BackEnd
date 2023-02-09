@@ -2,6 +2,8 @@ package com.codevumc.codev_backend.service.co_chat;
 
 import com.codevumc.codev_backend.domain.ChatMessage;
 import com.codevumc.codev_backend.domain.ChatRoom;
+import com.codevumc.codev_backend.domain.CoChatOfUser;
+import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
@@ -10,6 +12,7 @@ import com.codevumc.codev_backend.mongo_repository.ChatMessageRepository;
 import com.codevumc.codev_backend.service.ResponseService;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     public CoChatServiceImpl(CoChatMapper coChatMapper, ChatMessageRepository chatMessageRepository) {
         this.coChatMapper = coChatMapper;
         this.chatMessageRepository = chatMessageRepository;
+
     }
 
     @Override
@@ -83,7 +87,8 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     @Override
     public CoDevResponse getChatRoom(String roomId) {
         try {
-            return setResponse(200, "complete", coChatMapper.getChatRoom(roomId));
+            List<ChatMessage> chatMessageList = chatMessageRepository.findAllByRoomIdOrderByCreatedDateDesc(roomId);
+            return !chatMessageList.isEmpty() ?  setResponse(200, "complete", chatMessageList) : setResponse(404, "message", "메시지가 없습니다.");
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
@@ -124,5 +129,8 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
         }
     }
 
+    public CoUser getUserInfo(String co_email) {
+        return coChatMapper.getUserInfo(co_email);
+    }
 
 }

@@ -16,6 +16,8 @@ public class ChatMessage {
     private MessageType type;
     private String roomId;
     private String sender;
+    private String co_nickName;
+    private String profileImg;
     private String content;
     private String createdDate;
 

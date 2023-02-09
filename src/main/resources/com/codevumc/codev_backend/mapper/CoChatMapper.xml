@@ -27,6 +27,12 @@
         ORDER BY CROU.updatedAt DESC
     </select>
 
+    <select id="getUserInfo" resultType="CoUser">
+        select profileImg, co_nickName
+        from CoUser
+        where co_email = #{co_email}
+    </select>
+
     <select id="getChatRoomUser" resultType="ChatRoomOfUser">
         SELECT CO.co_email, CO.co_nickName, CO.profileImg, CROU.isRead
         FROM ChatRoomOfUser CROU
