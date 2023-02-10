@@ -19,13 +19,15 @@ public class ChatMessage {
     private String co_nickName;
     private String profileImg;
     private String content;
+    private int readCount;
     private String createdDate;
 
     public enum MessageType {
         ENTER("ENTER"),
         TALK("TALK"),
         LEAVE("LEAVE"),
-        EXIT("EXIT");
+        EXIT("EXIT"),
+        INVITE("INVITE");
 
         private String value;
 
