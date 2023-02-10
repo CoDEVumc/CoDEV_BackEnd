@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 public interface CoUserService {
@@ -21,5 +22,5 @@ public interface CoUserService {
 
     CoDevResponse isExistedEmail(String co_email);
 
-    CoDevResponse updatePassword(CoUser coUser);
+    CoDevResponse updatePassword(HttpServletRequest request, CoUser coUser);
 }
