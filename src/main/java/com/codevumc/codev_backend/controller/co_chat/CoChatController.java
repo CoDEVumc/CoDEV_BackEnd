@@ -16,7 +16,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,12 +38,13 @@ public class CoChatController extends JwtController {
     }
 
     @MessageMapping("/chat/message")
-    public ChatMessage message(@Payload String data) throws ParseException{
+    public ChatMessage message(@Payload String data) throws ParseException, java.text.ParseException {
         ChatMessage chatMessage = getChatMessage(data);
         if(ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             coChatService.enterChatRoom(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage);
         } else if(ChatMessage.MessageType.TALK.equals(chatMessage.getType())) {
-            coChatService.sendMessage(chatMessage);
+            if(coChatService.sendMessage(chatMessage) == -1)
+                sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), ChatMessage.builder().type(ChatMessage.MessageType.DAY).createdDate(now()).build());
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
@@ -110,8 +110,13 @@ public class CoChatController extends JwtController {
                 .co_nickName(coUser.getCo_nickName())
                 .profileImg(coUser.getProfileImg())
                 .content(jsonObject.get("content").toString())
-                .readCount(Integer.parseInt(jsonObject.get("readCount").toString()))
                 .createdDate(sdf.format(timestamp)).build();
+    }
+
+    private String now() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 E요일");
+        return sdf.format(timestamp);
     }
 
     private ChatMessage getChatMessage(String type, String roomId) throws ParseException {
