@@ -111,17 +111,28 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public int sendMessage(ChatMessage chatMessage) throws ParseException {
+    public ChatMessage sendMessage(ChatMessage chatMessage) throws ParseException {
         //읽음 처리용
         coChatMapper.sendMessage(chatMessage.getRoomId());
-        //MongoDB 채팅 내용 저장
-        chatMessageRepository.save(chatMessage);
-        String lastDay = chatMessageRepository.findTopByRoomIdAndTypeOrderByCreatedDateDesc(chatMessage.getRoomId(), ChatMessage.MessageType.TALK.getValue()).getCreatedDate();
-        if(lastDay != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            return sdf.parse(lastDay).compareTo(sdf.parse(chatMessage.getCreatedDate()));
+
+        ChatMessage latestDate = chatMessageRepository.findTopByRoomIdAndTypeOrderByCreatedDateDesc(chatMessage.getRoomId(), ChatMessage.MessageType.TALK.getValue());
+
+        String lastDay = latestDate != null ? latestDate.getCreatedDate() : "0000-00-00";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(sdf.parse(lastDay).before(sdf.parse(chatMessage.getCreatedDate()))) {
+            ChatMessage nextDay = ChatMessage.builder()
+                    .type(ChatMessage.MessageType.DAY)
+                    .roomId(chatMessage.getRoomId())
+                    .createdDate(now()).build();
+            chatMessageRepository.save(nextDay);
+            chatMessageRepository.save(chatMessage);
+            return nextDay;
         }
-        return 0;
+
+        chatMessageRepository.save(chatMessage);
+
+        return null;
     }
 
     @Override
@@ -141,4 +152,10 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
         return coChatMapper.getUserInfo(co_email);
     }
 
+
+    private String now() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 E요일");
+        return sdf.format(timestamp);
+    }
 }

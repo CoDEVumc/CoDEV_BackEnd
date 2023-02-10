@@ -43,8 +43,9 @@ public class CoChatController extends JwtController {
         if(ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             coChatService.enterChatRoom(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage);
         } else if(ChatMessage.MessageType.TALK.equals(chatMessage.getType())) {
-            if(coChatService.sendMessage(chatMessage) == -1)
-                sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), ChatMessage.builder().type(ChatMessage.MessageType.DAY).createdDate(now()).build());
+            ChatMessage nextDay = coChatService.sendMessage(chatMessage);
+            if(nextDay != null)
+                sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), nextDay);
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
@@ -71,6 +72,17 @@ public class CoChatController extends JwtController {
     @GetMapping("/rooms")
     public CoDevResponse getChatRooms(HttpServletRequest request) throws Exception{
         return coChatService.getChatRooms(getCoUserEmail(request));
+    }
+
+    @GetMapping("/test")
+    public void test(@RequestBody Map<String, Object> user) throws java.text.ParseException {
+        ChatMessage chatMessage = ChatMessage.builder()
+                        .roomId(user.get("roomId").toString())
+                        .sender(user.get("sender").toString())
+                        .type(ChatMessage.MessageType.from(user.get("type").toString()))
+                        .content(user.get("content").toString())
+                        .createdDate(user.get("createdDate").toString()).build();
+        coChatService.sendMessage(chatMessage);
     }
 
     @PostMapping("/invite")
@@ -111,12 +123,6 @@ public class CoChatController extends JwtController {
                 .profileImg(coUser.getProfileImg())
                 .content(jsonObject.get("content").toString())
                 .createdDate(sdf.format(timestamp)).build();
-    }
-
-    private String now() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 E요일");
-        return sdf.format(timestamp);
     }
 
     private ChatMessage getChatMessage(String type, String roomId) throws ParseException {
