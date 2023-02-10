@@ -108,6 +108,16 @@ public class CoUserController extends JwtController {
         return coUserService.isExistedEmail(email);
     }
 
+    @PatchMapping("/update/password")
+    public CoDevResponse updatePassword(HttpServletRequest request, @RequestBody Map<String, Object> user) throws Exception {
+        CoUser coUser = CoUser.builder()
+                .co_email(getCoUserEmail(request))
+                .co_password(user.get("co_password").toString())
+                .co_newPassword(passwordEncoder.encode(user.get("co_newPassword").toString())).build();
+        return coUserService.updatePassword(request, coUser);
+    }
+
+
 
 
 }
