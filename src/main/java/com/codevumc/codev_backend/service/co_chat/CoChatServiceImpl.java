@@ -13,6 +13,10 @@ import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -44,7 +48,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
             List<ChatRoom> chatRooms = coChatMapper.getChatRooms(co_email);
             ChatMessage chatMessage;
             for(ChatRoom chatRoom : chatRooms) {
-                chatMessage = chatMessageRepository.findTopByRoomIdOrderByCreatedDateDesc(chatRoom.getRoomId());
+                chatMessage = chatMessageRepository.findTopByRoomIdAndTypeOrderByCreatedDateDesc(chatRoom.getRoomId(), ChatMessage.MessageType.TALK.getValue());
                 chatRoom.setLatestconv(chatMessage != null ? chatMessage.getContent() : null);
                 chatRoom.setLatestDate(chatMessage != null ? chatMessage.getCreatedDate() : null);
 
@@ -107,13 +111,17 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public void sendMessage(ChatMessage chatMessage) {
+    public int sendMessage(ChatMessage chatMessage) throws ParseException {
         //읽음 처리용
         coChatMapper.sendMessage(chatMessage.getRoomId());
-
         //MongoDB 채팅 내용 저장
         chatMessageRepository.save(chatMessage);
-
+        String lastDay = chatMessageRepository.findTopByRoomIdAndTypeOrderByCreatedDateDesc(chatMessage.getRoomId(), ChatMessage.MessageType.TALK.getValue()).getCreatedDate();
+        if(lastDay != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            return sdf.parse(lastDay).compareTo(sdf.parse(chatMessage.getCreatedDate()));
+        }
+        return 0;
     }
 
     @Override

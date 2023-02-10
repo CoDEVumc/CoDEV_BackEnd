@@ -19,7 +19,6 @@ public class ChatMessage {
     private String co_nickName;
     private String profileImg;
     private String content;
-    private int readCount;
     private String createdDate;
 
     public enum MessageType {
@@ -27,7 +26,8 @@ public class ChatMessage {
         TALK("TALK"),
         LEAVE("LEAVE"),
         EXIT("EXIT"),
-        INVITE("INVITE");
+        INVITE("INVITE"),
+        DAY("DAY");
 
         private String value;
 
