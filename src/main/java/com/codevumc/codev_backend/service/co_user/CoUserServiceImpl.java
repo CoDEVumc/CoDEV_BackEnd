@@ -22,11 +22,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -120,6 +122,26 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
 
         return coUser.isPresent();
     }
+
+    @Override
+    public CoDevResponse updatePassword(HttpServletRequest request, CoUser coUser) {
+        try {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            Optional<CoUser> coUserDto = this.coUserMapper.findByEmail(coUser.getCo_email());
+            if (encoder.matches(coUser.getCo_password(),coUserDto.get().getCo_password())){
+                this.coUserMapper.updatePassword(coUser);
+                return setResponse(200,"message","비밀번호가 변경되었습니다");
+            }
+            throw new SecurityException();
+        } catch (SecurityException e) {
+            request.setAttribute("exception", "PasswordNotFoundException");
+            throw new AuthenticationCustomException(ErrorCode.PasswordNotFoundException);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
 
