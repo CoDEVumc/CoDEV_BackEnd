@@ -114,7 +114,7 @@ public class CoUserController extends JwtController {
                 .co_email(getCoUserEmail(request))
                 .co_password(user.get("co_password").toString())
                 .co_newPassword(passwordEncoder.encode(user.get("co_newPassword").toString())).build();
-        return coUserService.updatePassword(coUser);
+        return coUserService.updatePassword(request, coUser);
     }
 
 

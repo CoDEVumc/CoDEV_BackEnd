@@ -25,6 +25,11 @@ public class AutheniticationEntryPointHandler implements AuthenticationEntryPoin
             setResponse(response, errorCode);
             return;
         }
+        
+        if(exception.equals("PasswordNotFoundException")) {
+            errorCode = ErrorCode.PasswordNotFoundException;
+            setResponse(response, errorCode);
+        }
 
         if(exception.equals("ForbiddenException")) {
             errorCode = ErrorCode.ForbiddenException;
