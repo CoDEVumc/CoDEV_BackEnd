@@ -86,6 +86,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     @Override
     public CoDevResponse getChatRoom(String roomId) {
         try {
+
             List<ChatMessage> chatMessageList = chatMessageRepository.findAllByRoomIdOrderByCreatedDate(roomId);
             return !chatMessageList.isEmpty() ?  setResponse(200, "complete", chatMessageList) : setResponse(404, "message", "메시지가 없습니다.");
         } catch (Exception e) {

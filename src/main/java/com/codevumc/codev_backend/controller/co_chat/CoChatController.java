@@ -48,20 +48,14 @@ public class CoChatController extends JwtController {
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
+        }else if(ChatMessage.MessageType.INVITE.equals(chatMessage.getType())) {
+            //초대 어떤 형태로??
         }
 
         sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);
         return chatMessage;
     }
 
-
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(ChatMessage chatMessage) {
-        //chatService.insertMessage(chatMessage);
-        sendingOperations.convertAndSend("/topic/chat/room/"+ chatMessage.getRoomId(), chatMessage);
-        return chatMessage;
-    }
 
     @PostMapping("/create/room")
     public CoDevResponse createChatRoom(HttpServletRequest request, @RequestBody Map<String, String> chat) {
@@ -89,11 +83,6 @@ public class CoChatController extends JwtController {
         return coChatService.getChatRoom(roomId);
     }
 
-    @GetMapping("/leave/{roomId}")
-    public void getLeaveRoom(HttpServletRequest request, @PathVariable("roomId") String roomId) throws Exception{
-        coChatService.closeChatRoom(roomId, getCoUserEmail(request));
-        sendingOperations.convertAndSend("/topic/chat/room/"+ roomId, getChatMessage(ChatMessage.MessageType.LEAVE.getValue(), roomId));
-    }
 
     @DeleteMapping("/delete/{roomId}")
     public CoDevResponse exitChatRoom(HttpServletRequest request, @PathVariable("roomId") String roomId) throws Exception{
@@ -121,6 +110,7 @@ public class CoChatController extends JwtController {
                 .co_nickName(coUser.getCo_nickName())
                 .profileImg(coUser.getProfileImg())
                 .content(jsonObject.get("content").toString())
+                .readCount(Integer.parseInt(jsonObject.get("readCount").toString()))
                 .createdDate(sdf.format(timestamp)).build();
     }
 
