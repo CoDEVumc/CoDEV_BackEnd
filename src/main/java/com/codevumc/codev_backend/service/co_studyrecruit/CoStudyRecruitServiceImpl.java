@@ -1,6 +1,7 @@
 package com.codevumc.codev_backend.service.co_studyrecruit;
 
 import com.codevumc.codev_backend.domain.*;
+import com.codevumc.codev_backend.domain.CoStudy.DevType;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
@@ -20,19 +21,13 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
     @Override
     public CoDevResponse submitCoStudy(CoRecruitOfStudy coRecruitOfStudy) {
         try {
-            Map<String, Object> coStudyRecruitDto = new HashMap<>();
-            coStudyRecruitDto.put("co_viewer", coRecruitOfStudy.getCo_email());
-            coStudyRecruitDto.put("co_studyId", coRecruitOfStudy.getCo_studyId());
-            Optional<CoStudy> coStudy = coStudyMapper.getCoStudyViewer(coStudyRecruitDto);
-            if(coStudy.isPresent()) {
-                if(coStudy.get().getCo_email().equals(coRecruitOfStudy.getCo_email()))
-                    return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
-                if (!CoStudy.DevType.FIN.equals(coStudy.get().getCo_process()) && !coStudy.get().isCo_recruitStatus()) {
-                    this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
-                    return setResponse(200, "message", "지원 완료되었습니다.");
-                }
-                return setResponse(445,"message","이미 지원했거나 지원 마감한 스터디입니다.");
-            }
+            if (isAdmin(coRecruitOfStudy))
+                return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다.");
+            if (!DevType.FIN.equals(coRecruitOfStudy.getCo_process()) && !coRecruitOfStudy.isCo_recruitStatus()) {
+                this.coStudyMapper.insertCoRecruitOfStudy(coRecruitOfStudy);
+                return setResponse(200, "message", "지원 완료되었습니다.");
+            } else
+                return setResponse(445, "message", "이미 지원했거나 마감된 스터디입니다.");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,21 +35,15 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
     }
 
     @Override
-    public CoDevResponse cancelRecruitStudy(String co_email, long co_studyId) {
-        Map<String, Object> recruitDto = new HashMap<>();
-        recruitDto.put("co_viewer", co_email);
-        recruitDto.put("co_studyId", co_studyId);
+    public CoDevResponse cancelRecruitStudy(CoRecruitOfStudy coRecruitOfStudy) {
         try {
-            Optional<CoStudy> coStudy = coStudyMapper.getCoStudyViewer(recruitDto);
-            if(coStudy.isPresent()) {
-                if(coStudy.get().getCo_email().equals(co_email))
-                    return setResponse(403, "Forbidden", "작성자는 지원할 수 없습니다..");
-                if (!CoStudy.DevType.FIN.equals(coStudy.get().getCo_process()) && coStudy.get().isCo_recruitStatus()) {
-                    this.coStudyMapper.deleteRecruitOfStudy(recruitDto);
-                    return setResponse(200, "message", "지원 취소되었습니다.");
-                }
-                return setResponse(445, "message", "이미 지원이 취소되었습니다.");
-            }
+            if (isAdmin(coRecruitOfStudy))
+                return setResponse(403, "Forbidden", "작성자는 취소할 수 없습니다.");
+            if (!DevType.FIN.equals(coRecruitOfStudy.getCo_process()) && coRecruitOfStudy.isCo_recruitStatus()) {
+                this.coStudyMapper.deleteRecruitOfStudy(coRecruitOfStudy);
+                return setResponse(200, "message", "지원 취소되었습니다.");
+            } else
+                return setResponse(445, "message", "이미 취소했거나 마감된 스터디입니다.");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,6 +142,13 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             e.printStackTrace();
         }
         return null;
+    }
+
+    private boolean isAdmin(CoRecruitOfStudy coRecruitOfStudy) throws Exception {
+        if (coRecruitOfStudy.getCo_email().equals(coRecruitOfStudy.getCo_writer())){
+            return true;
+        }
+        return false;
     }
 
 }

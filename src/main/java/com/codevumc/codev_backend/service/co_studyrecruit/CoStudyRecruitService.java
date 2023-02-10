@@ -7,7 +7,7 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 
 
 public interface CoStudyRecruitService {
-    CoDevResponse cancelRecruitStudy(String co_email, long co_studyId);
+    CoDevResponse cancelRecruitStudy(CoRecruitOfStudy coRecruitOfStudy);
     CoDevResponse submitCoStudy(CoRecruitOfStudy coRecruitOfStudy);
     CoDevResponse completeCoStudyRecruitment(String co_email, long co_studyId, CoStudy co_applicantList);
     CoDevResponse getCoApplicantsOfStudy(String co_email, long co_studyId, String co_part);
