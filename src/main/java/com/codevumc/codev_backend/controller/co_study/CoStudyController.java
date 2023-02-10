@@ -4,6 +4,7 @@ import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoRecruitOfStudy;
 import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.domain.CoStudy.DevType;
 import com.codevumc.codev_backend.domain.CoTempSaveApplicants;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
@@ -64,7 +65,7 @@ public class CoStudyController extends JwtController {
                 .co_title(study.get("co_title").toString())
                 .co_location(study.get("co_location").toString())
                 .co_content(study.get("co_content").toString())
-                .co_process(CoStudy.DevType.from("ING"))
+                .co_process(DevType.from("ING"))
                 .co_part(study.get("co_part").toString())
                 .co_total((Integer) study.get("co_total"))
                 .co_deadLine((study.get("co_deadLine").toString())).build();
@@ -91,7 +92,7 @@ public class CoStudyController extends JwtController {
                 .co_title(study.get("co_title").toString())
                 .co_location(study.get("co_location").toString())
                 .co_content(study.get("co_content").toString())
-                .co_process(CoStudy.DevType.from(study.get("co_process").toString()))
+                .co_process(DevType.from(study.get("co_process").toString()))
                 .co_part(study.get("co_part").toString())
                 .co_total((Integer) study.get("co_total"))
                 .co_deadLine((study.get("co_deadLine").toString())).build();
@@ -116,8 +117,11 @@ public class CoStudyController extends JwtController {
                                        @PathVariable("coStudyId") long coStudyId,
                                        @RequestBody Map<String, Object> recruitStudy) throws Exception {
         CoRecruitOfStudy coRecruitOfStudy = CoRecruitOfStudy.builder()
-                .co_email(getCoUserEmail(request))
                 .co_studyId(coStudyId)
+                .co_email(getCoUserEmail(request))
+                .co_writer(recruitStudy.get("co_writer").toString())
+                .co_recruitStatus(Boolean.parseBoolean(recruitStudy.get("co_recruitStatus").toString()))
+                .co_process(DevType.valueOf(recruitStudy.get("co_process").toString()))
                 .co_portfolioId(Long.parseLong(recruitStudy.get("co_portfolioId").toString()))
                 .co_motivation(recruitStudy.get("co_motivation").toString())
                 .build();

@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.domain;
 
+import com.codevumc.codev_backend.domain.CoProject.DevType;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -17,7 +18,7 @@ public class CoRecruitOfProject {
     private long co_portfolioId;
     private String co_partId;
     private String co_motivation;
-    private CoProject.DevType co_process;
+    private DevType co_process;
     private boolean isApproved;
     private Timestamp createdAt;
     private Timestamp updatedAt;
