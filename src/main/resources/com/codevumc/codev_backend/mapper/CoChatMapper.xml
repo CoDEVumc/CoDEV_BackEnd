@@ -36,7 +36,7 @@
     <select id="getChatRoomUser" resultType="ChatRoomOfUser">
         SELECT CO.co_email, CO.co_nickName, CO.profileImg, CROU.isRead
         FROM ChatRoomOfUser CROU
-        JOIN CoUser CO on CROU.co_email = CO.co_email
+                 JOIN CoUser CO on CROU.co_email = CO.co_email
         WHERE CROU.roomId = #{roomId}
     </select>
 
@@ -49,7 +49,7 @@
     <!--채팅방 입장-->
     <update id="readMessage">
         UPDATE ChatRoomOfUser
-        SET isRead = true
+        SET isRead = 0
         WHERE roomId = #{roomId} AND co_email = #{co_email}
     </update>
 
@@ -70,14 +70,14 @@
     <!--메세지 보내기-->
     <update id="sendMessage">
         UPDATE ChatRoomOfUser
-        SET isRead = false
+        SET isRead = isRead + 1
         WHERE status = false AND roomId = #{roomId}
     </update>
 
     <select id="getChatRoom" resultType="ChatRoomOfUser">
         SELECT crou.roomId, crou.co_email, cu.co_nickName, cu.profileImg
         FROM ChatRoomOfUser crou
-        JOIN CoUser cu on crou.co_email = cu.co_email
+                 JOIN CoUser cu on crou.co_email = cu.co_email
         WHERE crou.roomId = #{roomId}
     </select>
 
