@@ -129,8 +129,15 @@ public class CoStudyController extends JwtController {
     }
 
     @DeleteMapping("/recruitment/{coStudyId}")
-    public CoDevResponse cancelRecruitStudy(HttpServletRequest request, @PathVariable("coStudyId") long coStudyId) throws Exception {
-        return coStudyRecruitService.cancelRecruitStudy(getCoUserEmail(request), coStudyId);
+    public CoDevResponse cancelRecruitStudy(HttpServletRequest request, @PathVariable("coStudyId") long co_studyId, @RequestBody Map<String, Object> portfolio) throws Exception {
+        CoRecruitOfStudy coRecruitOfStudy = CoRecruitOfStudy.builder()
+                .co_studyId(co_studyId)
+                .co_email(getCoUserEmail(request))
+                .co_writer(portfolio.get("co_writer").toString())
+                .co_process(DevType.valueOf(portfolio.get("co_process").toString()))
+                .co_recruitStatus(Boolean.parseBoolean(portfolio.get("co_recruitStatus").toString()))
+                .build();
+        return coStudyRecruitService.cancelRecruitStudy(coRecruitOfStudy);
     }
 
     @GetMapping("/recruitment/portfolio/{coStudyId}/{coPortfolioId}")
