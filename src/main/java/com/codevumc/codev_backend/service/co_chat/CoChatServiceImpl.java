@@ -2,7 +2,6 @@ package com.codevumc.codev_backend.service.co_chat;
 
 import com.codevumc.codev_backend.domain.ChatMessage;
 import com.codevumc.codev_backend.domain.ChatRoom;
-import com.codevumc.codev_backend.domain.CoChatOfUser;
 import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -12,7 +11,6 @@ import com.codevumc.codev_backend.mongo_repository.ChatMessageRepository;
 import com.codevumc.codev_backend.service.ResponseService;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -74,9 +72,10 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public void enterChatRoom(String roomId, String co_email) {
+    public void enterChatRoom(String roomId, String co_email, ChatMessage chatMessage) {
         coChatMapper.readMessage(roomId, co_email);
         coChatMapper.enterChatRoom(roomId, co_email);
+        chatMessageRepository.save(chatMessage);
     }
 
     @Override
@@ -87,7 +86,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     @Override
     public CoDevResponse getChatRoom(String roomId) {
         try {
-            List<ChatMessage> chatMessageList = chatMessageRepository.findAllByRoomIdOrderByCreatedDateDesc(roomId);
+            List<ChatMessage> chatMessageList = chatMessageRepository.findAllByRoomIdOrderByCreatedDate(roomId);
             return !chatMessageList.isEmpty() ?  setResponse(200, "complete", chatMessageList) : setResponse(404, "message", "메시지가 없습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,7 +120,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
         try {
             //List<ChatMessage> chatMessageList = chatMessageRepository.findByRoomId(roomId);
             //if(!chatMessageList.isEmpty())
-              //  return setResponse(200, "chatLog", chatMessageList);
+            //  return setResponse(200, "chatLog", chatMessageList);
             return setResponse(200, "chatLog", "");
         } catch (Exception e) {
             e.printStackTrace();
