@@ -196,6 +196,7 @@
               </when>
               <otherwise>
                   and crp.co_partId = #{co_partId}
+                  and crp.co_temporaryStorage = false
               </otherwise>
           </choose>
         order by crp.createdAt asc;
