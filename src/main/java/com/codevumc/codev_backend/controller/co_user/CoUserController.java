@@ -69,10 +69,10 @@ public class CoUserController extends JwtController {
                 .co_nickName(user.get("co_nickName").toString()).build();
         CoDevResponse result = coUserService.updateProfile(coUser);
 
+        coFileService.deleteFile(coUser.getCo_email(), "USER");
         if(file != null) {
-            coFileService.deleteFile(coUser.getCo_email(), "USER");
-            coFileService.storeFile(file, user.get("co_email").toString(), "USER");
-            coUserService.updateProfileImg(coFileService.getCo_MainImg("USER", user.get("co_email").toString()), user.get("co_email").toString());
+            coFileService.storeFile(file, coUser.getCo_email(), "USER");
+            coUserService.updateProfileImg(coFileService.getCo_MainImg("USER", coUser.getCo_email()), coUser.getCo_email());
         }
         return result;
     }
