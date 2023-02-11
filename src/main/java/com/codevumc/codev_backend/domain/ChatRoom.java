@@ -1,20 +1,24 @@
 package com.codevumc.codev_backend.domain;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-import java.sql.Timestamp;
-
+@Setter
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChatRoom {
     private String roomId;
     private RoomType room_type;
     private String room_title;
-    private String room_mainImg;
-    private boolean isRead;
+    private int isRead;
     private boolean status;
-    private Timestamp createdDate;
+    private String receiverCo_email;
+    private String receiverCo_nickName;
+    private String receiverProfileImg;
+    private int people;
+    private String latestconv;
+    private String latestDate;
 
     public enum RoomType {
         OTO("OTO"),// One To One
