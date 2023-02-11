@@ -24,7 +24,7 @@ public interface CoStudyMapper {
     List<CoStudy> getCoStudies(Map<String, Object> condition);
     boolean deleteCoStudy(Map<String, Object> studyDto);
     void insertCoRecruitOfStudy(CoRecruitOfStudy coRecruitOfStudy);
-    void deleteRecruitOfStudy(Map<String, Object> recruitDto);
+    boolean deleteRecruitOfStudy(CoRecruitOfStudy coRecruitOfStudy);
     Long getCoHeartOfStudyEmail(@Param("co_studyId") Long co_studyId, @Param("co_email") String co_email);
     boolean getCoStudyProcess(long co_studyId, String co_process);
     void updateCoStudyDeadLine(CoStudy coStudy);

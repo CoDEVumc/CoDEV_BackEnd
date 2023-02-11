@@ -3,6 +3,7 @@ package com.codevumc.codev_backend.controller.co_project;
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.domain.CoProject.DevType;
 import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.domain.CoTempSaveApplicants;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -58,7 +59,7 @@ public class CoProjectController extends JwtController {
                 .co_title(project.get("co_title").toString())
                 .co_location(project.get("co_location").toString())
                 .co_content(project.get("co_content").toString())
-                .co_process(CoProject.DevType.from("ING"))
+                .co_process(DevType.from("ING"))
                 .co_deadLine(project.get("co_deadLine").toString()).build();
 
         CoDevResponse result = coProjectService.insertProject(coProject, getJSONArray(project.get("co_languages")), getJSONArray(project.get("co_parts")));
@@ -92,7 +93,7 @@ public class CoProjectController extends JwtController {
                 .co_title(project.get("co_title").toString())
                 .co_location(project.get("co_location").toString())
                 .co_content(project.get("co_content").toString())
-                .co_process(CoProject.DevType.from(project.get("co_process").toString()))
+                .co_process(DevType.from(project.get("co_process").toString()))
                 .co_deadLine(project.get("co_deadLine").toString()).build();
 
         CoDevResponse result = coProjectService.updateProject(coProject, getJSONArray(project.get("co_languages")), getJSONArray(project.get("co_parts")));
@@ -118,7 +119,7 @@ public class CoProjectController extends JwtController {
                 .co_writer(portfolio.get("co_writer").toString())
                 .co_partId(portfolio.get("co_partId").toString())
                 .co_recruitStatus(Boolean.parseBoolean(portfolio.get("co_recruitStatus").toString()))
-                .co_process(CoProject.DevType.valueOf(portfolio.get("co_process").toString()))
+                .co_process(DevType.valueOf(portfolio.get("co_process").toString()))
                 .co_motivation(portfolio.get("co_motivation").toString()).build();
         if(portfolio.get("co_portfolioId")!=null){
             coRecruitOfProject.setCo_portfolioId(Long.parseLong(portfolio.get("co_portfolioId").toString()));
@@ -133,7 +134,7 @@ public class CoProjectController extends JwtController {
                 .co_projectId(co_projectId)
                 .co_email(getCoUserEmail(request))
                 .co_writer(portfolio.get("co_writer").toString())
-                .co_process(CoProject.DevType.valueOf(portfolio.get("co_process").toString()))
+                .co_process(DevType.valueOf(portfolio.get("co_process").toString()))
                 .co_recruitStatus(Boolean.parseBoolean(portfolio.get("co_recruitStatus").toString())).build();
         return coProjectRecruitService.cancelCoRecruitOfProject(coRecruitOfProject);
     }
