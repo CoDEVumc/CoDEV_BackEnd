@@ -6,6 +6,7 @@ import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoUserMapper;
 import com.codevumc.codev_backend.mapper.TokenMapper;
+import com.codevumc.codev_backend.mongo_repository.ChatMessageRepository;
 import com.codevumc.codev_backend.service.ResponseService;
 import com.codevumc.codev_backend.snslogin.GitHubApi;
 import com.codevumc.codev_backend.snslogin.GoogleApi;
@@ -43,14 +44,12 @@ import java.util.regex.Pattern;
 @Service
 public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
-    private final TokenMapper tokenMapper;
-    private final JavaMailSender javaMailSender;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    public CoUserServiceImpl(CoUserMapper coUserMapper, TokenMapper tokenMapper, JavaMailSender javaMailSender) {
+    public CoUserServiceImpl(CoUserMapper coUserMapper, ChatMessageRepository chatMessageRepository) {
         this.coUserMapper = coUserMapper;
-        this.tokenMapper = tokenMapper;
-        this.javaMailSender = javaMailSender;
+        this.chatMessageRepository = chatMessageRepository;
     }
 
     @Override
@@ -100,6 +99,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
 
     public void updateProfileImg(String profileImg, String co_email) {
         coUserMapper.updateProfileImg(profileImg, co_email);
+
     }
 
     @Override
