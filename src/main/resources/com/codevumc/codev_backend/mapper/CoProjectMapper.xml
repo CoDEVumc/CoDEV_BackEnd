@@ -216,6 +216,7 @@
                  left join (select crop.co_projectId, crop.co_partId, count(*) as co_recruitCount
                             from CoRecruitOfProject crop
                             where co_projectId = #{co_projectId}
+                            and crop.co_temporaryStorage = false
                             group by crop.co_partId) crop on crop.co_partId = cpop.co_part
         where cpop.co_projectId = #{co_projectId};
     </select>
