@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class CoChatServiceImpl extends ResponseService implements CoChatService{
@@ -119,12 +120,13 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
 
         String lastDay = latestDate != null ? latestDate.getCreatedDate() : "0000-00-00";
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         if(sdf.parse(lastDay).before(sdf.parse(chatMessage.getCreatedDate()))) {
             ChatMessage nextDay = ChatMessage.builder()
                     .type(ChatMessage.MessageType.DAY)
                     .roomId(chatMessage.getRoomId())
-                    .createdDate(now()).build();
+                    .content(now())
+                    .createdDate(chatMessage.getCreatedDate()).build();
             chatMessageRepository.save(nextDay);
             chatMessageRepository.save(chatMessage);
             return nextDay;
@@ -155,7 +157,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
 
     private String now() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 E요일");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 E요일", Locale.KOREA);
         return sdf.format(timestamp);
     }
 }

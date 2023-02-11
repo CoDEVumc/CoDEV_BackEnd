@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Map;
 
 @RequestMapping("/codev/chat")
@@ -111,7 +112,7 @@ public class CoChatController extends JwtController {
 
     private ChatMessage getChatMessage(String data) throws ParseException{
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(data);
         CoUser coUser = coChatService.getUserInfo(jsonObject.get("sender").toString());
