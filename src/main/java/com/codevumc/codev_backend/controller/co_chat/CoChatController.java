@@ -60,14 +60,17 @@ public class CoChatController extends JwtController {
 
 
     @PostMapping("/create/room")
-    public CoDevResponse createChatRoom(HttpServletRequest request, @RequestBody Map<String, String> chat) {
+    public CoDevResponse createChatRoom(HttpServletRequest request, @RequestBody Map<String, String> chat) throws Exception {
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(chat.get("roomId"))
                 .room_type(ChatRoom.RoomType.valueOf(chat.get("room_type")))
                 .room_title(chat.get("co_title"))
                 .build();
-        return coChatService.createChatRoom(chatRoom);
+        if(chat.get("mainImg") != null)
+            chatRoom.setMainImg(chat.get("mainImg"));
+
+        return coChatService.createChatRoom(chatRoom, getCoUserEmail(request));
     }
 
     @GetMapping("/rooms")
@@ -75,20 +78,10 @@ public class CoChatController extends JwtController {
         return coChatService.getChatRooms(getCoUserEmail(request));
     }
 
-    @GetMapping("/test")
-    public void test(@RequestBody Map<String, Object> user) throws java.text.ParseException {
-        ChatMessage chatMessage = ChatMessage.builder()
-                        .roomId(user.get("roomId").toString())
-                        .sender(user.get("sender").toString())
-                        .type(ChatMessage.MessageType.from(user.get("type").toString()))
-                        .content(user.get("content").toString())
-                        .createdDate(user.get("createdDate").toString()).build();
-        coChatService.sendMessage(chatMessage);
-    }
 
     @PostMapping("/invite")
     public CoDevResponse inviteUser(HttpServletRequest request, @RequestBody Map<String, Object> user) throws Exception{
-        return coChatService.inviteUser(user.get("roomId").toString(), getJSONArray(user.get("co_emails")), getCoUserEmail(request));
+        return coChatService.inviteUser(user.get("roomId").toString(), getJSONArray(user.get("co_emails")));
     }
 
     @GetMapping("/room/{roomId}")
@@ -124,18 +117,6 @@ public class CoChatController extends JwtController {
                 .profileImg(coUser.getProfileImg())
                 .content(jsonObject.get("content").toString())
                 .createdDate(sdf.format(timestamp)).build();
-    }
-
-    private ChatMessage getChatMessage(String type, String roomId) throws ParseException {
-        return ChatMessage.builder()
-                .type(ChatMessage.MessageType.valueOf(type))
-                .roomId(roomId)
-                .sender("")
-                .co_nickName("")
-                .profileImg("")
-                .content("")
-                .createdDate("").
-                build();
     }
 
     private JSONArray getJSONArray(Object object) throws Exception{

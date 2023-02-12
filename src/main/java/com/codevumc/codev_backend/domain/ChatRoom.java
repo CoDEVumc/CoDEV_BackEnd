@@ -11,6 +11,7 @@ public class ChatRoom {
     private String roomId;
     private RoomType room_type;
     private String room_title;
+    private String mainImg;
     private int isRead;
     private boolean status;
     private String receiverCo_email;

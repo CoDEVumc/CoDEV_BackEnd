@@ -9,9 +9,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 
 public interface CoChatService {
-    CoDevResponse createChatRoom(ChatRoom chatRoom);
+    CoDevResponse createChatRoom(ChatRoom chatRoom, String self_email);
     CoDevResponse getChatRooms(String co_email);
-    CoDevResponse inviteUser(String roomId, JSONArray co_emails, String self_email);
+    CoDevResponse inviteUser(String roomId, JSONArray co_emails);
     void enterChatRoom(String roomId, String co_email, ChatMessage chatMessage);
     void closeChatRoom(String roomId, String co_email);
     CoDevResponse getChatRoom(String roomId);
