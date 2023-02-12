@@ -44,9 +44,7 @@ public class CoChatController extends JwtController {
         if(ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             coChatService.enterChatRoom(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage);
         } else if(ChatMessage.MessageType.TALK.equals(chatMessage.getType())) {
-            ChatMessage nextDay = coChatService.sendMessage(chatMessage);
-            if(nextDay != null)
-                sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), nextDay);
+            coChatService.sendMessage(chatMessage, sendingOperations);
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
@@ -65,12 +63,12 @@ public class CoChatController extends JwtController {
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(chat.get("roomId"))
                 .room_type(ChatRoom.RoomType.valueOf(chat.get("room_type")))
-                .room_title(chat.get("co_title"))
+                .room_title(chat.get("room_title"))
                 .build();
         if(chat.get("mainImg") != null)
             chatRoom.setMainImg(chat.get("mainImg"));
 
-        return coChatService.createChatRoom(chatRoom, getCoUserEmail(request));
+        return coChatService.createChatRoom(request, chatRoom, getCoUserEmail(request));
     }
 
     @GetMapping("/rooms")
@@ -108,7 +106,13 @@ public class CoChatController extends JwtController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(data);
-        CoUser coUser = coChatService.getUserInfo(jsonObject.get("sender").toString());
+            CoUser coUser = coChatService.getUserInfo(jsonObject.get("sender").toString());
+        String[] classification = jsonObject.get("roomId").toString().split("_");
+        boolean isPm = false;
+
+        if(classification[0].equals("OTM"))
+            isPm = coChatService.isBoardAdmin(classification[1], Long.parseLong(classification[2]), jsonObject.get("sender").toString());
+
         return ChatMessage.builder()
                 .type(ChatMessage.MessageType.valueOf(jsonObject.get("type").toString()))
                 .roomId(jsonObject.get("roomId").toString())
@@ -116,6 +120,7 @@ public class CoChatController extends JwtController {
                 .co_nickName(coUser.getCo_nickName())
                 .profileImg(coUser.getProfileImg())
                 .content(jsonObject.get("content").toString())
+                .isPm(isPm)
                 .createdDate(sdf.format(timestamp)).build();
     }
 

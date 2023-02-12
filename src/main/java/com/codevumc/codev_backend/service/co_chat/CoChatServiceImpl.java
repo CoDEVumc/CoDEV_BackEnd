@@ -10,15 +10,16 @@ import com.codevumc.codev_backend.mapper.CoChatMapper;
 import com.codevumc.codev_backend.mongo_repository.ChatMessageRepository;
 import com.codevumc.codev_backend.service.ResponseService;
 import org.json.simple.JSONArray;
+import org.mockito.internal.verification.Times;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 public class CoChatServiceImpl extends ResponseService implements CoChatService{
@@ -33,15 +34,16 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public CoDevResponse createChatRoom(ChatRoom chatRoom, String self_email) {
+    public CoDevResponse createChatRoom(HttpServletRequest request, ChatRoom chatRoom, String self_email) {
         try {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             coChatMapper.createChatRoom(chatRoom);
-            coChatMapper.inviteUser(chatRoom.getRoomId(), self_email);
-            coChatMapper.inviteUser(chatRoom.getRoomId(), "TEMP");
+            coChatMapper.inviteUser(chatRoom.getRoomId(), self_email, timestamp);
+            coChatMapper.inviteTemp(chatRoom.getRoomId(), "TEMP");
             return setResponse(200, "message", "채팅방이 생성되었습니다.");
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+            request.setAttribute("exception", "DUPLICATEERROR");
+            throw new AuthenticationCustomException(ErrorCode.DUPLICATEERROR);
         }
     }
 
@@ -66,10 +68,12 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     @Override
     public CoDevResponse inviteUser(String roomId, JSONArray co_emails) {
         try {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             for(Object email : co_emails) {
                 String co_email = (String) email;
-                coChatMapper.inviteUser(roomId, co_email);
+                coChatMapper.inviteUser(roomId, co_email, timestamp);
             }
+            coChatMapper.updateTime(new Timestamp(System.currentTimeMillis()), roomId);
             return setResponse(200, "message", "채팅방에 초대하였습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,7 +117,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public ChatMessage sendMessage(ChatMessage chatMessage) throws ParseException {
+    public void sendMessage(ChatMessage chatMessage, SimpMessageSendingOperations sendingOperations) throws ParseException {
         //읽음 처리용
         coChatMapper.sendMessage(chatMessage.getRoomId());
 
@@ -121,21 +125,39 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
 
         String lastDay = latestDate != null ? latestDate.getCreatedDate() : "0000-00-00";
 
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         if(sdf.parse(lastDay).before(sdf.parse(chatMessage.getCreatedDate()))) {
-            ChatMessage nextDay = ChatMessage.builder()
+            ChatMessage notice = ChatMessage.builder()
                     .type(ChatMessage.MessageType.DAY)
                     .roomId(chatMessage.getRoomId())
                     .content(now())
                     .createdDate(chatMessage.getCreatedDate()).build();
-            chatMessageRepository.save(nextDay);
-            chatMessageRepository.save(chatMessage);
-            return nextDay;
+            chatMessageRepository.save(notice);
+            sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), notice);
+
+            if(lastDay.equals("0000-00-00")) {
+                StringBuffer sb = new StringBuffer();
+                sb.append(chatMessage.getCo_nickName());
+                sb.append("님이 ");
+                List<String> co_nickNames = coChatMapper.getNickNames(chatMessage.getRoomId(), chatMessage.getSender());
+                for(int i = 0; i < co_nickNames.size(); i++) {
+                    sb.append(co_nickNames.get(i));
+                    sb.append("님");
+                    if(i != co_nickNames.size() - 1)
+                        sb.append(", ");
+                }
+                sb.append("을 초대했습니다.");
+                notice.setType(ChatMessage.MessageType.INVITE);
+                notice.setContent(sb.toString());
+                chatMessageRepository.save(notice);
+                sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), notice);
+            }
+
         }
 
         chatMessageRepository.save(chatMessage);
         coChatMapper.updateTime(new Timestamp(System.currentTimeMillis()), chatMessage.getRoomId());
-        return null;
     }
 
     @Override
@@ -160,5 +182,14 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 E요일", Locale.KOREA);
         return sdf.format(timestamp);
+    }
+
+    public boolean isBoardAdmin(String boardType, long co_boardId, String co_email) {
+        Map<String, Object> boardDto = new HashMap<String, Object>();
+        boardDto.put("boardType", boardType);
+        boardDto.put("co_boardId", co_boardId);
+        boardDto.put("co_email", co_email);
+
+        return coChatMapper.isBoardAdmin(boardDto);
     }
 }
