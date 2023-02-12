@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -23,7 +24,9 @@ public interface CoChatMapper {
     List<ChatRoomOfUser> getChatRoomUser(@Param("roomId") String roomId);
 
     //채팅방 초대
-    void inviteUser(@Param("roomId") String roomId, @Param("co_email") String co_email);
+    void inviteUser(@Param("roomId") String roomId, @Param("co_email") String co_email, @Param("updatedAt") Timestamp updatedAt);
+
+    void inviteTemp(@Param("roomId") String roomId, @Param("co_email") String co_email);
 
     //채팅방 입장
     void readMessage(@Param("roomId") String roomId, @Param("co_email") String co_email);
@@ -47,4 +50,9 @@ public interface CoChatMapper {
     CoUser getUserInfo(@Param("co_email") String co_email);
 
     void updateTime(@Param("updatedAt") Timestamp updatedAt, @Param("roomId") String roomId);
+
+
+    List<String> getNickNames(@Param("roomId") String roomId, @Param("co_email") String co_email);
+
+    boolean isBoardAdmin(Map<String, Object> boardDto);
 }
