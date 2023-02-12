@@ -223,7 +223,9 @@
                 where cros.co_temporaryStorage = true
             </when>
             <otherwise>
-                where cros.co_studyId = #{co_studyId} and cpos.co_part = #{co_part}
+                where cros.co_studyId = #{co_studyId}
+                    and cpos.co_part = #{co_part}
+                    and cros.co_temporaryStorage = false
             </otherwise>
         </choose>
         order by cros.createdAt asc;
@@ -236,7 +238,8 @@
         from CoPartOfStudy cpos
                  left join (select cros.co_studyId as 'co_studyId', count(*) as 'co_applicantCount'
                             from CoRecruitOfStudy cros
-                            where cros.co_studyId = #{co_studyId}) cros on cros.co_studyId = cpos.co_studyId
+                            where cros.co_studyId = #{co_studyId}
+                              and cros.co_temporaryStorage = false) cros on cros.co_studyId = cpos.co_studyId
         where cpos.co_studyId = #{co_studyId};
     </select>
 
