@@ -81,7 +81,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     public void enterChatRoom(String roomId, String co_email, ChatMessage chatMessage) {
         coChatMapper.readMessage(roomId, co_email);
         coChatMapper.enterChatRoom(roomId, co_email);
-        chatMessageRepository.save(chatMessage);
+        //chatMessageRepository.save(chatMessage);
     }
 
     @Override
