@@ -33,9 +33,11 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public CoDevResponse createChatRoom(ChatRoom chatRoom) {
+    public CoDevResponse createChatRoom(ChatRoom chatRoom, String self_email) {
         try {
             coChatMapper.createChatRoom(chatRoom);
+            coChatMapper.inviteUser(chatRoom.getRoomId(), self_email);
+            coChatMapper.inviteUser(chatRoom.getRoomId(), "TEMP");
             return setResponse(200, "message", "채팅방이 생성되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,9 +64,8 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     }
 
     @Override
-    public CoDevResponse inviteUser(String roomId, JSONArray co_emails, String self_email) {
+    public CoDevResponse inviteUser(String roomId, JSONArray co_emails) {
         try {
-            coChatMapper.inviteUser(roomId, self_email);
             for(Object email : co_emails) {
                 String co_email = (String) email;
                 coChatMapper.inviteUser(roomId, co_email);
@@ -133,7 +134,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
         }
 
         chatMessageRepository.save(chatMessage);
-
+        coChatMapper.updateTime(new Timestamp(System.currentTimeMillis()), chatMessage.getRoomId());
         return null;
     }
 

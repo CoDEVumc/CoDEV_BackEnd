@@ -7,6 +7,7 @@ import com.codevumc.codev_backend.domain.CoUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,4 +45,6 @@ public interface CoChatMapper {
 
     //프로필 가져오기
     CoUser getUserInfo(@Param("co_email") String co_email);
+
+    void updateTime(@Param("updatedAt") Timestamp updatedAt, @Param("roomId") String roomId);
 }
