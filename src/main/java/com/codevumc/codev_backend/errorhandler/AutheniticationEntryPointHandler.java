@@ -26,6 +26,11 @@ public class AutheniticationEntryPointHandler implements AuthenticationEntryPoin
             return;
         }
 
+        if(exception.equals("FAILEDPUSHNOTIFICATION")) {
+            errorCode = ErrorCode.FAILEDPUSHNOTIFICATION;
+            setResponse(response, errorCode);
+        }
+
         if(exception.equals("DUPLICATEERROR")) {
             errorCode = ErrorCode.DUPLICATEERROR;
             setResponse(response, errorCode);

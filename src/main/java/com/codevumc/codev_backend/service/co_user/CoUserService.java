@@ -23,4 +23,5 @@ public interface CoUserService {
     CoDevResponse isExistedEmail(String co_email);
 
     CoDevResponse updatePassword(HttpServletRequest request, CoUser coUser);
+
 }
