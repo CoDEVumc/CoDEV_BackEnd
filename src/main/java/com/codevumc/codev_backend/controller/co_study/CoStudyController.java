@@ -185,8 +185,8 @@ public class CoStudyController extends JwtController {
     @PatchMapping("/recruitment/completion/{coStudyId}")
     public CoDevResponse completeCoStudyRecruitment(HttpServletRequest request,
                                                     @PathVariable("coStudyId") long coStudyId,
-                                                    @RequestBody CoStudy coApplicantList) throws Exception {
-        return coStudyRecruitService.completeCoStudyRecruitment(getCoUserEmail(request), coStudyId, coApplicantList);
+                                                    @RequestBody Map<String, Object> user) throws Exception {
+        return coStudyRecruitService.completeCoStudyRecruitment(getCoUserEmail(request), coStudyId, getJSONArray(user.get("co_emails")));
     }
 
     @GetMapping("/recruitment/{coStudyId}")
