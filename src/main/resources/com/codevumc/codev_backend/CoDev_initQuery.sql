@@ -1,514 +1,501 @@
--- 테이블 순서는 관계를 고려하여 한 번에 실행해도 에러가 발생하지 않게 정렬되었습니다.
-
--- CoUser Table Create SQL
--- 테이블 생성 SQL - CoUser
-CREATE TABLE CoUser
+create table if not exists ChatRoom
 (
-    `co_email`     VARCHAR(50)     NOT NULL    COMMENT '이메일', 
-    `co_password`  VARCHAR(50)     NOT NULL    COMMENT '비밀번호', 
-    `co_nickName`  VARCHAR(20)     NOT NULL    COMMENT '닉네임', 
-    `role`         VARCHAR(30)     NOT NULL    DEFAULT 'USER' COMMENT '권한', 
-    `profileImg`   VARCHAR(300)    NULL        DEFAULT 'https://avatars.githubusercontent.com/u/74559561?s=80&v=4' COMMENT '프로필 이미지', 
-    `createdAt`    TIMESTAMP       NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`    TIMESTAMP       NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`       BIT             NOT NULL    DEFAULT true COMMENT '상태. 활성/비활성/탈퇴', 
-     PRIMARY KEY (co_email)
+    roomId      varchar(150)                        not null,
+    room_type   varchar(50)                         not null,
+    room_title  varchar(100)                        null,
+    mainImg     mediumtext                          null,
+    createdDate timestamp default CURRENT_TIMESTAMP not null,
+    primary key (roomId, room_type)
 );
 
--- 테이블 Comment 설정 SQL - CoUser
-ALTER TABLE CoUser COMMENT '사용자 정보';
-
-
--- CoStudy Table Create SQL
--- 테이블 생성 SQL - CoStudy
-CREATE TABLE CoStudy
+create table if not exists ChatRoomOfUser
 (
-    `co_studyId`  BIGINT          NOT NULL    AUTO_INCREMENT COMMENT '스터디 id', 
-    `co_email`    VARCHAR(50)     NOT NULL    COMMENT '이메일', 
-    `co_title`    VARCHAR(100)    NOT NULL    COMMENT '제목', 
-    `co_content`  TEXT            NOT NULL    COMMENT '내용', 
-    `co_logo`     TEXT            NOT NULL    COMMENT '로고 이미지', 
-    `co_limit`    INT             NOT NULL    COMMENT '제한 인원', 
-    `co_process`  BIT             NOT NULL    DEFAULT true COMMENT '진행 상태. 모집중: true / 모집완료: false', 
-    `createdAt`   TIMESTAMP       NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`   TIMESTAMP       NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`      BIT             NOT NULL    DEFAULT true COMMENT '상태. 정상: true / 삭제: false', 
-     PRIMARY KEY (co_studyId)
+    roomId    varchar(150)                        not null,
+    co_email  varchar(50)                         not null,
+    status    bit       default b'0'              not null,
+    isRead    int       default 0                 not null,
+    updatedAt timestamp default CURRENT_TIMESTAMP not null,
+    primary key (roomId, co_email),
+    constraint ChatRoomOfUser_ibfk_1
+        foreign key (roomId) references ChatRoom (roomId)
 );
 
--- 테이블 Comment 설정 SQL - CoStudy
-ALTER TABLE CoStudy COMMENT '스터디 모집 게시판';
-
--- Foreign Key 설정 SQL - CoStudy(co_email) -> CoUser(co_email)
-ALTER TABLE CoStudy
-    ADD CONSTRAINT FK_CoStudy_co_email_CoUser_co_email FOREIGN KEY (co_email)
-        REFERENCES CoUser (co_email) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoStudy(co_email)
--- ALTER TABLE CoStudy
--- DROP FOREIGN KEY FK_CoStudy_co_email_CoUser_co_email;
-
-
--- CoProject Table Create SQL
--- 테이블 생성 SQL - CoProject
-CREATE TABLE CoProject
+create table if not exists CoChat
 (
-    `co_project`  BIGINT          NOT NULL    AUTO_INCREMENT COMMENT '프로젝트 id', 
-    `co_email`    VARCHAR(50)     NOT NULL    COMMENT '이메일', 
-    `co_title`    VARCHAR(100)    NOT NULL    COMMENT '제목', 
-    `co_content`  TEXT            NOT NULL    COMMENT '내용', 
-    `co_mainImg`  TEXT            NULL        COMMENT '대표 이미지. 글 대표 이미지 -> 10장 중 랜덤 1장', 
-    `co_limit`    INT             NOT NULL    COMMENT '제한 인원', 
-    `co_process`  BIT             NOT NULL    DEFAULT true COMMENT '진행 상태. 모집중: true / 모집완료: false', 
-    `createdAt`   TIMESTAMP       NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`   TIMESTAMP       NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`      BIT             NOT NULL    DEFAULT true COMMENT '상태. 정상: true / 삭제: false', 
-     PRIMARY KEY (co_project)
-);
+    co_chatName  varchar(100)                        not null comment '채팅방이름'
+        primary key,
+    chatType     varchar(3)                          not null comment '타입. 1:1 -> QA  1:N -> DEV',
+    co_chatFile  text                                not null comment '채팅파일로그',
+    createdAt    timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    co_chatImage text                                not null comment '채팅방 이미지'
+)
+    charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoProject
-ALTER TABLE CoProject COMMENT '프로젝트 모집 게시판';
-
--- Foreign Key 설정 SQL - CoProject(co_email) -> CoUser(co_email)
-ALTER TABLE CoProject
-    ADD CONSTRAINT FK_CoProject_co_email_CoUser_co_email FOREIGN KEY (co_email)
-        REFERENCES CoUser (co_email) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoProject(co_email)
--- ALTER TABLE CoProject
--- DROP FOREIGN KEY FK_CoProject_co_email_CoUser_co_email;
-
-
--- CoLanguage Table Create SQL
--- 테이블 생성 SQL - CoLanguage
-CREATE TABLE CoLanguage
+create table if not exists CoLocation
 (
-    `co_languageId`  BIGINT         NOT NULL    AUTO_INCREMENT COMMENT '언어 id', 
-    `co_language`    VARCHAR(45)    NOT NULL    COMMENT '언어 이름', 
-    `co_logo`        VARCHAR(45)    NOT NULL    COMMENT '로고 이미지', 
-    `createdAt`      TIMESTAMP      NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`      TIMESTAMP      NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-     PRIMARY KEY (co_languageId)
-);
+    co_location varchar(50)                         not null comment '지역명'
+        primary key,
+    status      bit       default b'1'              not null comment '상태',
+    createdAt   timestamp default CURRENT_TIMESTAMP not null comment '생성 시간',
+    updatedAt   timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간'
+)
+    comment '지역 카테고리' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoLanguage
-ALTER TABLE CoLanguage COMMENT '언어 카테고리';
-
-
--- CoChat Table Create SQL
--- 테이블 생성 SQL - CoChat
-CREATE TABLE CoChat
+create table if not exists CoMainImg
 (
-    `co_chatName`   VARCHAR(100)    NOT NULL    COMMENT '채팅방이름', 
-    `chatType`      VARCHAR(3)      NOT NULL    COMMENT '타입. 1:1 -> QA  1:N -> DEV', 
-    `co_chatFile`   TEXT            NOT NULL    COMMENT '채팅파일로그', 
-    `createdAt`      TIMESTAMP       NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `co_chatImage`  text            NOT NULL    COMMENT '채팅방 이미지', 
-     PRIMARY KEY (co_chatName)
-);
+    co_mainImgId bigint auto_increment comment '대표 이미지 id'
+        primary key,
+    co_mainImg   text                                not null comment '대표 이미지',
+    createdAt    timestamp default CURRENT_TIMESTAMP not null comment '생성 시간',
+    updatedAt    timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status       bit       default b'1'              not null comment '상태'
+)
+    charset = utf8;
 
-
--- CoPart Table Create SQL
--- 테이블 생성 SQL - CoPart
-CREATE TABLE CoPart
+create table if not exists CoPart
 (
-    `co_partId`  BIGINT         NOT NULL    AUTO_INCREMENT COMMENT '파트 id', 
-    `co_part`    VARCHAR(45)    NOT NULL    COMMENT '파트 명', 
-    `createdAt`  TIMESTAMP      NOT NULL    DEFAULT current_timestamp COMMENT '생성 시간', 
-    `updatedAt`  TIMESTAMP      NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-     PRIMARY KEY (co_partId)
-);
+    co_part   varchar(45)                         not null comment '파트 명'
+        primary key,
+    createdAt timestamp default CURRENT_TIMESTAMP not null comment '생성 시간',
+    updatedAt timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간'
+)
+    comment '파트 카테고리' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoPart
-ALTER TABLE CoPart COMMENT '파트 카테고리';
-
-
--- CoLanguageOfProject Table Create SQL
--- 테이블 생성 SQL - CoLanguageOfProject
-CREATE TABLE CoLanguageOfProject
+create table if not exists CoLanguage
 (
-    `co_lopId`       BIGINT       NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_projectId`   BIGINT       NOT NULL    COMMENT '프로젝트 id', 
-    `co_languageId`  BIGINT       NOT NULL    COMMENT '언어 id', 
-    `createdAt`      TIMESTAMP    NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`      TIMESTAMP    NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`         BIT          NOT NULL    DEFAULT true COMMENT '상태. 정상: true / 삭제: false', 
-     PRIMARY KEY (co_lopId)
-);
+    co_languageId bigint auto_increment comment '언어 id'
+        primary key,
+    co_part       varchar(45)                         not null comment '파트 명',
+    co_language   varchar(45)                         not null comment '언어 이름',
+    co_logo       text                                not null comment '로고 이미지',
+    createdAt     timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt     timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    constraint FK_CoLanguage_co_part_CoPart_co_part
+        foreign key (co_part) references CoPart (co_part)
+)
+    comment '언어 카테고리' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoLanguageOfProject
-ALTER TABLE CoLanguageOfProject COMMENT '프로젝트에서 사용하는 언어 저장 테이블';
-
--- Foreign Key 설정 SQL - CoLanguageOfProject(co_languageId) -> CoLanguage(co_languageId)
-ALTER TABLE CoLanguageOfProject
-    ADD CONSTRAINT FK_CoLanguageOfProject_co_languageId_CoLanguage_co_languageId FOREIGN KEY (co_languageId)
-        REFERENCES CoLanguage (co_languageId) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoLanguageOfProject(co_languageId)
--- ALTER TABLE CoLanguageOfProject
--- DROP FOREIGN KEY FK_CoLanguageOfProject_co_languageId_CoLanguage_co_languageId;
-
--- Foreign Key 설정 SQL - CoLanguageOfProject(co_projectId) -> CoProject(co_project)
-ALTER TABLE CoLanguageOfProject
-    ADD CONSTRAINT FK_CoLanguageOfProject_co_projectId_CoProject_co_project FOREIGN KEY (co_projectId)
-        REFERENCES CoProject (co_project) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoLanguageOfProject(co_projectId)
--- ALTER TABLE CoLanguageOfProject
--- DROP FOREIGN KEY FK_CoLanguageOfProject_co_projectId_CoProject_co_project;
-
-
--- CoLanguageOfUser Table Create SQL
--- 테이블 생성 SQL - CoLanguageOfUser
-CREATE TABLE CoLanguageOfUser
+create table if not exists CoPhotos
 (
-    `co_louId`       BIGINT         NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_email`       VARCHAR(50)    NOT NULL    COMMENT '이메일', 
-    `co_languageId`  BIGINT         NOT NULL    COMMENT '언어 id', 
-    `createdAt`      TIMESTAMP      NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`      TIMESTAMP      NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-     PRIMARY KEY (co_louId)
-);
+    co_photoId          bigint auto_increment comment '사진 id'
+        primary key,
+    co_targetId         varchar(100)                        not null comment '타겟 id',
+    co_type             varchar(20)                         not null comment '타입',
+    co_uuId             text                                not null comment 'uuid',
+    co_fileName         text                                not null comment '파일명',
+    co_filePath         text                                not null comment '파일 경로',
+    co_fileUrl          text                                not null comment '사진 url',
+    co_fileDownloadPath text                                not null comment '파일 다운로드 경로',
+    co_fileSize         double                              not null comment '파일 크기',
+    createdAt           timestamp default CURRENT_TIMESTAMP not null comment '생성 시간'
+)
+    comment '사진 저장 테이블' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoLanguageOfUser
-ALTER TABLE CoLanguageOfUser COMMENT '사용자가 사용하는 언어 설정 -> 삭제 시 delete문 사용할 예정!';
-
--- Foreign Key 설정 SQL - CoLanguageOfUser(co_languageId) -> CoLanguage(co_languageId)
-ALTER TABLE CoLanguageOfUser
-    ADD CONSTRAINT FK_CoLanguageOfUser_co_languageId_CoLanguage_co_languageId FOREIGN KEY (co_languageId)
-        REFERENCES CoLanguage (co_languageId) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoLanguageOfUser(co_languageId)
--- ALTER TABLE CoLanguageOfUser
--- DROP FOREIGN KEY FK_CoLanguageOfUser_co_languageId_CoLanguage_co_languageId;
-
--- Foreign Key 설정 SQL - CoLanguageOfUser(co_email) -> CoUser(co_email)
-ALTER TABLE CoLanguageOfUser
-    ADD CONSTRAINT FK_CoLanguageOfUser_co_email_CoUser_co_email FOREIGN KEY (co_email)
-        REFERENCES CoUser (co_email) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoLanguageOfUser(co_email)
--- ALTER TABLE CoLanguageOfUser
--- DROP FOREIGN KEY FK_CoLanguageOfUser_co_email_CoUser_co_email;
-
-
--- CoRecruit Table Create SQL
--- 테이블 생성 SQL - CoRecruit
-CREATE TABLE CoRecruit
+create table if not exists CoUser
 (
-    `co_recruitId`  BIGINT         NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_email`      VARCHAR(50)    NOT NULL    COMMENT '이메일', 
-    `co_projectId`  BIGINT         NOT NULL    COMMENT '프로젝트 id', 
-    `co_partId`     BIGINT         NOT NULL    COMMENT '파트 id', 
-    `isApproved`    BIT            NOT NULL    DEFAULT false COMMENT '승인 여부', 
-    `createdAt`     TIMESTAMP      NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`     TIMESTAMP      NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`        BIT            NOT NULL    DEFAULT true COMMENT '상태. 정상: true / 삭제: false', 
-     PRIMARY KEY (co_recruitId)
-);
+    co_email     varchar(50)                                                                                         not null comment '이메일'
+        primary key,
+    co_password  mediumtext                                                                                          not null comment '비밀번호',
+    co_nickName  varchar(20)                                                                                         not null comment '닉네임',
+    co_name      varchar(30)                                                                                         not null comment '이름',
+    co_birth     varchar(45)  default '20202020'                                                                     not null comment '나이',
+    co_gender    varchar(45)  default 'temp'                                                                         not null comment '성볇',
+    role         varchar(30)  default 'USER'                                                                         not null comment '권한',
+    profileImg   varchar(300) default 'http://semtle.catholic.ac.kr:8080/image?name=Profile_Basic20230130012110.png' null comment '프로필 이미지',
+    co_loginType varchar(50)                                                                                         not null,
+    createdAt    timestamp    default CURRENT_TIMESTAMP                                                              not null comment '생성시간',
+    status       bit          default b'1'                                                                           not null comment '상태. 활성/비활성/탈퇴',
+    updatedAt    timestamp    default CURRENT_TIMESTAMP                                                              not null on update CURRENT_TIMESTAMP comment '업데이트 시간'
+)
+    comment '사용자 정보';
 
--- 테이블 Comment 설정 SQL - CoRecruit
-ALTER TABLE CoRecruit COMMENT '사용자가 지원한 프로젝트';
-
--- Foreign Key 설정 SQL - CoRecruit(co_email) -> CoUser(co_email)
-ALTER TABLE CoRecruit
-    ADD CONSTRAINT FK_CoRecruit_co_email_CoUser_co_email FOREIGN KEY (co_email)
-        REFERENCES CoUser (co_email) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoRecruit(co_email)
--- ALTER TABLE CoRecruit
--- DROP FOREIGN KEY FK_CoRecruit_co_email_CoUser_co_email;
-
--- Foreign Key 설정 SQL - CoRecruit(co_projectId) -> CoProject(co_project)
-ALTER TABLE CoRecruit
-    ADD CONSTRAINT FK_CoRecruit_co_projectId_CoProject_co_project FOREIGN KEY (co_projectId)
-        REFERENCES CoProject (co_project) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoRecruit(co_projectId)
--- ALTER TABLE CoRecruit
--- DROP FOREIGN KEY FK_CoRecruit_co_projectId_CoProject_co_project;
-
-
--- CoHeartOfProject Table Create SQL
--- 테이블 생성 SQL - CoHeartOfProject
-CREATE TABLE CoHeartOfProject
+create table if not exists CoLanguageOfUser
 (
-    `co_hopId`      BIGINT         NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_email`      VARCHAR(50)    NOT NULL    COMMENT '이메일', 
-    `co_projectId`  BIGINT         NOT NULL    COMMENT '프로젝트 id', 
-    `createdAt`     TIMESTAMP      NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`     TIMESTAMP      NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`        BIT            NOT NULL    DEFAULT true COMMENT '상태', 
-     PRIMARY KEY (co_hopId)
-);
+    co_louId      bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_email      varchar(50)                         not null comment '이메일',
+    co_languageId bigint                              not null comment '언어 id',
+    createdAt     timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt     timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    constraint FK_CoLanguageOfUser_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email),
+    constraint FK_CoLanguageOfUser_co_languageId_CoLanguage_co_languageId
+        foreign key (co_languageId) references CoLanguage (co_languageId)
+)
+    comment '사용자가 사용하는 언어 설정 -> 삭제 시 delete문 사용할 예정!' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoHeartOfProject
-ALTER TABLE CoHeartOfProject COMMENT '프로젝트 모집글 찜하기';
-
--- Foreign Key 설정 SQL - CoHeartOfProject(co_email) -> CoUser(co_email)
-ALTER TABLE CoHeartOfProject
-    ADD CONSTRAINT FK_CoHeartOfProject_co_email_CoUser_co_email FOREIGN KEY (co_email)
-        REFERENCES CoUser (co_email) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoHeartOfProject(co_email)
--- ALTER TABLE CoHeartOfProject
--- DROP FOREIGN KEY FK_CoHeartOfProject_co_email_CoUser_co_email;
-
--- Foreign Key 설정 SQL - CoHeartOfProject(co_projectId) -> CoProject(co_project)
-ALTER TABLE CoHeartOfProject
-    ADD CONSTRAINT FK_CoHeartOfProject_co_projectId_CoProject_co_project FOREIGN KEY (co_projectId)
-        REFERENCES CoProject (co_project) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoHeartOfProject(co_projectId)
--- ALTER TABLE CoHeartOfProject
--- DROP FOREIGN KEY FK_CoHeartOfProject_co_projectId_CoProject_co_project;
-
-
--- CoChatOfProject Table Create SQL
--- 테이블 생성 SQL - CoChatOfProject
-CREATE TABLE CoChatOfProject
+create table if not exists CoPortfolio
 (
-    `co_email`     VARCHAR(50)     NOT NULL    COMMENT '이메일', 
-    `co_chatName`  VARCHAR(100)    NOT NULL    COMMENT '채팅방이름', 
-     PRIMARY KEY (co_email, co_chatName)
-);
+    co_portfolioId  bigint auto_increment comment '포트폴리오 id'
+        primary key,
+    co_email        varchar(50)                         not null comment '이메일',
+    co_title        varchar(100)                        not null comment '제목',
+    co_rank         varchar(20)                         not null comment '개발 능력',
+    co_headLine     varchar(60)                         not null comment '나를 표현하는 한마디',
+    co_introduction text                                not null comment '자기소개',
+    createdAt       timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt       timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status          bit       default b'1'              not null comment '상태',
+    constraint FK_CoPortfolio_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email)
+)
+    comment '포트폴리오' charset = utf8;
 
--- Foreign Key 설정 SQL - CoChatOfProject(co_email) -> CoUser(co_email)
-ALTER TABLE CoChatOfProject
-    ADD CONSTRAINT FK_CoChatOfProject_co_email_CoUser_co_email FOREIGN KEY (co_email)
-        REFERENCES CoUser (co_email) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoChatOfProject(co_email)
--- ALTER TABLE CoChatOfProject
--- DROP FOREIGN KEY FK_CoChatOfProject_co_email_CoUser_co_email;
-
--- Foreign Key 설정 SQL - CoChatOfProject(co_chatName) -> CoChat(co_chatName)
-ALTER TABLE CoChatOfProject
-    ADD CONSTRAINT FK_CoChatOfProject_co_chatName_CoChat_co_chatName FOREIGN KEY (co_chatName)
-        REFERENCES CoChat (co_chatName) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoChatOfProject(co_chatName)
--- ALTER TABLE CoChatOfProject
--- DROP FOREIGN KEY FK_CoChatOfProject_co_chatName_CoChat_co_chatName;
-
-
--- CoPartOfProject Table Create SQL
--- 테이블 생성 SQL - CoPartOfProject
-CREATE TABLE CoPartOfProject
+create table if not exists CoLanguageOfPortfolio
 (
-    `co_popId`      BIGINT       NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_projectId`  BIGINT       NOT NULL    COMMENT '프로젝트 id', 
-    `co_partId`     BIGINT       NOT NULL    COMMENT '파트 id', 
-    `createdAt`     TIMESTAMP    NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`     TIMESTAMP    NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`        BIT          NOT NULL    DEFAULT true COMMENT '상태. 정상: true / 삭제: false', 
-     PRIMARY KEY (co_popId)
-);
+    co_lopfId      bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_portfolioId bigint                              not null,
+    co_languageId  bigint                              not null comment '언어 id',
+    createdAt      timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt      timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status         bit       default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint CoLanguageOfPortfolio_CoPortfolio_co_portfolioId_fk
+        foreign key (co_portfolioId) references CoPortfolio (co_portfolioId)
+            on delete cascade,
+    constraint FK_CoLanguageOfPotfolio_co_languageId_CoLanguage_co_languageId
+        foreign key (co_languageId) references CoLanguage (co_languageId)
+)
+    comment '프로젝트에서 사용하는 언어 저장 테이블' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoPartOfProject
-ALTER TABLE CoPartOfProject COMMENT '프로젝트에서 사용하는 파트 저장 테이블';
-
--- Foreign Key 설정 SQL - CoPartOfProject(co_partId) -> CoPart(co_partId)
-ALTER TABLE CoPartOfProject
-    ADD CONSTRAINT FK_CoPartOfProject_co_partId_CoPart_co_partId FOREIGN KEY (co_partId)
-        REFERENCES CoPart (co_partId) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoPartOfProject(co_partId)
--- ALTER TABLE CoPartOfProject
--- DROP FOREIGN KEY FK_CoPartOfProject_co_partId_CoPart_co_partId;
-
--- Foreign Key 설정 SQL - CoPartOfProject(co_projectId) -> CoProject(co_project)
-ALTER TABLE CoPartOfProject
-    ADD CONSTRAINT FK_CoPartOfProject_co_projectId_CoProject_co_project FOREIGN KEY (co_projectId)
-        REFERENCES CoProject (co_project) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoPartOfProject(co_projectId)
--- ALTER TABLE CoPartOfProject
--- DROP FOREIGN KEY FK_CoPartOfProject_co_projectId_CoProject_co_project;
-
-
--- CoHeartOfStudy Table Create SQL
--- 테이블 생성 SQL - CoHeartOfStudy
-CREATE TABLE CoHeartOfStudy
+create table if not exists CoLinkOfPortfolio
 (
-    `co_hosId`    BIGINT         NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_email`    VARCHAR(50)    NOT NULL    COMMENT '이메일', 
-    `co_studyId`  BIGINT         NOT NULL    COMMENT '스터디 id', 
-    `createdAt`   TIMESTAMP      NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`   TIMESTAMP      NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`      BIT            NULL        DEFAULT true COMMENT '상태', 
-     PRIMARY KEY (co_hosId)
-);
+    co_lopId       bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_portfolioId bigint                              not null comment '포트폴리오 id',
+    co_link        text                                not null comment '링크',
+    createdAt      timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt      timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    constraint FK_CoLinkOfPortfolio_co_portfolioId_CoPortfolio_co_portfolioId
+        foreign key (co_portfolioId) references CoPortfolio (co_portfolioId)
+            on delete cascade
+)
+    comment '깃허브, 외부 링크' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoHeartOfStudy
-ALTER TABLE CoHeartOfStudy COMMENT '스터디 모집글 찜하기';
+create definer = codev@`%` trigger DELETE_LANGUAGES_WHEN_PORTFOLIO_UPDATED
+    after update
+    on CoPortfolio
+    for each row
+begin
+    delete from CoLanguageOfPortfolio where CoLanguageOfPortfolio.co_portfolioId = OLD.co_portfolioId;
+end;
 
--- Foreign Key 설정 SQL - CoHeartOfStudy(co_studyId) -> CoStudy(co_studyId)
-ALTER TABLE CoHeartOfStudy
-    ADD CONSTRAINT FK_CoHeartOfStudy_co_studyId_CoStudy_co_studyId FOREIGN KEY (co_studyId)
-        REFERENCES CoStudy (co_studyId) ON DELETE RESTRICT ON UPDATE RESTRICT;
+create definer = codev@`%` trigger DELETE_LINKS_WHEN_PORTFOLIO_UPDATED
+    after update
+    on CoPortfolio
+    for each row
+begin
+    delete from CoLinkOfPortfolio  where co_portfolioId = OLD.co_portfolioId;
+end;
 
--- Foreign Key 삭제 SQL - CoHeartOfStudy(co_studyId)
--- ALTER TABLE CoHeartOfStudy
--- DROP FOREIGN KEY FK_CoHeartOfStudy_co_studyId_CoStudy_co_studyId;
-
--- Foreign Key 설정 SQL - CoHeartOfStudy(co_email) -> CoUser(co_email)
-ALTER TABLE CoHeartOfStudy
-    ADD CONSTRAINT FK_CoHeartOfStudy_co_email_CoUser_co_email FOREIGN KEY (co_email)
-        REFERENCES CoUser (co_email) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoHeartOfStudy(co_email)
--- ALTER TABLE CoHeartOfStudy
--- DROP FOREIGN KEY FK_CoHeartOfStudy_co_email_CoUser_co_email;
-
-
--- CoLanguageOfStudy Table Create SQL
--- 테이블 생성 SQL - CoLanguageOfStudy
-CREATE TABLE CoLanguageOfStudy
+create table if not exists CoProject
 (
-    `co_losId`       BIGINT       NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_studyId`     BIGINT       NOT NULL    COMMENT '스터디 id', 
-    `co_languageId`  BIGINT       NOT NULL    COMMENT '언어 id', 
-    `createdAt`      TIMESTAMP    NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`      TIMESTAMP    NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`         BIT          NOT NULL    DEFAULT true COMMENT '상태. 정상: true / 삭제: false', 
-     PRIMARY KEY (co_losId)
-);
+    co_projectId bigint auto_increment comment '프로젝트 id',
+    co_email     varchar(50)                           not null comment '이메일',
+    co_title     varchar(100)                          not null comment '제목',
+    co_location  varchar(50)                           not null comment '지역명',
+    co_content   mediumtext                            not null comment '내용',
+    co_mainImg   mediumtext                            null comment '대표 이미지. 글 대표 이미지 -> 10장 중 랜덤 1장',
+    co_process   varchar(10) default 'ING'             not null comment '진행 상태. 모집중: ING / 심사기간: TEST / 종료: FIN',
+    co_deadLine  timestamp                             null comment '마감 기한',
+    createdAt    timestamp   default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt    timestamp   default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status       bit         default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    primary key (co_projectId, co_location),
+    constraint FK_CoProject_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email),
+    constraint FK_CoProject_co_location_CoLocation_co_location
+        foreign key (co_location) references CoLocation (co_location)
+)
+    comment '프로젝트 모집 게시판';
 
--- 테이블 Comment 설정 SQL - CoLanguageOfStudy
-ALTER TABLE CoLanguageOfStudy COMMENT '스터디에서 사용하는 언어 저장 테이블';
-
--- Foreign Key 설정 SQL - CoLanguageOfStudy(co_studyId) -> CoStudy(co_studyId)
-ALTER TABLE CoLanguageOfStudy
-    ADD CONSTRAINT FK_CoLanguageOfStudy_co_studyId_CoStudy_co_studyId FOREIGN KEY (co_studyId)
-        REFERENCES CoStudy (co_studyId) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoLanguageOfStudy(co_studyId)
--- ALTER TABLE CoLanguageOfStudy
--- DROP FOREIGN KEY FK_CoLanguageOfStudy_co_studyId_CoStudy_co_studyId;
-
--- Foreign Key 설정 SQL - CoLanguageOfStudy(co_languageId) -> CoLanguage(co_languageId)
-ALTER TABLE CoLanguageOfStudy
-    ADD CONSTRAINT FK_CoLanguageOfStudy_co_languageId_CoLanguage_co_languageId FOREIGN KEY (co_languageId)
-        REFERENCES CoLanguage (co_languageId) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoLanguageOfStudy(co_languageId)
--- ALTER TABLE CoLanguageOfStudy
--- DROP FOREIGN KEY FK_CoLanguageOfStudy_co_languageId_CoLanguage_co_languageId;
-
-
--- CoPartOfStudy Table Create SQL
--- 테이블 생성 SQL - CoPartOfStudy
-CREATE TABLE CoPartOfStudy
+create table if not exists CoHeartOfProject
 (
-    `co_posId`    BIGINT       NOT NULL    AUTO_INCREMENT COMMENT '중간 테이블 id', 
-    `co_studyId`  BIGINT       NOT NULL    COMMENT '스터디 id', 
-    `co_partId`   BIGINT       NOT NULL    COMMENT '파트 id', 
-    `createdAt`   TIMESTAMP    NOT NULL    DEFAULT current_timestamp COMMENT '생성시간', 
-    `updatedAt`   TIMESTAMP    NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`      BIT          NOT NULL    DEFAULT true COMMENT '상태. 정상: true / 삭제: false', 
-     PRIMARY KEY (co_posId)
-);
+    co_hopId     bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_email     varchar(50)                         not null comment '이메일',
+    co_projectId bigint                              not null comment '프로젝트 id',
+    createdAt    timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt    timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status       bit       default b'1'              not null comment '상태',
+    constraint FK_CoHeartOfProject_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email)
+            on delete cascade,
+    constraint FK_CoHeartOfProject_co_projectId_CoProject_co_projectId
+        foreign key (co_projectId) references CoProject (co_projectId)
+            on update cascade on delete cascade
+)
+    comment '프로젝트 모집글 찜하기' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoPartOfStudy
-ALTER TABLE CoPartOfStudy COMMENT '스터디에서 사용하는 파트 저장 테이블';
-
--- Foreign Key 설정 SQL - CoPartOfStudy(co_studyId) -> CoStudy(co_studyId)
-ALTER TABLE CoPartOfStudy
-    ADD CONSTRAINT FK_CoPartOfStudy_co_studyId_CoStudy_co_studyId FOREIGN KEY (co_studyId)
-        REFERENCES CoStudy (co_studyId) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoPartOfStudy(co_studyId)
--- ALTER TABLE CoPartOfStudy
--- DROP FOREIGN KEY FK_CoPartOfStudy_co_studyId_CoStudy_co_studyId;
-
--- Foreign Key 설정 SQL - CoPartOfStudy(co_partId) -> CoPart(co_partId)
-ALTER TABLE CoPartOfStudy
-    ADD CONSTRAINT FK_CoPartOfStudy_co_partId_CoPart_co_partId FOREIGN KEY (co_partId)
-        REFERENCES CoPart (co_partId) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
--- Foreign Key 삭제 SQL - CoPartOfStudy(co_partId)
--- ALTER TABLE CoPartOfStudy
--- DROP FOREIGN KEY FK_CoPartOfStudy_co_partId_CoPart_co_partId;
-
-
--- CoMainImg Table Create SQL
--- 테이블 생성 SQL - CoMainImg
-CREATE TABLE CoMainImg
+create table if not exists CoLanguageOfProject
 (
-    `co_mainImgId`  BIGINT       NOT NULL    AUTO_INCREMENT COMMENT '대표 이미지 id', 
-    `co_mainImg`    TEXT         NOT NULL    COMMENT '대표 이미지', 
-    `createdAt`     TIMESTAMP    NOT NULL    DEFAULT current_timestamp COMMENT '생성 시간', 
-    `updatedAt`     TIMESTAMP    NOT NULL    DEFAULT current_timestamp on update current_timestamp COMMENT '업데이트 시간', 
-    `status`        BIT          NOT NULL    DEFAULT true COMMENT '상태', 
-     PRIMARY KEY (co_mainImgId)
-);
+    co_lopId      bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_projectId  bigint                              not null comment '프로젝트 id',
+    co_languageId bigint                              not null comment '언어 id',
+    createdAt     timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt     timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status        bit       default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint FK_CoLanguageOfProject_co_languageId_CoLanguage_co_languageId
+        foreign key (co_languageId) references CoLanguage (co_languageId),
+    constraint FK_CoLanguageOfProject_co_projectId_CoProject_co_projectId
+        foreign key (co_projectId) references CoProject (co_projectId)
+            on delete cascade
+)
+    comment '프로젝트에서 사용하는 언어 저장 테이블' charset = utf8;
 
-
--- CoPhotoOfProject Table Create SQL
--- 테이블 생성 SQL - CoPhotoOfProject
-CREATE TABLE CoPhotoOfProject
+create table if not exists CoPartOfProject
 (
-    `co_popId`             BIGINT       NOT NULL    AUTO_INCREMENT COMMENT '사진 id', 
-    `co_project`           BIGINT       NOT NULL    COMMENT '프로젝트 id', 
-    `co_uuId`              TEXT         NOT NULL    COMMENT 'uuid', 
-    `co_fileName`          TEXT         NOT NULL    COMMENT '파일명', 
-    `co_url`               TEXT         NOT NULL    COMMENT '사진 url', 
-    `co_filePath`          TEXT         NOT NULL    COMMENT '파일 경로', 
-    `co_fileDownloadPath`  TEXT         NOT NULL    COMMENT '파일 다운로드 경로', 
-    `co_fileSize`          DOUBLE       NOT NULL    COMMENT '파일 크기', 
-    `createdAt`             TIMESTAMP    NOT NULL    DEFAULT current_timestamp COMMENT '생성 시간', 
-     PRIMARY KEY (co_popId)
-);
+    co_popId     bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_projectId bigint                              not null comment '프로젝트 id',
+    co_part      varchar(45)                         not null comment '파트 명',
+    co_limit     int                                 not null comment '파트별 인원 수',
+    createdAt    timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt    timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status       bit       default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint FK_CoPartOfProject_co_part_CoPart_co_part
+        foreign key (co_part) references CoPart (co_part),
+    constraint FK_CoPartOfProject_co_projectId_CoProject_co_projectId
+        foreign key (co_projectId) references CoProject (co_projectId)
+            on delete cascade
+)
+    comment '프로젝트에서 사용하는 파트 저장 테이블' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoPhotoOfProject
-ALTER TABLE CoPhotoOfProject COMMENT '프로젝트 사진';
+create definer = darren@`%` trigger INSERT_RANDOM_IMG
+    before insert
+    on CoProject
+    for each row
+BEGIN
+    IF new.co_mainImg IS NULL THEN
+        SET new.co_mainImg = (SELECT co_mainImg FROM CoMainImg Order By rand() LIMIT 1);
+    END IF;
+END;
 
--- Foreign Key 설정 SQL - CoPhotoOfProject(co_project) -> CoProject(co_project)
-ALTER TABLE CoPhotoOfProject
-    ADD CONSTRAINT FK_CoPhotoOfProject_co_project_CoProject_co_project FOREIGN KEY (co_project)
-        REFERENCES CoProject (co_project) ON DELETE RESTRICT ON UPDATE RESTRICT;
+create definer = darren@`%` trigger UPDATE_RANDOM_IMG
+    before update
+    on CoProject
+    for each row
+BEGIN
+    IF new.co_mainImg IS NULL THEN
+        SET new.co_mainImg = (SELECT co_mainImg FROM CoMainImg Order By rand() LIMIT 1);
+    END IF;
+    IF (select roomId from ChatRoom where roomId = (select concat('OTM_PROJECT_', new.co_projectId))) IS NOT NULL THEN
+        update ChatRoom set mainImg = new.co_mainImg WHERE roomId = (select concat('OTM_PROJECT_', new.co_projectId));
+    END IF;
+END;
 
--- Foreign Key 삭제 SQL - CoPhotoOfProject(co_project)
--- ALTER TABLE CoPhotoOfProject
--- DROP FOREIGN KEY FK_CoPhotoOfProject_co_project_CoProject_co_project;
+create definer = codev@`%` trigger delete_project_photo
+    after delete
+    on CoProject
+    for each row
+begin
+    delete from CoPhotos where CoPhotos.co_targetId = CAST(OLD.co_projectId as char(100)) and co_type = 'PROJECT';
+end;
 
-
--- CoPhotoOfStudy Table Create SQL
--- 테이블 생성 SQL - CoPhotoOfStudy
-CREATE TABLE CoPhotoOfStudy
+create table if not exists CoRecruitOfProject
 (
-    `co_popId`             BIGINT       NOT NULL    AUTO_INCREMENT COMMENT '사진 id', 
-    `co_study`             BIGINT       NOT NULL    COMMENT '스터디 id', 
-    `co_uuId`              TEXT         NOT NULL    COMMENT 'uuid', 
-    `co_fileName`          TEXT         NOT NULL    COMMENT '파일명', 
-    `co_url`               TEXT         NOT NULL    COMMENT '사진 url', 
-    `co_filePath`          TEXT         NOT NULL    COMMENT '파일 경로', 
-    `co_fileDownloadPath`  TEXT         NOT NULL    COMMENT '파일 다운로드 경로', 
-    `co_fileSize`          DOUBLE       NOT NULL    COMMENT '파일 크기', 
-    `createdAt`             TIMESTAMP    NOT NULL    DEFAULT current_timestamp COMMENT '생성 시간', 
-     PRIMARY KEY (co_popId)
-);
+    co_ropId            bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_email            varchar(50)                         not null comment '이메일',
+    co_projectId        bigint                              not null comment '프로젝트 id',
+    co_portfolioId      bigint                              null comment '포트폴리오 id',
+    co_partId           varchar(45)                         not null comment '파트 id',
+    co_motivation       text                                not null,
+    co_temporaryStorage bit       default b'0'              not null,
+    isApproved          bit       default b'0'              not null comment '승인 여부',
+    createdAt           timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt           timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status              bit       default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint FK_CoRecruitOfProject_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email),
+    constraint FK_CoRecruitOfProject_co_projectId_CoProject_co_projectId
+        foreign key (co_projectId) references CoProject (co_projectId)
+            on delete cascade
+)
+    comment '지원/참여한 프로젝트' charset = utf8;
 
--- 테이블 Comment 설정 SQL - CoPhotoOfStudy
-ALTER TABLE CoPhotoOfStudy COMMENT '스터디 사진';
+create index FK_CoRecruitOfProject_co_portfolioId_CoPortfolio_co_portfolioId
+    on CoRecruitOfProject (co_portfolioId);
 
--- Foreign Key 설정 SQL - CoPhotoOfStudy(co_study) -> CoStudy(co_studyId)
-ALTER TABLE CoPhotoOfStudy
-    ADD CONSTRAINT FK_CoPhotoOfStudy_co_study_CoStudy_co_studyId FOREIGN KEY (co_study)
-        REFERENCES CoStudy (co_studyId) ON DELETE RESTRICT ON UPDATE RESTRICT;
+create table if not exists CoStudy
+(
+    co_studyId  bigint auto_increment comment '스터디 id'
+        primary key,
+    co_email    varchar(50)                           not null comment '이메일',
+    co_title    varchar(100)                          not null comment '제목',
+    co_location varchar(50)                           not null comment '지역명',
+    co_content  mediumtext                            not null comment '내용',
+    co_mainImg  mediumtext                            null comment '대표 이미지. 글 대표 이미지 -> 10장 중 랜덤 1장',
+    co_deadLine timestamp                             null comment '마감 기한',
+    co_process  varchar(10) default 'ING'             not null comment '진행 상태. 모집중: ING / 심사기간: TEST / 종료: FIN',
+    createdAt   timestamp   default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt   timestamp   default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status      bit         default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint FK_CoStudy_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email),
+    constraint FK_CoStudy_co_location_CoLocation_co_location
+        foreign key (co_location) references CoLocation (co_location)
+)
+    comment '스터디 모집 게시판';
 
--- Foreign Key 삭제 SQL - CoPhotoOfStudy(co_study)
--- ALTER TABLE CoPhotoOfStudy
--- DROP FOREIGN KEY FK_CoPhotoOfStudy_co_study_CoStudy_co_studyId;
+create table if not exists CoHeartOfStudy
+(
+    co_hosId   bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_email   varchar(50)                         not null comment '이메일',
+    co_studyId bigint                              not null comment '스터디 id',
+    createdAt  timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt  timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status     bit       default b'1'              not null comment '상태',
+    constraint FK_CoHeartOfStudy_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email)
+            on delete cascade,
+    constraint FK_CoHeartOfStudy_co_studyId_CoStudy_co_studyId
+        foreign key (co_studyId) references CoStudy (co_studyId)
+            on delete cascade
+)
+    comment '스터디 모집글 찜하기' charset = utf8;
 
+create table if not exists CoLanguageOfStudy
+(
+    co_losId      bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_studyId    bigint                              not null comment '스터디 id',
+    co_languageId bigint                              not null comment '언어 id',
+    createdAt     timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt     timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status        bit       default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint FK_CoLanguageOfStudy_co_languageId_CoLanguage_co_languageId
+        foreign key (co_languageId) references CoLanguage (co_languageId),
+    constraint FK_CoLanguageOfStudy_co_studyId_CoStudy_co_studyId
+        foreign key (co_studyId) references CoStudy (co_studyId)
+            on delete cascade
+)
+    comment '스터디에서 사용하는 언어 저장 테이블' charset = utf8;
 
-CREATE TABLE `refreshtoken` (
-  `refreshTokenId` int(11) NOT NULL AUTO_INCREMENT,
-  `refreshToken` varchar(300) DEFAULT NULL,
-  `keyId` varchar(150) DEFAULT NULL,
-  `userAgent` varchar(300) DEFAULT NULL,
-  PRIMARY KEY (`refreshTokenId`)
-);
+create table if not exists CoPartOfStudy
+(
+    co_posId   bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_studyId bigint                              not null comment '스터디 id',
+    co_part    varchar(45)                         not null comment '파트 명',
+    co_total   int                                 not null comment '파트별 인원 수',
+    createdAt  timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt  timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status     bit       default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint FK_CoPartOfStudy_co_part_CoPart_co_part
+        foreign key (co_part) references CoPart (co_part),
+    constraint FK_CoPartOfStudy_co_studyId_CoStudy_co_studyId
+        foreign key (co_studyId) references CoStudy (co_studyId)
+            on delete cascade
+)
+    comment '스터디에서 사용하는 파트 저장 테이블' charset = utf8;
+
+create table if not exists CoRecruitOfStudy
+(
+    co_rosId            bigint auto_increment comment '중간 테이블 id'
+        primary key,
+    co_email            varchar(50)                         not null comment '이메일',
+    co_studyId          bigint                              not null comment '스터디 id',
+    co_portfolioId      bigint                              null comment '포트폴리오 id',
+    co_motivation       text                                not null,
+    co_temporaryStorage bit       default b'0'              not null,
+    isApproved          bit       default b'0'              not null comment '승인 여부',
+    createdAt           timestamp default CURRENT_TIMESTAMP not null comment '생성시간',
+    updatedAt           timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '업데이트 시간',
+    status              bit       default b'1'              not null comment '상태. 정상: true / 삭제: false',
+    constraint FK_CoRecruitOfStudy_co_email_CoUser_co_email
+        foreign key (co_email) references CoUser (co_email),
+    constraint FK_CoRecruitOfStudy_co_portfolioId_CoPortfolio_co_portfolioId
+        foreign key (co_portfolioId) references CoPortfolio (co_portfolioId)
+            on update cascade on delete set null,
+    constraint FK_CoRecruitOfStudy_co_studyId_CoStudy_co_studyId
+        foreign key (co_studyId) references CoStudy (co_studyId)
+            on delete cascade
+)
+    comment '지원/참여한 스터디' charset = utf8;
+
+create definer = codev@`%` trigger INSERT_RANDOM_IMG_OF_STUDY
+    before insert
+    on CoStudy
+    for each row
+BEGIN
+    IF new.co_mainImg IS NULL THEN
+        SET new.co_mainImg = (SELECT co_mainImg FROM CoMainImg Order By rand() LIMIT 1);
+    END IF;
+END;
+
+create definer = codev@`%` trigger UPDATE_RANDOM_IMG_OF_STUDY
+    before update
+    on CoStudy
+    for each row
+BEGIN
+    IF new.co_mainImg IS NULL THEN
+        SET new.co_mainImg = (SELECT co_mainImg FROM CoMainImg Order By rand() LIMIT 1);
+    END IF;
+    IF (select roomId from ChatRoom where roomId = (select concat('OTM_STUDY_', new.co_studyId))) IS NOT NULL THEN
+        update ChatRoom set mainImg = new.co_mainImg WHERE roomId = (select concat('OTM_STUDY_', new.co_studyId));
+    END IF;
+END;
+
+create definer = codev@`%` trigger delete_study_photo
+    after delete
+    on CoStudy
+    for each row
+begin
+    delete from CoPhotos where CoPhotos.co_targetId = CAST(OLD.co_studyId as char(100)) and co_type = 'STUDY';
+end;
+
+create definer = darren@`%` trigger INSERT_DEFAULT_PROFILE_IMG
+    before insert
+    on CoUser
+    for each row
+BEGIN
+    IF new.profileImg IS NULL THEN
+        SET new.profileImg = 'http://semtle.catholic.ac.kr:8080/image?name=Profile_Basic20230130012110.png';
+    END IF;
+END;
+
+create definer = darren@`%` trigger UPDATE_DEFAULT_PROFILE_IMG
+    before update
+    on CoUser
+    for each row
+BEGIN
+    IF new.profileImg IS NULL THEN
+        SET new.profileImg = 'http://semtle.catholic.ac.kr:8080/image?name=Profile_Basic20230130012110.png';
+    END IF;
+END;
+
+create table if not exists refreshtoken
+(
+    refreshTokenId bigint auto_increment comment '리프레쉬 토큰 id'
+        primary key,
+    refreshToken   text         not null comment '리프레쉬 토큰',
+    keyId          varchar(150) not null comment '이메일',
+    userAgent      varchar(300) not null comment 'userAgent'
+)
+    comment '리프레쉬 토큰' charset = utf8;
+
+create definer = codev@`%` event if not exists CHANGE_PROCESS_OF_PROJECT on schedule
+    every '1' DAY
+        starts '2023-02-02 00:00:00'
+    enable
+    do
+    update CoProject
+    set co_process='TEST'
+    where TIMESTAMPDIFF(second, now(), co_deadLine) <= -86400
+      and co_process = 'ING';
+
+create definer = codev@`%` event if not exists CHANGE_PROCESS_OF_STUDY on schedule
+    every '1' DAY
+        starts '2023-02-02 00:00:00'
+    enable
+    do
+    update CoStudy
+    set co_process='TEST'
+    where TIMESTAMPDIFF(second, now(), co_deadLine) <= -86400
+      and co_process = 'ING';
+
 
 
