@@ -6,10 +6,10 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
+import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -51,7 +51,7 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
     }
 
     @Override
-    public CoDevResponse completeCoStudyRecruitment(String co_email, long co_studyId, CoStudy co_applicantList) {
+    public CoDevResponse completeCoStudyRecruitment(String co_email, long co_studyId, JSONArray co_applicantList) {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
@@ -59,10 +59,10 @@ public class CoStudyRecruitServiceImpl extends ResponseService implements CoStud
             Optional<CoStudy> coStudy = coStudyMapper.getCoStudy(co_studyId);
             if(coStudy.isPresent()) {
                 if(coStudy.get().getCo_email().equals(co_email)) {
-                    List<CoRecruitOfStudy> applicants = co_applicantList.getCo_applicantList();
                     this.coStudyMapper.completeCoStudyRecruitment(condition);
-                    for (CoRecruitOfStudy applicant : applicants) {
-                        this.coStudyMapper.updateCoStudyMemberApprove(applicant.getCo_email(), co_studyId);
+                    for(Object email : co_applicantList) {
+                        String co_applicantEmail = (String) email;
+                        this.coStudyMapper.updateCoStudyMemberApprove(co_applicantEmail, co_studyId);
                     }
                     return setResponse(200, "message", "모집 마감되었습니다.");
                 }else
