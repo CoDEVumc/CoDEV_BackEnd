@@ -1,15 +1,12 @@
 package com.codevumc.codev_backend.service.co_projectrecruit;
 
 import com.codevumc.codev_backend.domain.*;
-import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
-import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoProjectMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
-import org.apache.tomcat.websocket.AuthenticationException;
+import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +50,7 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
     }
 
     @Override
-    public CoDevResponse closeCoProjectDeadLine(String co_email, Long co_projectId, CoProject co_applicantList) {
+    public CoDevResponse closeCoProjectDeadLine(String co_email, Long co_projectId, JSONArray co_applicantList) {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
@@ -62,9 +59,9 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
             if (coProjectOptional.isPresent()) {
                 if (coProjectOptional.get().getCo_email().equals(co_email)){
                     this.coProjectMapper.closeCoProjectDeadLine(condition);
-                    List<CoRecruitOfProject> applicants = co_applicantList.getCo_applicantList();
-                    for (CoRecruitOfProject applicant : applicants) {
-                        this.coProjectMapper.approveCoProjectMember(applicant.getCo_email(), co_projectId);
+                    for (Object email : co_applicantList) {
+                        String co_applicantEmail = (String) email;
+                        this.coProjectMapper.approveCoProjectMember(co_applicantEmail, co_projectId);
                     }
                     return setResponse(200,"message","모집마감 되었습니다");
                 }

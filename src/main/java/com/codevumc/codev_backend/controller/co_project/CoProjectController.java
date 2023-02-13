@@ -149,9 +149,9 @@ public class CoProjectController extends JwtController {
     }
 
     @PatchMapping("/recruitment/dead-line/{coProjectId}")
-    public CoDevResponse closeCoProjectDeadLine(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestBody CoProject co_applicantsList) throws Exception {
+    public CoDevResponse closeCoProjectDeadLine(HttpServletRequest request, @PathVariable("coProjectId") Long co_projectId, @RequestBody Map<String, Object> user) throws Exception {
         String co_email = getCoUserEmail(request);
-        return coProjectRecruitService.closeCoProjectDeadLine(co_email, co_projectId, co_applicantsList);
+        return coProjectRecruitService.closeCoProjectDeadLine(co_email, co_projectId, getJSONArray(user.get("co_emails")));
     }
 
     @GetMapping("/recruitment/{coProjectId}")
