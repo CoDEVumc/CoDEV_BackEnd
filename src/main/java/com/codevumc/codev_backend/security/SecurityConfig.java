@@ -46,10 +46,10 @@ public class SecurityConfig {
         http.httpBasic().disable()
                 .authorizeRequests()// 요청에 대한 사용권한 체크
                 .antMatchers("/v1/**").authenticated()
-                .antMatchers("/codev/my-page/**","/codev/project/**","/codev/study/**","/codev/user/update/password").authenticated()
+                .antMatchers("/codev/my-page/**","/codev/project/**","/codev/study/**","/codev/user/update/password", "/codev/chat/**", "/codev/notification/**").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/codev/user/code/mail/**").permitAll()
+                .antMatchers("/codev/user/duplication/**").permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(autheniticationEntryPointHandler)

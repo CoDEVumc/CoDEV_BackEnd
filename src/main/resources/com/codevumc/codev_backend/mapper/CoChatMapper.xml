@@ -22,10 +22,15 @@
     <select id="getChatRooms" resultType="ChatRoom">
         SELECT CROU.roomId, CR.room_type, CR.room_title, CR.mainImg, CROU.isRead, CROU.status, pinfo.co_email as receiverCo_email, pinfo.co_nickName as receiverCo_nickName, pinfo.profileImg as receiverProfileImg, cnt.people as people
         FROM ChatRoom CR
-                 JOIN (select crou.roomId,ANY_VALUE(cu.co_email) as co_email, ANY_VALUE(cu.co_nickName) as co_nickName, ANY_VALUE(cu.profileImg) as profileImg
-                       from ChatRoomOfUser crou
-                                join CoUser cu on cu.co_email = crou.co_email
-                       where cu.co_email != #{co_email} group by crou.roomId) pinfo ON CR.roomId = pinfo.roomId
+                 JOIN ((select crou.roomId,  ANY_VALUE(cu.co_email) as co_email, ANY_VALUE(cu.co_nickName) as co_nickName, ANY_VALUE(cu.profileImg) as profileImg
+                        from ChatRoomOfUser crou join (
+                            select co_email, co_nickName, profileImg
+                            from CoUser order by co_birth DESC) cu on cu.co_email = crou.co_email
+                        where cu.co_email != #{co_email} group by crou.roomId, updatedAt having updatedAt != '2000-01-01 00:00:00' order by crou.updatedAt DESC)
+                       union
+                       (select crou.roomId, ANY_VALUE(cu.co_email), ANY_VALUE(cu.co_nickName), ANY_VALUE(cu.profileImg)
+                        from ChatRoomOfUser crou join CoUser cu on cu.co_email = crou.co_email
+                        group by crou.roomId having count(crou.roomId) = 2)) pinfo ON CR.roomId = pinfo.roomId
                  JOIN ChatRoomOfUser CROU on CROU.roomId = CR.roomId
                  JOIN (
             select roomId, count(*) as people
@@ -38,7 +43,7 @@
     <update id="updateTime">
         update ChatRoomOfUser
         set updatedAt = #{updatedAt}
-        where roomId = #{roomId}
+        where roomId = #{roomId} and co_email != 'TEMP'
     </update>
 
     <select id="getUserInfo" resultType="CoUser">
@@ -58,6 +63,11 @@
     <insert id="inviteUser">
         INSERT INTO ChatRoomOfUser (roomId, co_email)
         VALUES (#{roomId}, #{co_email})
+    </insert>
+
+    <insert id="inviteTemp">
+        INSERT INTO ChatRoomOfUser (roomId, co_email, updatedAt)
+        VALUES (#{roomId}, #{co_email}, timestamp('2000-01-01 00:00:00'))
     </insert>
 
     <!--채팅방 입장-->
@@ -85,7 +95,7 @@
     <update id="sendMessage">
         UPDATE ChatRoomOfUser
         SET isRead = isRead + 1
-        WHERE status = false AND roomId = #{roomId}
+        WHERE status = false AND roomId = #{roomId} AND co_email != 'TEMP'
     </update>
 
     <select id="getChatRoom" resultType="ChatRoomOfUser">
@@ -101,4 +111,60 @@
     </delete>
 
 
+    <select id="getNickNames" resultType="String">
+        select co_nickName
+        from ChatRoomOfUser crou
+                 join CoUser cu on cu.co_email = crou.co_email
+        where roomId = #{roomId} and crou.co_email != #{co_email} and cu.co_email != 'TEMP'
+    </select>
+
+    <select id="isBoardAdmin" parameterType="hashMap" resultType="boolean">
+
+        <choose>
+            <when test='boardType.equals("PROJECT")'>
+                select exists(select co_projectId from CoProject where co_projectId = #{co_boardId} and co_email = #{co_email})
+            </when>
+            <otherwise>
+                select exists(select co_studyId from CoStudy where co_studyId = #{co_boardId} and co_email = #{co_email})
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="updateRoomTitle">
+        update ChatRoom
+        set room_title = #{room_title}
+        where roomId = #{roomId};
+    </select>
+
+    <select id="confirmRoom" resultType="boolean">
+        select exists(select roomId from ChatRoom where roomId = #{roomId})
+    </select>
+
+    <select id="getParticipantsOfRoom" resultType="ChatRoomOfUser">
+        select crou.roomId, crou.co_email, cu.co_nickName, cu.profileImg
+        from ChatRoomOfUser crou join CoUser cu on crou.co_email = cu.co_email
+        where roomId = #{roomId} and crou.co_email != 'TEMP'
+    </select>
+
+    <select id="getAdmin" parameterType="hashMap" resultType="String">
+        <choose>
+            <when test='boardType.equals("PROJECT")'>
+                select co_email from CoProject where co_projectId = #{co_boardId}
+            </when>
+            <otherwise>
+                select co_email from CoStudy where co_studyId = #{co_boardId}
+            </otherwise>
+        </choose>
+
+    </select>
+
+
+    <select id="getNonReadCoUser" resultType="CoUser">
+        select crou.co_email, cu.FCMToken
+        from ChatRoomOfUser crou
+                 join CoUser cu on cu.co_email = crou.co_email
+        where roomId = #{roomId}
+          and crou.co_email != 'TEMP'
+          and crou.`status` = false
+    </select>
 </mapper>

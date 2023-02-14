@@ -2,15 +2,14 @@ package com.codevumc.codev_backend.controller.co_mypage;
 
 import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoPortfolio;
-import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
+import com.codevumc.codev_backend.service.co_mypage.CoMyPageService;
 import com.codevumc.codev_backend.service.co_mypage.CoMyPageServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +18,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/codev/my-page")
 public class CoMyPageController extends JwtController {
-    private final CoMyPageServiceImpl coMyPageService;
+    private final CoMyPageService coMyPageService;
 
     public CoMyPageController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoMyPageServiceImpl coMyPagePortfolioService) {
         super(jwtTokenProvider, jwtService);

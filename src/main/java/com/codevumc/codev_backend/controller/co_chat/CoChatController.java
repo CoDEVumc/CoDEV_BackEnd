@@ -6,8 +6,11 @@ import com.codevumc.codev_backend.domain.ChatRoom;
 import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
+import com.codevumc.codev_backend.service.co_chat.CoChatService;
 import com.codevumc.codev_backend.service.co_chat.CoChatServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import com.codevumc.codev_backend.service.firebase.FirebaseCloudMessageService;
+import com.codevumc.codev_backend.service.firebase.FirebaseCloudMessageServiceImpl;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,13 +32,15 @@ import java.util.Map;
 @RestController
 public class CoChatController extends JwtController {
     private final SimpMessageSendingOperations sendingOperations;
-    private final CoChatServiceImpl coChatService;
+    private final CoChatService coChatService;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Autowired
-    public CoChatController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, SimpMessageSendingOperations sendingOperations, CoChatServiceImpl coChatService) {
+    public CoChatController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, SimpMessageSendingOperations sendingOperations, CoChatServiceImpl coChatService, FirebaseCloudMessageServiceImpl firebaseCloudMessageService) {
         super(jwtTokenProvider, jwtService);
         this.sendingOperations = sendingOperations;
         this.coChatService = coChatService;
+        this.firebaseCloudMessageService = firebaseCloudMessageService;
     }
 
     @MessageMapping("/chat/message")
@@ -44,14 +49,10 @@ public class CoChatController extends JwtController {
         if(ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             coChatService.enterChatRoom(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage);
         } else if(ChatMessage.MessageType.TALK.equals(chatMessage.getType())) {
-            ChatMessage nextDay = coChatService.sendMessage(chatMessage);
-            if(nextDay != null)
-                sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), nextDay);
+            coChatService.sendMessage(firebaseCloudMessageService, chatMessage, sendingOperations);
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
-        }else if(ChatMessage.MessageType.INVITE.equals(chatMessage.getType())) {
-            //초대 어떤 형태로??
         }
 
         sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);
@@ -65,12 +66,12 @@ public class CoChatController extends JwtController {
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(chat.get("roomId"))
                 .room_type(ChatRoom.RoomType.valueOf(chat.get("room_type")))
-                .room_title(chat.get("co_title"))
+                .room_title(chat.get("room_title"))
                 .build();
         if(chat.get("mainImg") != null)
             chatRoom.setMainImg(chat.get("mainImg"));
 
-        return coChatService.createChatRoom(chatRoom, getCoUserEmail(request));
+        return coChatService.createChatRoom(request, chatRoom, getCoUserEmail(request));
     }
 
     @GetMapping("/rooms")
@@ -103,12 +104,33 @@ public class CoChatController extends JwtController {
         return coChatService.exitChatRoom(co_email, roomId);
     }
 
+    @PostMapping("/confirm/{roomId}")
+    public CoDevResponse confirmRoom(HttpServletRequest request, @PathVariable("roomId") String roomId) {
+        return coChatService.confirmRoom(request, roomId);
+    }
+
+    @PostMapping("/update/room_title")
+    public CoDevResponse updateRoomTitle(HttpServletRequest request, @RequestBody Map<String, Object> user) {
+        return coChatService.updateRoomTitle(user.get("room_title").toString(), user.get("roomId").toString());
+    }
+
+    @GetMapping("/participants/{roomId}")
+    public CoDevResponse getParticipants(HttpServletRequest request, @PathVariable("roomId") String roomId) {
+        return coChatService.getParticipantsOfRoom(request, roomId);
+    }
+
     private ChatMessage getChatMessage(String data) throws ParseException{
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(data);
-        CoUser coUser = coChatService.getUserInfo(jsonObject.get("sender").toString());
+            CoUser coUser = coChatService.getUserInfo(jsonObject.get("sender").toString());
+        String[] classification = jsonObject.get("roomId").toString().split("_");
+        boolean isPm = false;
+
+        if(classification[0].equals("OTM"))
+            isPm = coChatService.isBoardAdmin(classification[1], Long.parseLong(classification[2]), jsonObject.get("sender").toString());
+
         return ChatMessage.builder()
                 .type(ChatMessage.MessageType.valueOf(jsonObject.get("type").toString()))
                 .roomId(jsonObject.get("roomId").toString())
@@ -116,6 +138,7 @@ public class CoChatController extends JwtController {
                 .co_nickName(coUser.getCo_nickName())
                 .profileImg(coUser.getProfileImg())
                 .content(jsonObject.get("content").toString())
+                .isPm(isPm)
                 .createdDate(sdf.format(timestamp)).build();
     }
 

@@ -5,38 +5,16 @@ import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
 import com.codevumc.codev_backend.mapper.CoUserMapper;
-import com.codevumc.codev_backend.mapper.TokenMapper;
-import com.codevumc.codev_backend.mongo_repository.ChatMessageRepository;
 import com.codevumc.codev_backend.service.ResponseService;
-import com.codevumc.codev_backend.snslogin.GitHubApi;
-import com.codevumc.codev_backend.snslogin.GoogleApi;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.interceptor.CacheableOperation;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,12 +22,10 @@ import java.util.regex.Pattern;
 @Service
 public class CoUserServiceImpl extends ResponseService implements CoUserService, UserDetailsService {
     private final CoUserMapper coUserMapper;
-    private final ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    public CoUserServiceImpl(CoUserMapper coUserMapper, ChatMessageRepository chatMessageRepository) {
+    public CoUserServiceImpl(CoUserMapper coUserMapper) {
         this.coUserMapper = coUserMapper;
-        this.chatMessageRepository = chatMessageRepository;
     }
 
     @Override
@@ -97,6 +73,7 @@ public class CoUserServiceImpl extends ResponseService implements CoUserService,
         }
     }
 
+    @Override
     public void updateProfileImg(String profileImg, String co_email) {
         coUserMapper.updateProfileImg(profileImg, co_email);
 

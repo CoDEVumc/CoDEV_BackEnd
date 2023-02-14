@@ -40,6 +40,8 @@ public class JwtService {
 
             Token token = getCoDevToken(user.get("co_email"), userAgent);
 
+            //FCM토큰 새로 저장
+            this.coUserMapper.updateFCMToken(user.get("FCMToken"), user.get("co_email"));
             result.setResponseData("accessToken", token.getAccessToken());
             result.setResponseData("refreshToken", token.getRefreshToken());
             result.setResponseData("key", token.getKey());
