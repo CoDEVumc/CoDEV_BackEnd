@@ -248,7 +248,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
             chatMessage.setType(ChatMessage.MessageType.TAB);
             chatMessage.setSender(chatMessage.getProfileImg());
             chatMessage.setProfileImg(chatMessage.getRoomId());
-            chatMessage.setCreatedDate("1");
+            chatMessage.setCreatedDate("3");
             ChatRoom chatRoom = coChatMapper.getNewRoom(chatMessage.getRoomId());
             if(chatRoom.getRoom_type().equals(ChatRoom.RoomType.OTM)) {
                 chatMessage.setSender(chatRoom.getMainImg());
