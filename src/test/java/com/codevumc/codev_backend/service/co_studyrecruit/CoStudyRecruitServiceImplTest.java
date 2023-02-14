@@ -58,13 +58,13 @@ class CoStudyRecruitServiceImplTest {
 
         // when
         when(coStudyMapper.getTempsavedApplicantsCount(co_studyId)).thenReturn(co_tempSavedApplicantsCount);
-        when(coStudyMapper.getCoApplicantCount(co_studyId)).thenReturn(coApplicantCount);
+        when(coStudyMapper.getCoApplicantsCount(co_studyId)).thenReturn(coApplicantCount);
         when(coStudyMapper.getCoApplicantsInfo(coStudyDto)).thenReturn(coApplicantsInfo);
 
         CoApplicantsInfoOfStudy coApplicantsInfoOfStudy = CoApplicantsInfoOfStudy.builder()
                 .co_part(co_part.toUpperCase())
                 .co_tempSavedApplicantsCount(this.coStudyMapper.getTempsavedApplicantsCount(co_studyId))
-                .co_applicantCount(this.coStudyMapper.getCoApplicantCount(co_studyId))
+                .co_applicantCount(this.coStudyMapper.getCoApplicantsCount(co_studyId))
                 .co_applicantsInfo(this.coStudyMapper.getCoApplicantsInfo(coStudyDto))
                 .build();
 
