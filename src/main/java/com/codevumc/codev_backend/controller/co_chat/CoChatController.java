@@ -6,8 +6,11 @@ import com.codevumc.codev_backend.domain.ChatRoom;
 import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
+import com.codevumc.codev_backend.service.co_chat.CoChatService;
 import com.codevumc.codev_backend.service.co_chat.CoChatServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import com.codevumc.codev_backend.service.firebase.FirebaseCloudMessageService;
+import com.codevumc.codev_backend.service.firebase.FirebaseCloudMessageServiceImpl;
 import com.google.gson.Gson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,7 +19,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,13 +32,15 @@ import java.util.Map;
 @RestController
 public class CoChatController extends JwtController {
     private final SimpMessageSendingOperations sendingOperations;
-    private final CoChatServiceImpl coChatService;
+    private final CoChatService coChatService;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Autowired
-    public CoChatController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, SimpMessageSendingOperations sendingOperations, CoChatServiceImpl coChatService) {
+    public CoChatController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, SimpMessageSendingOperations sendingOperations, CoChatServiceImpl coChatService, FirebaseCloudMessageServiceImpl firebaseCloudMessageService) {
         super(jwtTokenProvider, jwtService);
         this.sendingOperations = sendingOperations;
         this.coChatService = coChatService;
+        this.firebaseCloudMessageService = firebaseCloudMessageService;
     }
 
     @MessageMapping("/chat/message")
@@ -45,12 +49,10 @@ public class CoChatController extends JwtController {
         if(ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             coChatService.enterChatRoom(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage);
         } else if(ChatMessage.MessageType.TALK.equals(chatMessage.getType())) {
-            coChatService.sendMessage(chatMessage, sendingOperations);
+            coChatService.sendMessage(firebaseCloudMessageService, chatMessage, sendingOperations);
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
-        }else if(ChatMessage.MessageType.INVITE.equals(chatMessage.getType())) {
-            //초대 어떤 형태로??
         }
 
         sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);

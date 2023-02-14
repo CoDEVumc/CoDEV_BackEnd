@@ -24,4 +24,5 @@ public interface CoUserService {
 
     CoDevResponse updatePassword(HttpServletRequest request, CoUser coUser);
 
+    void updateProfileImg(String profileImg, String co_email);
 }

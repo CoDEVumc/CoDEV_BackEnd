@@ -27,7 +27,7 @@ public class FirebaseController {
 
     @GetMapping("/push")
     public CoDevResponse pushNotification(HttpServletRequest request, @RequestBody FCM fcm) {
-        return firebaseCloudMessageService.sendMessageTo(request, fcm);
+        return firebaseCloudMessageService.sendMessageAll(request, fcm);
     }
 
     private JSONArray getJSONArray(Object object) throws Exception{

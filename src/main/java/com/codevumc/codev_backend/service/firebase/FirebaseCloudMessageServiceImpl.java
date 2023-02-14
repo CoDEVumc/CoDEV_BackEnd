@@ -25,13 +25,12 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public class FirebaseCloudMessageServiceImpl extends ResponseService implements FirebaseCloudMessageService{
-    public static final String LOGO = "http://semtle.catholic.ac.kr:8080/image?name=Codev_logo20230214013923.png";
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/codev-14c11/messages:send";
     private final ObjectMapper objectMapper;
     private final CoUserMapper coUserMapper;
 
     @Override
-    public CoDevResponse sendMessageTo(HttpServletRequest request,  FCM fcm) {
+    public CoDevResponse sendMessageAll(HttpServletRequest request,  FCM fcm) {
         try {
             List<String> FCMToken = getFCMToken(fcm);
             for(String token : FCMToken) {
@@ -52,7 +51,8 @@ public class FirebaseCloudMessageServiceImpl extends ResponseService implements 
         return this.coUserMapper.getFCMToken(FCMDto);
     }
 
-    private void sendMessage(String targetToken, String title, String body) throws IOException{
+    @Override
+    public void sendMessage(String targetToken, String title, String body) throws IOException{
         String message = makeMessage(targetToken, title, body);
 
         OkHttpClient client = new OkHttpClient();
