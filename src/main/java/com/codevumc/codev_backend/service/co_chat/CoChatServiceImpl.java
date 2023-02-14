@@ -244,8 +244,18 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
     private void updateChatListAndPushNotification(FirebaseCloudMessageService firebaseCloudMessageService, SimpMessageSendingOperations sendingOperations,ChatMessage chatMessage) {
         try {
             List<CoUser> coUsers = coChatMapper.getNonReadCoUser(chatMessage.getRoomId());
+            String type = chatMessage.getType().getValue();
             chatMessage.setType(ChatMessage.MessageType.TAB);
+            chatMessage.setSender(chatMessage.getProfileImg());
             chatMessage.setProfileImg(chatMessage.getRoomId());
+            chatMessage.setCreatedDate("1");
+            ChatRoom chatRoom = coChatMapper.getNewRoom(chatMessage.getRoomId());
+            if(chatRoom.getRoom_type().equals(ChatRoom.RoomType.OTM)) {
+                chatMessage.setSender(chatRoom.getMainImg());
+                chatMessage.setCo_nickName(chatRoom.getRoom_title());
+                chatMessage.setCreatedDate(String.valueOf(chatRoom.getPeople()));
+            }
+
             if(chatMessage.getContent().length() > 500)
                 chatMessage.setContent(chatMessage.getContent().substring(0, 501));
             for(CoUser coUser : coUsers) {
@@ -253,7 +263,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
                 //채팅 목록 갱신 이벤트 발생
                 sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);
                 //FCM 메시지 전송
-                firebaseCloudMessageService.sendMessage(coUser.getFCMToken(), chatMessage.getSender(), chatMessage.getContent());
+                firebaseCloudMessageService.sendMessage(coUser.getFCMToken(), chatMessage.getCo_nickName(), chatMessage.getContent());
             }
         }catch (IOException e) {
             e.printStackTrace();

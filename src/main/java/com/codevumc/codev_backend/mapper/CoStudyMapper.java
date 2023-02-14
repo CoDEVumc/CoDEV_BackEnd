@@ -33,7 +33,7 @@ public interface CoStudyMapper {
     Optional<CoStudy> getCoStudyViewer(String co_viewer, long co_studyId);
     Optional<CoPortfolioOfApplicant> getCoPortfolioOfApplicant(Map<String, Object> coPortfolioDto);
     List<CoApplicantInfo> getCoApplicantsInfo(Map<String, Object> coStudyDto);
-    CoApplicantCount getCoApplicantsCount(long co_studyId);
+    List<CoApplicantCount> getCoApplicantsCount(long co_studyId);
     int getTempsavedApplicantsCount(long co_studyId);
     Optional<CoStudy> getCoStudyViewer(Map<String, Object> coStudyDto);
     List<Boolean> getCoTemporaryStorage(Map<String, Object> coApplicantsInfoDto);
