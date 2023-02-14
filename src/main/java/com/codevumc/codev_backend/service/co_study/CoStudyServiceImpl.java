@@ -122,19 +122,6 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
         return null;
     }
 
-    private CoDevResponse insertCoLanguageAndCoPart(JSONArray co_languages, CoStudy coStudy) throws Exception{
-        Map<String, Object> coPartDto = new HashMap<>();
-        coPartDto.put("co_studyId", coStudy.getCo_studyId());
-        coPartDto.put("co_part", coStudy.getCo_part());
-        coPartDto.put("co_total", coStudy.getCo_total());
-        for (Object co_language : co_languages) {
-            long co_languageId = (long) co_language;
-            this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
-        }
-        this.coStudyMapper.insertCoPartOfStudy(coPartDto);
-        return setResponse(200, "message", "스터디 모집글이 작성/수정되었습니다.");
-    }
-
     @Override
     public CoDevResponse updateCoStudyDeadLine(CoStudy coStudy) {
         try {
@@ -156,5 +143,18 @@ public class CoStudyServiceImpl extends ResponseService implements CoStudyServic
             e.printStackTrace();
         }
         return null;
+    }
+
+    private CoDevResponse insertCoLanguageAndCoPart(JSONArray co_languages, CoStudy coStudy) throws Exception{
+        Map<String, Object> coPartDto = new HashMap<>();
+        coPartDto.put("co_studyId", coStudy.getCo_studyId());
+        coPartDto.put("co_part", coStudy.getCo_part());
+        coPartDto.put("co_total", coStudy.getCo_total());
+        for (Object co_language : co_languages) {
+            long co_languageId = (long) co_language;
+            this.coStudyMapper.insertCoLanguageOfStudy(coStudy.getCo_studyId(), co_languageId);
+        }
+        this.coStudyMapper.insertCoPartOfStudy(coPartDto);
+        return setResponse(200, "message", "스터디 모집글이 작성/수정되었습니다.");
     }
 }

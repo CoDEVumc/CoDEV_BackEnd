@@ -28,7 +28,8 @@ public class ChatMessage {
         LEAVE("LEAVE"),
         EXIT("EXIT"),
         INVITE("INVITE"),
-        DAY("DAY");
+        DAY("DAY"),
+        TAB("TAB");
 
         private String value;
 

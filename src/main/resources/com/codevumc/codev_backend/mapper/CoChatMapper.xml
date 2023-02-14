@@ -157,4 +157,14 @@
         </choose>
 
     </select>
+
+
+    <select id="getNonReadCoUser" resultType="CoUser">
+        select crou.co_email, cu.FCMToken
+        from ChatRoomOfUser crou
+                 join CoUser cu on cu.co_email = crou.co_email
+        where roomId = #{roomId}
+          and crou.co_email != 'TEMP'
+          and crou.`status` = false
+    </select>
 </mapper>

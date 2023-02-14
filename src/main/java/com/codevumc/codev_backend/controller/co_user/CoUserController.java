@@ -7,7 +7,9 @@ import com.codevumc.codev_backend.domain.RefreshToken;
 import com.codevumc.codev_backend.domain.role.Role;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
+import com.codevumc.codev_backend.service.co_file.CoFileService;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
+import com.codevumc.codev_backend.service.co_user.CoUserService;
 import com.codevumc.codev_backend.service.co_user.CoUserServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.codevumc.codev_backend.snslogin.GitHubApi;
@@ -25,8 +27,8 @@ import java.util.Map;
 @RequestMapping("/codev/user")
 public class CoUserController extends JwtController {
     private final PasswordEncoder passwordEncoder;
-    private final CoFileServiceImpl coFileService;
-    private final CoUserServiceImpl coUserService;
+    private final CoFileService coFileService;
+    private final CoUserService coUserService;
     private final GitHubApi gitHubApi;
     private final GoogleApi googleApi;
 

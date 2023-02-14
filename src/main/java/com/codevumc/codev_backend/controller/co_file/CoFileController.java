@@ -2,7 +2,7 @@ package com.codevumc.codev_backend.controller.co_file;
 
 
 import com.codevumc.codev_backend.domain.CoPhotos;
-import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
+import com.codevumc.codev_backend.service.co_file.CoFileService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 public class CoFileController {
 
-    private final CoFileServiceImpl coFileService;
+    private final CoFileService coFileService;
 
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(HttpServletRequest request, @PathVariable String fileName) {

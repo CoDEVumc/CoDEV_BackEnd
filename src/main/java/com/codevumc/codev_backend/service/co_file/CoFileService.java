@@ -11,8 +11,10 @@ import java.util.Map;
 
 public interface CoFileService {
 
-    public CoPhotos storeFile(MultipartFile file, String co_targetId, String co_type);
-    public void deleteFile(String co_targetId, String co_type) ;
-    public ResponseEntity<Resource> loadFileAsResource(HttpServletRequest request, String fileName);
-    public ResponseEntity<Resource> showImage(@RequestParam Map<String, String> param);
+    CoPhotos storeFile(MultipartFile file, String co_targetId, String co_type);
+    void deleteFile(String co_targetId, String co_type) ;
+    ResponseEntity<Resource> loadFileAsResource(HttpServletRequest request, String fileName);
+    ResponseEntity<Resource> showImage(@RequestParam Map<String, String> param);
+    String getCo_MainImg(String co_type, String co_targetId);
+
 }

@@ -6,7 +6,6 @@ import com.codevumc.codev_backend.domain.CoPart;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoCategoryMapper;
 import com.codevumc.codev_backend.service.ResponseService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

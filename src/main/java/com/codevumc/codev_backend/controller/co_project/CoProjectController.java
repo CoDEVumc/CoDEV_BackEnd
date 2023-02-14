@@ -8,9 +8,13 @@ import com.codevumc.codev_backend.domain.CoRecruitOfProject;
 import com.codevumc.codev_backend.domain.CoTempSaveApplicants;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
+import com.codevumc.codev_backend.service.co_file.CoFileService;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
+import com.codevumc.codev_backend.service.co_project.CoProjectService;
 import com.codevumc.codev_backend.service.co_project.CoProjectServiceImpl;
+import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartService;
 import com.codevumc.codev_backend.service.co_projectheart.CoProjectHeartServiceImpl;
+import com.codevumc.codev_backend.service.co_projectrecruit.CoProjectRecruitService;
 import com.codevumc.codev_backend.service.co_projectrecruit.CoProjectRecruitServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
@@ -31,10 +35,10 @@ import java.util.stream.Collectors;
 public class CoProjectController extends JwtController {
 
     public static final int SHOW_COUNT = 10;
-    private final CoFileServiceImpl coFileService;
-    private final CoProjectServiceImpl coProjectService;
-    private final CoProjectHeartServiceImpl coProjectHeartService;
-    private final CoProjectRecruitServiceImpl coProjectRecruitService;
+    private final CoFileService coFileService;
+    private final CoProjectService coProjectService;
+    private final CoProjectHeartService coProjectHeartService;
+    private final CoProjectRecruitService coProjectRecruitService;
 
     public CoProjectController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoProjectServiceImpl coProjectService, CoProjectHeartServiceImpl coProjectHeartService, CoProjectRecruitServiceImpl coProjectRecruitService) {
         super(jwtTokenProvider, jwtService);
