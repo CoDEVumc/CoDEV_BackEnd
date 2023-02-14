@@ -55,4 +55,12 @@ public interface CoChatMapper {
     List<String> getNickNames(@Param("roomId") String roomId, @Param("co_email") String co_email);
 
     boolean isBoardAdmin(Map<String, Object> boardDto);
+
+    void updateRoomTitle(@Param("room_title") String room_title, @Param("roomId") String roomId);
+
+    boolean confirmRoom(@Param("roomId") String roomId);
+
+    List<ChatRoomOfUser> getParticipantsOfRoom(@Param("roomId") String roomId);
+
+    String getAdmin(Map<String, Object> boardDto);
 }

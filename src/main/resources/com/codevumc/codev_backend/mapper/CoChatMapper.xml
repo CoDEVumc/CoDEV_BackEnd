@@ -130,4 +130,31 @@
         </choose>
     </select>
 
+    <select id="updateRoomTitle">
+        update ChatRoom
+        set room_title = #{room_title}
+        where roomId = #{roomId};
+    </select>
+
+    <select id="confirmRoom" resultType="boolean">
+        select exists(select roomId from ChatRoom where roomId = #{roomId})
+    </select>
+
+    <select id="getParticipantsOfRoom" resultType="ChatRoomOfUser">
+        select crou.roomId, crou.co_email, cu.co_nickName, cu.profileImg
+        from ChatRoomOfUser crou join CoUser cu on crou.co_email = cu.co_email
+        where roomId = #{roomId} and crou.co_email != 'TEMP'
+    </select>
+
+    <select id="getAdmin" parameterType="hashMap" resultType="String">
+        <choose>
+            <when test='boardType.equals("PROJECT")'>
+                select co_email from CoProject where co_projectId = #{co_boardId}
+            </when>
+            <otherwise>
+                select co_email from CoStudy where co_studyId = #{co_boardId}
+            </otherwise>
+        </choose>
+
+    </select>
 </mapper>

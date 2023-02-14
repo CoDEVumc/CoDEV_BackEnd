@@ -2,6 +2,7 @@ package com.codevumc.codev_backend.service.co_chat;
 
 import com.codevumc.codev_backend.domain.ChatMessage;
 import com.codevumc.codev_backend.domain.ChatRoom;
+import com.codevumc.codev_backend.domain.ChatRoomOfUser;
 import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -160,15 +161,49 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
         coChatMapper.updateTime(new Timestamp(System.currentTimeMillis()), chatMessage.getRoomId());
     }
 
+
     @Override
-    public CoDevResponse getChatLog(String roomId) {
+    public CoDevResponse updateRoomTitle(String room_title, String roomId) {
         try {
-            //List<ChatMessage> chatMessageList = chatMessageRepository.findByRoomId(roomId);
-            //if(!chatMessageList.isEmpty())
-            //  return setResponse(200, "chatLog", chatMessageList);
-            return setResponse(200, "chatLog", "");
+            coChatMapper.updateRoomTitle(room_title, roomId);
+            return setResponse(200, "message", "채팅방 이름이 변경되었습니다.");
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
+
+    @Override
+    public CoDevResponse confirmRoom(HttpServletRequest request, String roomId) {
+        try {
+            if(!coChatMapper.confirmRoom(roomId))
+                return setResponse(200, "message", "방을 생성합니다.");
+            throw new AuthenticationCustomException(ErrorCode.DUPLICATEERROR);
+        } catch (Exception e) {
+            request.setAttribute("exception", "DUPLICATEERROR");
+            throw new AuthenticationCustomException(ErrorCode.DUPLICATEERROR);
+        }
+    }
+
+    @Override
+    public CoDevResponse getParticipantsOfRoom(HttpServletRequest request, String roomId) {
+        try {
+            List<ChatRoomOfUser> participants = coChatMapper.getParticipantsOfRoom(roomId);
+            String[] classification = roomId.split("_");
+            Map<String, Object> boardDto = new HashMap<>();
+            String admin = null;
+            if(classification[0].equals(ChatRoom.RoomType.OTM.getValue())) {
+                boardDto.put("boardType", classification[1]);
+                boardDto.put("co_boardId", classification[2]);
+                admin = coChatMapper.getAdmin(boardDto);
+
+                for(ChatRoomOfUser participant : participants) {
+                    if(participant.getCo_email().equals(admin))
+                        participant.setPm(true);
+                }
+            }
+            return setResponse(200, "Complete", participants);
+        } catch (Exception e) {
+            request.setAttribute("exception", "REQUESTFAILED");
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
     }

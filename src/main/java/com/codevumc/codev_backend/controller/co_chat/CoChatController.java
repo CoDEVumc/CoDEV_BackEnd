@@ -102,6 +102,21 @@ public class CoChatController extends JwtController {
         return coChatService.exitChatRoom(co_email, roomId);
     }
 
+    @PostMapping("/confirm/{roomId}")
+    public CoDevResponse confirmRoom(HttpServletRequest request, @PathVariable("roomId") String roomId) {
+        return coChatService.confirmRoom(request, roomId);
+    }
+
+    @PostMapping("/update/room_title")
+    public CoDevResponse updateRoomTitle(HttpServletRequest request, @RequestBody Map<String, Object> user) {
+        return coChatService.updateRoomTitle(user.get("room_title").toString(), user.get("roomId").toString());
+    }
+
+    @GetMapping("/participants/{roomId}")
+    public CoDevResponse getParticipants(HttpServletRequest request, @PathVariable("roomId") String roomId) {
+        return coChatService.getParticipantsOfRoom(request, roomId);
+    }
+
     private ChatMessage getChatMessage(String data) throws ParseException{
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
