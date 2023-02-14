@@ -19,5 +19,7 @@ public interface CoChatService {
     CoDevResponse getChatRoom(String roomId);
     CoDevResponse exitChatRoom(String co_email, String roomId);
     void sendMessage(ChatMessage chatMessage, SimpMessageSendingOperations sendingOperations) throws ParseException;
-    CoDevResponse getChatLog(String roomId);
+    CoDevResponse updateRoomTitle(String room_title, String roomId);
+    CoDevResponse confirmRoom(HttpServletRequest request, String roomId);
+    CoDevResponse getParticipantsOfRoom(HttpServletRequest request, String roomId);
 }

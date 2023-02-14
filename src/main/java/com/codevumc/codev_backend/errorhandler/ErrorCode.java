@@ -12,9 +12,9 @@ public enum ErrorCode {
     ReLogin(445, "모든 토큰이 만료되었습니다. 다시 로그인해주세요.", HttpStatus.UNAUTHORIZED),
     FAILEDSIGNUP(402, "회원가입에 실패하였습니다.", HttpStatus.BAD_REQUEST),
     FAILEDLODINGPROJECT(999, "프로젝트 로딩 실패", HttpStatus.NOT_FOUND),
-    REQUESTFAILED(446, "요청에 실패하였습니다.", HttpStatus.BAD_REQUEST),
+    REQUESTFAILED(401, "요청에 실패하였습니다.", HttpStatus.BAD_REQUEST),
     DUPLICATEERROR(401, "이미 생성된 채팅방입니다.", HttpStatus.BAD_REQUEST),
-    FAILEDPUSHNOTIFICATION(401, "푸쉬알림을 보내는데 실패하였습니다.", HttpStatus.BAD_REQUEST);
+    FAILEDPUSHNOTIFICATION(401, "푸쉬알림을 보내는데 실패하였습니다.", HttpStatus.BAD_REQUEST),
     ;
     @Getter
     private int code;
