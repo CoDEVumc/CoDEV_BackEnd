@@ -48,14 +48,15 @@ public class CoChatController extends JwtController {
         ChatMessage chatMessage = getChatMessage(data);
         if(ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             coChatService.enterChatRoom(chatMessage.getRoomId(), chatMessage.getSender(), chatMessage);
+            sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);
         } else if(ChatMessage.MessageType.TALK.equals(chatMessage.getType())) {
             coChatService.sendMessage(firebaseCloudMessageService, chatMessage, sendingOperations);
         }else if(ChatMessage.MessageType.LEAVE.equals(chatMessage.getType())) {
             chatMessage.setContent(chatMessage.getSender() + "");
             coChatService.closeChatRoom(chatMessage.getRoomId(), chatMessage.getSender());
+            sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);
         }
 
-        sendingOperations.convertAndSend("/topic/chat/room/"+chatMessage.getRoomId(), chatMessage);
         return chatMessage;
     }
 
