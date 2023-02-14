@@ -245,7 +245,7 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
         try {
             List<CoUser> coUsers = coChatMapper.getNonReadCoUser(chatMessage.getRoomId());
             chatMessage.setType(ChatMessage.MessageType.TAB);
-            chatMessage.setProfileImg("");
+            chatMessage.setProfileImg(chatMessage.getRoomId());
             if(chatMessage.getContent().length() > 500)
                 chatMessage.setContent(chatMessage.getContent().substring(0, 501));
             for(CoUser coUser : coUsers) {
