@@ -25,7 +25,7 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public class FirebaseCloudMessageServiceImpl extends ResponseService implements FirebaseCloudMessageService{
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/codev-14c11/messages:send";
+    private final String API_URL = "https://fcm.googleapis.com/v1/projects/codev-1674735685978/messages:send";
     private final ObjectMapper objectMapper;
     private final CoUserMapper coUserMapper;
 
