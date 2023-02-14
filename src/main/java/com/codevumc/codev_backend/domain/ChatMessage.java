@@ -19,6 +19,7 @@ public class ChatMessage {
     private String co_nickName;
     private String profileImg;
     private String content;
+    private boolean isPm;
     private String createdDate;
 
     public enum MessageType {
@@ -27,7 +28,8 @@ public class ChatMessage {
         LEAVE("LEAVE"),
         EXIT("EXIT"),
         INVITE("INVITE"),
-        DAY("DAY");
+        DAY("DAY"),
+        TAB("TAB");
 
         private String value;
 

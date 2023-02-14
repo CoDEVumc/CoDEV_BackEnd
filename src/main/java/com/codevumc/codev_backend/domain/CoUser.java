@@ -27,6 +27,7 @@ public class CoUser implements UserDetails {
     private Role role;
     private String profileImg;
     private String co_loginType;
+    private String FCMToken;
 
     @Builder.Default
     private List<String> roles = new ArrayList<>();

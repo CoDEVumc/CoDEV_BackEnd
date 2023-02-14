@@ -8,9 +8,13 @@ import com.codevumc.codev_backend.domain.CoStudy.DevType;
 import com.codevumc.codev_backend.domain.CoTempSaveApplicants;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
+import com.codevumc.codev_backend.service.co_file.CoFileService;
 import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
+import com.codevumc.codev_backend.service.co_study.CoStudyService;
 import com.codevumc.codev_backend.service.co_study.CoStudyServiceImpl;
+import com.codevumc.codev_backend.service.co_studyheart.CoStudyHeartService;
 import com.codevumc.codev_backend.service.co_studyheart.CoStudyHeartServiceImpl;
+import com.codevumc.codev_backend.service.co_studyrecruit.CoStudyRecruitService;
 import com.codevumc.codev_backend.service.co_studyrecruit.CoStudyRecruitServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
 import com.google.gson.Gson;
@@ -31,10 +35,10 @@ import java.util.stream.Collectors;
 public class CoStudyController extends JwtController {
     public static final int SHOW_COUNT = 10;
 
-    private final CoFileServiceImpl coFileService;
-    private final CoStudyServiceImpl coStudyService;
-    private final CoStudyHeartServiceImpl coStudyHeartService;
-    private final CoStudyRecruitServiceImpl coStudyRecruitService;
+    private final CoFileService coFileService;
+    private final CoStudyService coStudyService;
+    private final CoStudyHeartService coStudyHeartService;
+    private final CoStudyRecruitService coStudyRecruitService;
 
     public CoStudyController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoFileServiceImpl coFileService, CoStudyServiceImpl coStudyService, CoStudyHeartServiceImpl coStudyHeartService, CoStudyRecruitServiceImpl coStudyRecruitService) {
         super(jwtTokenProvider, jwtService);

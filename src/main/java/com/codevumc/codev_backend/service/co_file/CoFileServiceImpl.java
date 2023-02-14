@@ -117,6 +117,7 @@ public class CoFileServiceImpl implements CoFileService{
         return null;
     }
 
+    @Override
     public String getCo_MainImg(String co_type, String co_targetId) {
         Optional<CoPhotos> coPhoto = coPhotos.findByCo_mainImg(co_type, co_targetId);
         if(coPhoto.isPresent())

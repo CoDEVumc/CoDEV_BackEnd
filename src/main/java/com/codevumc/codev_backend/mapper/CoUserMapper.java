@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -18,4 +19,7 @@ public interface CoUserMapper {
     void updateLoginType(@Param("co_loginType") String co_loginType, @Param("co_email") String co_email);
     boolean isExistedEmail(String co_email);
     void updatePassword(CoUser coUser);
+    List<String> getFCMToken(Map<String, Object> FCMDto);
+    void updateFCMToken(@Param("FCMToken") String FCMToken, @Param("co_email") String co_email);
+
 }
