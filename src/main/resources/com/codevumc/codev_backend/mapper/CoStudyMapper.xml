@@ -232,15 +232,16 @@
     </select>
 
     <select id="getCoApplicantCount" parameterType="Long" resultType="CoApplicantCount">
+
         select cpos.co_part           as 'co_part',
                cpos.co_total          as 'co_limit',
-               cros.co_applicantCount as 'co_applicantCount'
+               IFNULL(cros.co_recruitCount, 0) as 'co_applicantCount'
         from CoPartOfStudy cpos
-                 left join (select cros.co_studyId as 'co_studyId', count(*) as 'co_applicantCount'
+                 left join (select cros.co_studyId as 'co_studyId', count(*) as 'co_recruitCount'
                             from CoRecruitOfStudy cros
                             where cros.co_studyId = #{co_studyId}
                               and cros.co_temporaryStorage = false) cros on cros.co_studyId = cpos.co_studyId
-        where cpos.co_studyId = #{co_studyId};
+        where cpos.co_studyId = #{co_studyId}
     </select>
 
     <select id="getTempsavedApplicantsCount" parameterType="Long" resultType="Integer">
