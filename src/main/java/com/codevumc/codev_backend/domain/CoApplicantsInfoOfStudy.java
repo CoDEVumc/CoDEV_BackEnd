@@ -12,6 +12,6 @@ import java.util.List;
 public class CoApplicantsInfoOfStudy {
     private String co_part;
     private int co_tempSavedApplicantsCount;
-    private CoApplicantCount co_applicantCount;
+    private List<CoApplicantCount> co_applicantsCount;
     private List<CoApplicantInfo> co_applicantsInfo;
 }

@@ -65,4 +65,6 @@ public interface CoChatMapper {
     String getAdmin(Map<String, Object> boardDto);
 
     List<CoUser> getNonReadCoUser(@Param("roomId") String roomId);
+
+    ChatRoom getNewRoom(@Param("roomId") String roomId);
 }

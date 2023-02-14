@@ -167,4 +167,12 @@
           and crou.co_email != 'TEMP'
           and crou.`status` = false
     </select>
+
+    <select id="getNewRoom" resultType="ChatRoom">
+        select cr.mainImg, cr.room_title ,cr.room_type, crou.people
+        from ChatRoom cr join (select roomId, count(roomId) as people
+                               from ChatRoomOfUser
+                               group by roomId) crou on cr.roomId = crou.roomId
+        where cr.roomId = #{roomId}
+    </select>
 </mapper>
