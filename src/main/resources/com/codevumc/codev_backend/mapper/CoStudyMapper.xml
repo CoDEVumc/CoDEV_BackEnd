@@ -231,11 +231,11 @@
         order by cros.createdAt asc;
     </select>
 
-    <select id="getCoApplicantCount" parameterType="Long" resultType="CoApplicantCount">
+    <select id="getCoApplicantsCount" parameterType="Long" resultType="CoApplicantCount">
 
         select cpos.co_part           as 'co_part',
                cpos.co_total          as 'co_limit',
-               IFNULL(cros.co_recruitCount, 0) as 'co_applicantCount'
+               IFNULL(cros.co_recruitCount, 0) as 'co_applicantsCount'
         from CoPartOfStudy cpos
                  left join (select cros.co_studyId as 'co_studyId', count(*) as 'co_recruitCount'
                             from CoRecruitOfStudy cros
