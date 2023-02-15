@@ -23,7 +23,8 @@ public class ChatRoom {
 
     public enum RoomType {
         OTO("OTO"),// One To One
-        OTM("OTM");// One To Many
+        OTM("OTM"),// One To Many
+        UTU("UTU");
 
         private String value;
 
