@@ -90,7 +90,7 @@ public class CoProjectRecruitServiceImpl extends ResponseService implements CoPr
                         .co_part(co_part.toUpperCase())
                         .co_tempSavedApplicantsCount(this.coProjectMapper.getTempsavedApplicantsCount(co_projectId))
                         .co_applicantsCount(this.coProjectMapper.getCoApplicantsCount(co_projectId))
-                        .co_appllicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))
+                        .co_applicantsInfo(this.coProjectMapper.getCoApplicantsInfo(coProjectDto))
                         .build();
                 return setResponse(200, "message", coApplicantsInfoOfProject);
             }

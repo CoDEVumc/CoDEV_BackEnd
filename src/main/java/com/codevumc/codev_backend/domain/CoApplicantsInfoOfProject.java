@@ -13,5 +13,5 @@ public class CoApplicantsInfoOfProject {
     private String co_part;
     private int co_tempSavedApplicantsCount;
     private List<CoApplicantCount> co_applicantsCount;
-    private List<CoApplicantInfo> co_appllicantsInfo;
+    private List<CoApplicantInfo> co_applicantsInfo;
 }
