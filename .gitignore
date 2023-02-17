@@ -89,6 +89,7 @@ $RECYCLE.BIN/
 .idea
 .gradle
 build/
-firebase_service_key.json
+*.json
+*.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,java
