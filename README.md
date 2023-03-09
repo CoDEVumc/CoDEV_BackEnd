@@ -5,8 +5,11 @@
 
 
 <img src="https://user-images.githubusercontent.com/74559561/224093141-d2d18077-c755-431b-8fbd-3a811b961d9d.jpg" />
-<img align="left" width="49%" height="30%" src="https://user-images.githubusercontent.com/74559561/224093625-e4d96e63-c254-4e18-aaab-c7720c5e7712.jpg" />
-<img  width="49%" height="30%" src="https://user-images.githubusercontent.com/74559561/224093674-139e119f-4298-4c31-91fa-5979a247b5ac.jpg" />
+<div align="center">
+    <img align="left" width="48%" height="30%" src="https://user-images.githubusercontent.com/74559561/224093625-e4d96e63-c254-4e18-aaab-c7720c5e7712.jpg" />
+    <img  width="48%" height="30%" src="https://user-images.githubusercontent.com/74559561/224093674-139e119f-4298-4c31-91fa-5979a247b5ac.jpg" />
+</div>
+
 
 ## 커밋 컨벤션
 `feat` : 새로운 기능 추가
