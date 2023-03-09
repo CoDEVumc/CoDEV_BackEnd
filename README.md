@@ -1,5 +1,5 @@
-<div align="center">
-    <h2>CoDEV : 같이 개발해요! </h2>
+<div>
+    <h1>CoDEV : 같이 개발해요! </h1>
 </div>
 
 
