@@ -13,7 +13,7 @@
     <img  width="48%" height="30%" src="https://user-images.githubusercontent.com/74559561/224093674-139e119f-4298-4c31-91fa-5979a247b5ac.jpg" />
 </div>
 
-<div align=center><h1>📚 STACKS</h1></div>
+<div><h1>📚 STACKS</h1></div>
 
 <div align=center> 
   <img src="https://img.shields.io/badge/java-f26363?style=for-the-badge&logo=java&logoColor=white"/> 
