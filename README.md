@@ -45,4 +45,5 @@
 
 
 ## ERD
-<img src="https://user-images.githubusercontent.com/74559561/211275902-1aa6a493-574c-4974-b08a-5beda41eade7.png" />
+<img src="https://user-images.githubusercontent.com/74559561/224473599-aade5509-b7e2-4c9e-bc9c-715aa8969aa3.png" />
+
