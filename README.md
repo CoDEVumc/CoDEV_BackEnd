@@ -44,11 +44,5 @@
 `merge` : 브랜치 병합
 
 
-## 커밋 예시
-> Feat: "회원 가입 기능 구현"
-
-> SMS, 이메일 중복확인 API 개발
-
-
 ## ERD
 <img src="https://user-images.githubusercontent.com/74559561/211275902-1aa6a493-574c-4974-b08a-5beda41eade7.png" />
