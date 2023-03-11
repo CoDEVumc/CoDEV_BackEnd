@@ -4,6 +4,7 @@ package com.codevumc.codev_backend.domain;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,5 +19,5 @@ public class CoInfoBoard {
     private String co_mainImg;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-
+    private List<CoPhotos> co_photos;
 }
