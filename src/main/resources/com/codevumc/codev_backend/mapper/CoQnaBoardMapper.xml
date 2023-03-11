@@ -4,5 +4,15 @@
 
 <mapper namespace="com.codevumc.codev_backend.mapper.CoInfoBoardMapper">
 
+    <update id="updateCoMainImg">
+        UPDATE CoQnaBoard
+        SET co_mainImg = #{co_mainImg}
+        WHERE `co_qnaId` = #{co_qnaId};
+    </update>
 
+    <insert id="insertCoQnaBoard" parameterType="CoQnaBoard" useGeneratedKeys="true" keyProperty="co_qnaId">
+        INSERT INTO CoQnaBoard
+            (co_email, co_title, content)
+        VALUES (#{co_email}, #{co_title}, #{content})
+    </insert>
 </mapper>
