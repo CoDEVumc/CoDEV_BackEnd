@@ -30,16 +30,16 @@ public class CoProjectServiceImpl extends ResponseService implements CoProjectSe
     }
 
     @Override
-    public CoDevResponse insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
-        try {
-            Map<String, Object> coPartsDto = new HashMap<>();
-            this.coProjectMapper.insertCoProject(coProject);
+        public CoDevResponse insertProject(CoProject coProject, JSONArray co_languages, JSONArray co_parts) {
+            try {
+                Map<String, Object> coPartsDto = new HashMap<>();
+                this.coProjectMapper.insertCoProject(coProject);
 
-            return insertCoLanguageAndCoPart(co_languages, co_parts, coProject.getCo_projectId(), coPartsDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
-        }
+                return insertCoLanguageAndCoPart(co_languages, co_parts, coProject.getCo_projectId(), coPartsDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+            }
 
     }
 
