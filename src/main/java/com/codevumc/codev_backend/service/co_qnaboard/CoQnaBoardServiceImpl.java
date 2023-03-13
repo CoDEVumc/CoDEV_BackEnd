@@ -51,6 +51,22 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
         }
     }
 
+    @Override
+    public CoDevResponse changeMark(String co_email, long co_qnaId) {
+        try{
+            if(coQnaBoardMapper.getCoMarkOfQnaBoardEmail(co_email,co_qnaId) == null){
+                this.coQnaBoardMapper.insertCoMarkOfQnaBoard(co_email,co_qnaId);
+                return setResponse(200,"message","북마크 등록이 완료되었습니다.");
+            }
+            else{
+                this.coQnaBoardMapper.deleteCoMarkOfQnaBoard(co_email,co_qnaId);
+                return setResponse(200,"message","북마크 등록이 취소되었습니다.");
+            }
 
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
 
 }

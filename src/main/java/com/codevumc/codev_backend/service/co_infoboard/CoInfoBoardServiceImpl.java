@@ -49,6 +49,24 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
         }
     }
 
+    @Override
+    public CoDevResponse changeMark(String co_email, long co_infoId) {
+        try{
+            if(coInfoBoardMapper.getCoMarkOfInfoBoardEmail(co_email,co_infoId) == null){
+                this.coInfoBoardMapper.insertCoMarkOfInfoBoard(co_email,co_infoId);
+                return setResponse(200,"message","북마크 등록이 완료되었습니다.");
+            }
+            else{
+                this.coInfoBoardMapper.deleteCoMarkOfInfoBoard(co_email,co_infoId);
+                return setResponse(200,"message","북마크 등록이 취소되었습니다.");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
+
 
     @Override
     public void updateMainImg(String co_mainImg, long co_infoId) {

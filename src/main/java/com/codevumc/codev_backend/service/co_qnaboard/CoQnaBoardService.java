@@ -9,4 +9,6 @@ public interface CoQnaBoardService {
     void updateMainImg(String co_mainImg, long co_qnaId);
     CoDevResponse insertCoQnaBoard(CoQnaBoard coQnaBoard);
     CoDevResponse insertCoCommentOfQnaBoard(CoCommentOfQnaBoard coCommentOfQnaBoard);
+    CoDevResponse changeMark(String co_email, long co_qnaId);
+
 }
