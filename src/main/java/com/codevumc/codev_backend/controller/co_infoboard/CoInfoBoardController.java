@@ -76,7 +76,6 @@ public class CoInfoBoardController extends JwtController {
                 .co_email(getCoUserEmail(request))
                 .co_infoId(coInfoId)
                 .content(co_content.get("co_content").toString()).build();
-        System.out.println("coinfoId:"+coInfoId);
         return coInfoBoardService.insertCoCommentOfInfoBoard(coCommentOfInfoBoard);
     }
 
