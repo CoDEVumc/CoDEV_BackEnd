@@ -22,4 +22,10 @@
         VALUES (#{co_email}, #{co_qnaId}, #{content})
     </insert>
 
+    <insert id="insertCoReCommentOfQnaBoard" parameterType="CoReCommentOfQnaBoard">
+        INSERT INTO CoReCommentOfQnaBoard
+            (co_email, co_coqb, content)
+        VALUES (#{co_email}, #{co_coqb}, #{content})
+    </insert>
+
 </mapper>
