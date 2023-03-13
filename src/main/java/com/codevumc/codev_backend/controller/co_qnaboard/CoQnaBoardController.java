@@ -77,7 +77,6 @@ public class CoQnaBoardController extends JwtController {
                 .co_email(getCoUserEmail(request))
                 .co_qnaId(coQnaId)
                 .content(co_content.get("co_content").toString()).build();
-        System.out.println(coCommentOfQnaBoard.getContent());
         return coQnaBoardService.insertCoCommentOfQnaBoard(coCommentOfQnaBoard);
     }
 

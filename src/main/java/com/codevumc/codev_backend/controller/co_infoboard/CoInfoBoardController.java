@@ -2,6 +2,8 @@ package com.codevumc.codev_backend.controller.co_infoboard;
 
 
 import com.codevumc.codev_backend.controller.JwtController;
+import com.codevumc.codev_backend.domain.CoCommentOfInfoBoard;
+import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
 import com.codevumc.codev_backend.domain.CoInfoBoard;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -11,11 +13,12 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardService;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,4 +68,16 @@ public class CoInfoBoardController extends JwtController {
         coInfoBoardService.updateMainImg(coFileService.getCo_MainImg(BOARD_TYPE, co_targetId), Long.parseLong(co_targetId));
         return coPhotos;
     }
+
+    //정보게시판 댓글 작성
+    @PostMapping("comment/{coInfoId}")
+    public CoDevResponse insertCoCommentOfInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") Long coInfoId, @RequestBody Map<String,Object> co_content) throws Exception{
+        CoCommentOfInfoBoard coCommentOfInfoBoard = CoCommentOfInfoBoard.builder()
+                .co_email(getCoUserEmail(request))
+                .co_infoId(coInfoId)
+                .content(co_content.get("co_content").toString()).build();
+        return coInfoBoardService.insertCoCommentOfInfoBoard(coCommentOfInfoBoard);
+    }
+
+
 }
