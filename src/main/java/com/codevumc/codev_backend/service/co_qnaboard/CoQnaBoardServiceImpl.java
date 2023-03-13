@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.service.co_qnaboard;
 
+import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
 import com.codevumc.codev_backend.domain.CoInfoBoard;
 import com.codevumc.codev_backend.domain.CoQnaBoard;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
@@ -34,9 +35,22 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
 
     }
 
-
     @Override
     public void updateMainImg(String co_mainImg, long co_qnaId) {
         coQnaBoardMapper.updateCoMainImg(co_mainImg, co_qnaId);
     }
+
+    @Override
+    public CoDevResponse insertCoCommentOfQnaBoard(CoCommentOfQnaBoard coCommentOfQnaBoard) {
+        try{
+            this.coQnaBoardMapper.insertCoCommentOfQnaBoard(coCommentOfQnaBoard);
+            return setResponse(200,"message", "질문게시판 댓글이 작성되었습니다.");
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
+
+
+
 }
