@@ -15,4 +15,11 @@
             (co_email, co_title, content)
         VALUES (#{co_email}, #{co_title}, #{content})
     </insert>
+
+    <insert id="insertCoCommentOfQnaBoard" parameterType="CoCommentOfInfoBoard" useGeneratedKeys="true" keyProperty="co_coqb">
+        INSERT INTO CoCommentOfQnaBoard
+            (co_email,co_qnaId,content)
+        VALUES (#{co_email}, #{co_qnaId}, #{content})
+    </insert>
+
 </mapper>
