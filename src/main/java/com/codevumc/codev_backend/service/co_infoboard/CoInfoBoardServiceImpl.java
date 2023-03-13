@@ -1,6 +1,8 @@
 package com.codevumc.codev_backend.service.co_infoboard;
 
 
+import com.codevumc.codev_backend.domain.CoCommentOfInfoBoard;
+import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
 import com.codevumc.codev_backend.domain.CoInfoBoard;
 import com.codevumc.codev_backend.domain.CoProject;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
@@ -35,6 +37,18 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
         }
 
     }
+
+    @Override
+    public CoDevResponse insertCoCommentOfInfoBoard(CoCommentOfInfoBoard coCommentOfInfoBoard) {
+        try{
+            this.coInfoBoardMapper.insertCoCommentOfQnaBoard(coCommentOfInfoBoard);
+            return setResponse(200,"message", "정보게시판 댓글이 작성되었습니다.");
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
+
 
     @Override
     public void updateMainImg(String co_mainImg, long co_infoId) {
