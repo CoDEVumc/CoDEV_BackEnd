@@ -4,6 +4,7 @@ import com.codevumc.codev_backend.controller.JwtController;
 import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
 import com.codevumc.codev_backend.domain.CoPhotos;
 import com.codevumc.codev_backend.domain.CoQnaBoard;
+import com.codevumc.codev_backend.domain.CoReCommentOfQnaBoard;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileService;
@@ -78,5 +79,15 @@ public class CoQnaBoardController extends JwtController {
                 .content(co_content.get("co_content").toString()).build();
         System.out.println(coCommentOfQnaBoard.getContent());
         return coQnaBoardService.insertCoCommentOfQnaBoard(coCommentOfQnaBoard);
+    }
+
+    @PostMapping("/recomments/{coCoqb}")
+    public CoDevResponse insertCoReCommentOfQnaBoard(HttpServletRequest request, @PathVariable("coCoqb") Long coCoqb, @RequestBody Map<String, Object> co_content) throws Exception {
+        CoReCommentOfQnaBoard coReCommentOfQnaBoard = CoReCommentOfQnaBoard.builder()
+                .co_email(getCoUserEmail(request))
+                .co_coqb(coCoqb)
+                .content(co_content.get("co_content").toString())
+                .build();
+        return coQnaBoardService.insertCoReCommentOfQnaBoard(coReCommentOfQnaBoard);
     }
 }
