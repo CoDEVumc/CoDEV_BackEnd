@@ -91,7 +91,7 @@ public class CoQnaBoardController extends JwtController {
     }
 
     //질문게시판 북마크
-    @PatchMapping("mark/{coQnaId}")
+    @PatchMapping("/mark/{coQnaId}")
     public CoDevResponse markOfQnaBoard(HttpServletRequest request, @PathVariable("coQnaId") long co_qnaId) throws Exception{
         return coQnaBoardService.changeMark(getCoUserEmail(request),co_qnaId);
     }
