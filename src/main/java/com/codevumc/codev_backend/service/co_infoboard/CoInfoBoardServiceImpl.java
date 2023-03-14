@@ -1,10 +1,7 @@
 package com.codevumc.codev_backend.service.co_infoboard;
 
 
-import com.codevumc.codev_backend.domain.CoCommentOfInfoBoard;
-import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
-import com.codevumc.codev_backend.domain.CoInfoBoard;
-import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
@@ -50,6 +47,16 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
     }
 
     @Override
+    public CoDevResponse insertCoReCommentOfInfoBoard(CoReCommentOfInfoBoard coReCommentOfInfoBoard) {
+        try {
+            this.coInfoBoardMapper.insertCoReCommentOfInfoBoard(coReCommentOfInfoBoard);
+            return setResponse(200, "message", "정보게시판 대댓글이 작성되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
+    @Override
     public CoDevResponse changeMark(String co_email, long co_infoId) {
         try{
             if(coInfoBoardMapper.getCoMarkOfInfoBoardEmail(co_email,co_infoId) == null){
@@ -72,6 +79,5 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
     public void updateMainImg(String co_mainImg, long co_infoId) {
         coInfoBoardMapper.updateCoMainImg(co_mainImg, co_infoId);
     }
-
 
 }

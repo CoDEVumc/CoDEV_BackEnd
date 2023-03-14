@@ -2,10 +2,7 @@ package com.codevumc.codev_backend.controller.co_infoboard;
 
 
 import com.codevumc.codev_backend.controller.JwtController;
-import com.codevumc.codev_backend.domain.CoCommentOfInfoBoard;
-import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
-import com.codevumc.codev_backend.domain.CoInfoBoard;
-import com.codevumc.codev_backend.domain.CoPhotos;
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileService;
@@ -79,8 +76,17 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.insertCoCommentOfInfoBoard(coCommentOfInfoBoard);
     }
 
+    @PostMapping("/recomments/{co_coib}")
+    public CoDevResponse insertCoReCommentOfInfoBoard(HttpServletRequest request, @PathVariable("co_coib") Long co_coib, @RequestBody Map<String, Object> co_content) throws Exception {
+        CoReCommentOfInfoBoard coReCommentOfInfoBoard = CoReCommentOfInfoBoard.builder()
+                .co_email(getCoUserEmail(request))
+                .co_coib(co_coib)
+                .content(co_content.get("co_content").toString())
+                .build();
+        return coInfoBoardService.insertCoReCommentOfInfoBoard(coReCommentOfInfoBoard);
+    }
     //정보게시판 북마크
-    @PatchMapping("mark/{coInfoId}")
+    @PatchMapping("/mark/{coInfoId}")
     public CoDevResponse markOfInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") long co_infoId) throws Exception{
         return coInfoBoardService.changeMark(getCoUserEmail(request),co_infoId);
     }
