@@ -28,4 +28,8 @@
         VALUES (#{co_email}, #{co_coib}, #{content})
     </insert>
 
+    <select id="getCoInfoBoards" parameterType="hashMap">
+
+    </select>
+
 </mapper>
