@@ -10,5 +10,6 @@ public interface CoInfoBoardService {
     void updateMainImg(String co_mainImg, long co_infoId);
     CoDevResponse insertCoInfoBoard(CoInfoBoard coInfoBoard);
     CoDevResponse insertCoCommentOfInfoBoard(CoCommentOfInfoBoard coCommentOfInfoBoard);
+    CoDevResponse changeMark(String co_email, long co_infoId);
     CoDevResponse insertCoReCommentOfInfoBoard(CoReCommentOfInfoBoard coReCommentOfInfoBoard);
 }

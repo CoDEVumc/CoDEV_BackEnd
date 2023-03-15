@@ -89,4 +89,10 @@ public class CoQnaBoardController extends JwtController {
                 .build();
         return coQnaBoardService.insertCoReCommentOfQnaBoard(coReCommentOfQnaBoard);
     }
+
+    //질문게시판 북마크
+    @PatchMapping("/mark/{coQnaId}")
+    public CoDevResponse markOfQnaBoard(HttpServletRequest request, @PathVariable("coQnaId") long co_qnaId) throws Exception{
+        return coQnaBoardService.changeMark(getCoUserEmail(request),co_qnaId);
+    }
 }
