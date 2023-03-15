@@ -1,9 +1,6 @@
 package com.codevumc.codev_backend.service.co_qnaboard;
 
-import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
-import com.codevumc.codev_backend.domain.CoInfoBoard;
-import com.codevumc.codev_backend.domain.CoQnaBoard;
-import com.codevumc.codev_backend.domain.CoReCommentOfQnaBoard;
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.errorhandler.ErrorCode;
@@ -12,6 +9,11 @@ import com.codevumc.codev_backend.mapper.CoQnaBoardMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -57,6 +59,26 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
         try {
             this.coQnaBoardMapper.insertCoReCommentOfQnaBoard(coReCommentOfQnaBoard);
             return setResponse(200, "message", "질문게시판 대댓글이 작성되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
+
+    @Override
+    public CoDevResponse getCoQnaBoard(String co_viewer, long co_qnaId) {
+        try {
+            Map<String, Object> coQnaBoardDto = new HashMap<>();
+            List<CoPhotos> coPhotosList = coPhotosMapper.findByCoTargetId(String.valueOf(co_qnaId), "QNABOARD");
+            coQnaBoardDto.put("co_viewer", co_viewer);
+            coQnaBoardDto.put("co_qnaId", co_qnaId);
+            Optional<CoQnaBoard> coQnaBoard = coQnaBoardMapper.getCoQnaBoardByViewer(coQnaBoardDto);
+            if(coQnaBoard.isPresent()) {
+                coQnaBoard.get().setCo_viewer(co_viewer);
+                coQnaBoard.get().setCo_photos(coPhotosList);
+                coQnaBoard.get().setCo_comment(coQnaBoardMapper.getComment(co_qnaId));
+            }
+                return setResponse(200, "Complete", coQnaBoard);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);

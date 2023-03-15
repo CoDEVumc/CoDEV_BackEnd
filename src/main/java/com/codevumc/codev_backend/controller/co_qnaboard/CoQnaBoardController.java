@@ -89,4 +89,10 @@ public class CoQnaBoardController extends JwtController {
                 .build();
         return coQnaBoardService.insertCoReCommentOfQnaBoard(coReCommentOfQnaBoard);
     }
+
+    @GetMapping("/{coQnaId}")
+    public CoDevResponse getCoQnaBoard(HttpServletRequest request, @PathVariable("coQnaId") Long co_qnaId) throws Exception {
+        String co_viewer = getCoUserEmail(request);
+        return coQnaBoardService.getCoQnaBoard(co_viewer,co_qnaId);
+    }
 }

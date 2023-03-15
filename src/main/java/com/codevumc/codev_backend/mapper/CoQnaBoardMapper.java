@@ -6,6 +6,10 @@ import com.codevumc.codev_backend.domain.CoReCommentOfQnaBoard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 @Mapper
 public interface CoQnaBoardMapper {
 
@@ -13,4 +17,6 @@ public interface CoQnaBoardMapper {
     void insertCoQnaBoard(CoQnaBoard coQnaBoard);
     void insertCoCommentOfQnaBoard(CoCommentOfQnaBoard coCommentOfQnaBoard);
     void insertCoReCommentOfQnaBoard(CoReCommentOfQnaBoard coReCommentOfQnaBoard);
+    Optional<CoQnaBoard> getCoQnaBoardByViewer(Map<String, Object> coQnaBoardDto);
+    List<CoCommentOfQnaBoard> getComment(long co_qnaId);
 }
