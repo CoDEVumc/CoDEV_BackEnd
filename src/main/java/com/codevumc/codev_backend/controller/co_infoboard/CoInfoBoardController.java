@@ -85,5 +85,10 @@ public class CoInfoBoardController extends JwtController {
                 .build();
         return coInfoBoardService.insertCoReCommentOfInfoBoard(coReCommentOfInfoBoard);
     }
+    //정보게시판 북마크
+    @PatchMapping("/mark/{coInfoId}")
+    public CoDevResponse markOfInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") long co_infoId) throws Exception{
+        return coInfoBoardService.changeMark(getCoUserEmail(request),co_infoId);
+    }
 
 }

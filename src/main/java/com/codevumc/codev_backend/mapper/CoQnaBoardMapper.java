@@ -12,5 +12,8 @@ public interface CoQnaBoardMapper {
     void updateCoMainImg(@Param("co_mainImg") String co_mainImg, @Param("co_qnaId") long co_qnaId);
     void insertCoQnaBoard(CoQnaBoard coQnaBoard);
     void insertCoCommentOfQnaBoard(CoCommentOfQnaBoard coCommentOfQnaBoard);
+    Long getCoMarkOfQnaBoardEmail(String co_email, long co_qnaId);
+    void insertCoMarkOfQnaBoard(String co_email, long co_qnaId);
+    void deleteCoMarkOfQnaBoard(String co_email, long co_qnaId);
     void insertCoReCommentOfQnaBoard(CoReCommentOfQnaBoard coReCommentOfQnaBoard);
 }
