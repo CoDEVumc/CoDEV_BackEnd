@@ -86,4 +86,19 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.insertCoReCommentOfInfoBoard(coReCommentOfInfoBoard);
     }
 
+    @PutMapping(value="/update/{coInfoId}",consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public CoDevResponse updateCoInfoBoard(HttpServletRequest request,@PathVariable("coInfoId") long coInfoId, @RequestPart Map<String, Object> InfoBoard, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+
+        CoInfoBoard coInfoBoard = CoInfoBoard.builder()
+                .co_infoId(coInfoId)
+                .co_email(getCoUserEmail(request))
+                .co_title(InfoBoard.get("co_title").toString())
+                .content(InfoBoard.get("content").toString()).build();
+
+        CoDevResponse result = coInfoBoardService.updateCoInfoBoard(coInfoBoard);
+        if (files != null) {
+            coInfoBoard.setCo_photos(uploadPhotos(files, String.valueOf(coInfoBoard.getCo_infoId())));
+        }
+        return result;
+    }
 }

@@ -13,6 +13,8 @@ import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @AllArgsConstructor
 @Service
@@ -57,6 +59,23 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
         try {
             this.coQnaBoardMapper.insertCoReCommentOfQnaBoard(coReCommentOfQnaBoard);
             return setResponse(200, "message", "질문게시판 대댓글이 작성되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
+
+    @Override
+    public CoDevResponse updateCoQnaBoard(CoQnaBoard coQnaBoard) {
+        try {
+            Optional<CoQnaBoard> coQnaBoardOptional = coQnaBoardMapper.getQnaBoard(coQnaBoard.getCo_qnaId());
+            if(coQnaBoardOptional.isPresent()){
+                if(!coQnaBoard.getCo_email().equals(coQnaBoardOptional.get().getCo_email()))
+                    return setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
+            this.coQnaBoardMapper.updateCoQnaBoard(coQnaBoard);
+
+            return setResponse(200, "message", "질문게시판 글이 수정되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);

@@ -28,4 +28,15 @@
         VALUES (#{co_email}, #{co_coqb}, #{content})
     </insert>
 
+    <select id="getQnaBoard" resultType="coQnaBoard">
+        select * from CoQnaBoard where co_qnaId=#{co_qnaId}
+    </select>
+
+    <update id="updateCoQnaBoard" parameterType="CoQnaBoard">
+        UPDATE CoQnaBoard
+        SET co_title = #{co_title},
+            content = #{content}
+        WHERE co_qnaId = #{co_qnaId}
+    </update>
+
 </mapper>

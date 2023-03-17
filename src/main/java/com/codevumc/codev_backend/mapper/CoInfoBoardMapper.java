@@ -8,6 +8,8 @@ import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardService;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 @Mapper
 public interface CoInfoBoardMapper {
 
@@ -15,4 +17,6 @@ public interface CoInfoBoardMapper {
     void insertCoInfoBoard(CoInfoBoard coInfoBoard);
     void insertCoCommentOfQnaBoard(CoCommentOfInfoBoard coCommentOfInfoBoard);
     void insertCoReCommentOfInfoBoard(CoReCommentOfInfoBoard coReCommentOfInfoBoard);
+    Optional<CoInfoBoard> getInfoBoard(long co_infoId);
+    void updateCoInfoBoard(CoInfoBoard coInfoBoard);
 }
