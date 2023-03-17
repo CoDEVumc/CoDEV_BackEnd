@@ -28,4 +28,15 @@
         VALUES (#{co_email}, #{co_coib}, #{content})
     </insert>
 
+    <select id="getInfoBoard" resultType="coInfoBoard">
+            select * from CoInfoBoard where co_infoId=#{co_infoId}
+    </select>
+
+    <update id="updateCoInfoBoard" parameterType="CoInfoBoard">
+        UPDATE CoInfoBoard
+        SET co_title = #{co_title},
+            content = #{content}
+        WHERE co_infoId = #{co_infoId}
+    </update>
+
 </mapper>

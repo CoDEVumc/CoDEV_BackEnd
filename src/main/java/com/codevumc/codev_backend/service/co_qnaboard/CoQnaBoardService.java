@@ -11,4 +11,5 @@ public interface CoQnaBoardService {
     CoDevResponse insertCoQnaBoard(CoQnaBoard coQnaBoard);
     CoDevResponse insertCoCommentOfQnaBoard(CoCommentOfQnaBoard coCommentOfQnaBoard);
     CoDevResponse insertCoReCommentOfQnaBoard(CoReCommentOfQnaBoard coReCommentOfQnaBoard);
+    CoDevResponse updateCoQnaBoard(CoQnaBoard coQnaBoard);
 }

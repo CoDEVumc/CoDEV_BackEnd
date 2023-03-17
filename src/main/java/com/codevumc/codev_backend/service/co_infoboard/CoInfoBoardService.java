@@ -11,4 +11,5 @@ public interface CoInfoBoardService {
     CoDevResponse insertCoInfoBoard(CoInfoBoard coInfoBoard);
     CoDevResponse insertCoCommentOfInfoBoard(CoCommentOfInfoBoard coCommentOfInfoBoard);
     CoDevResponse insertCoReCommentOfInfoBoard(CoReCommentOfInfoBoard coReCommentOfInfoBoard);
+    CoDevResponse updateCoInfoBoard(CoInfoBoard coInfoBoard);
 }
