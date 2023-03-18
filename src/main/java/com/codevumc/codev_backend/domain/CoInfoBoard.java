@@ -12,11 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CoInfoBoard {
-    private long co_infoId;
+    private Long co_infoId;
     private String co_email;
+    private String profileImg;
     private String co_title;
     private String content;
     private String co_mainImg;
+    private Long co_likeCount;
+    private Long co_commentCount;
+    private Long co_markCount;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private List<CoPhotos> co_photos;
