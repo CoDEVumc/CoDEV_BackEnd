@@ -41,16 +41,19 @@
                      (select count(*) from CoCommentOfInfoBoard ccoib2 where ccoib2.co_infoId = cib.co_infoId) +
                      (select count(*) from CoReCommentOfInfoBoard crcoib where crcoib.co_coib = ccoib.co_coib)) as 'co_commentCount',
             (select count(*) from CoMarkOfInfoBoard cmoib where cmoib.co_infoId = cib.co_infoId) as 'co_markCount',
-            if(cmoib.co_email is null, false, true) as 'co_mark',
             cib.createdAt as 'createdAt',
             cib.updatedAt as 'updatedAt'
         from CoInfoBoard cib
                  left join CoUser cu on cib.co_email = cu.co_email
-                 left join CoMarkOfInfoBoard cmoib on cmoib.co_infoId = cib.co_infoId and cmoib.co_email = #{co_email}
                  left join CoCommentOfInfoBoard ccoib on cib.co_infoId = ccoib.co_infoId
+        where
         <if test="co_keyword != null and !co_keyword.equals('')">
-            where cib.co_title like #{co_keyword} or cib.content like #{co_keyword}
+            cib.co_title like #{co_keyword} or cib.content like #{co_keyword} and
         </if>
+        <if test="co_myBoard != null and !co_myBoard.equals('')">
+            cib.co_email = #{co_email} and
+        </if>
+        cib.createdAt is not null
         order by
         <choose>
             <when test='co_sortingTag.equals("POPULARITY")'>

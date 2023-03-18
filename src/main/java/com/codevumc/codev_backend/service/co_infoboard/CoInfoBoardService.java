@@ -12,5 +12,5 @@ public interface CoInfoBoardService {
     CoDevResponse insertCoCommentOfInfoBoard(CoCommentOfInfoBoard coCommentOfInfoBoard);
     CoDevResponse changeMark(String co_email, long co_infoId);
     CoDevResponse insertCoReCommentOfInfoBoard(CoReCommentOfInfoBoard coReCommentOfInfoBoard);
-    CoDevResponse getAllInfoBoards(String co_email, String co_keyword, String co_sortingTag, int showCount, int offset, int pageNum);
+    CoDevResponse getAllInfoBoards(String co_email, String co_keyword, String co_sortingTag, int showCount, int offset, int pageNum, String co_myBoard);
 }
