@@ -21,7 +21,6 @@ public class CoInfoBoard {
     private Long co_likeCount;
     private Long co_commentCount;
     private Long co_markCount;
-    private boolean co_mark;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private List<CoPhotos> co_photos;
