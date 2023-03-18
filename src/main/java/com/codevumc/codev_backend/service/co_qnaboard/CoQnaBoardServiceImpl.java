@@ -112,7 +112,7 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
             condition.put("co_sortingTag", co_sortingTag);
             condition.put("limit", limit);
             condition.put("offset", offset);
-            List<CoQnaBoard> coQnaBoards = this.coQnaBoardMapper.getAllQnaBoards(condition);
+            List<CoQnaBoard> coQnaBoards = this.coQnaBoardMapper.getCoQnaBoards(condition);
             setResponse(200, "success", coQnaBoards);
             return addResponse("co_page", pageNum);
         } catch (Exception e) {
