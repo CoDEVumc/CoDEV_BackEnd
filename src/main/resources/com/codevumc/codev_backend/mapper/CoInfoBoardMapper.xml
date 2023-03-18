@@ -32,4 +32,19 @@
 
     </select>
 
+    <select id ="getCoMarkOfInfoBoardEmail" resultType="Long">
+        SELECT co_moib FROM CoMarkOfInfoBoard
+        WHERE co_email=#{co_email} AND co_infoId=#{co_infoId}
+    </select>
+
+    <insert id ="insertCoMarkOfInfoBoard">
+        INSERT INTO CoMarkOfInfoBoard (co_email,co_infoId)
+        VALUES(#{co_email},#{co_infoId})
+    </insert>
+
+    <delete id ="deleteCoMarkOfInfoBoard">
+        DELETE FROM CoMarkOfInfoBoard
+        WHERE co_email =#{co_email} AND co_infoId = #{co_infoId}
+    </delete>
+
 </mapper>
