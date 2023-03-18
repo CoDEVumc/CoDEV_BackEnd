@@ -35,18 +35,17 @@
             cu.profileImg as 'profileImg',
             cib.co_title as 'co_title',
             substr(cib.content, 1, 40) as 'content',
-            cib.co_mainImg,
+            cib.co_mainImg as 'co_mainImg',
             (select count(*) from CoLikeOfInfoBoard cloib where cloib.co_infoId = cib.co_infoId) as 'co_likeCount',
             (select
-                     (select count(*) from CoCommentOfInfoBoard ccoib where ccoib.co_infoId = cib.co_infoId) +
+                     (select count(*) from CoCommentOfInfoBoard ccoib2 where ccoib2.co_infoId = cib.co_infoId) +
                      (select count(*) from CoReCommentOfInfoBoard crcoib where crcoib.co_coib = ccoib.co_coib)) as 'co_commentCount',
             (select count(*) from CoMarkOfInfoBoard cmoib where cmoib.co_infoId = cib.co_infoId) as 'co_markCount',
-            cib.createdAt as 'createdAt',
-            cib.updatedAt as 'updatedAt'
+            cib.createdAt as 'createAt',
+            cib.updatedAt as 'updateAt'
         from CoInfoBoard cib
                  left join CoUser cu on cib.co_email = cu.co_email
                  left join CoCommentOfInfoBoard ccoib on cib.co_infoId = ccoib.co_infoId
-                 left join CoReCommentOfInfoBoard crcoib on ccoib.co_coib = crcoib.co_coib
     </select>
 
     <select id ="getCoMarkOfInfoBoardEmail" resultType="Long">
