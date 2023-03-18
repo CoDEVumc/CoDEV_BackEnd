@@ -94,7 +94,7 @@
         <collection property="coReCommentOfQnaBoardList" column="CO_COQB" javaType="java.util.ArrayList" ofType="CoReCommentOfQnaBoard" select="getReComment"/>
     </resultMap>
 
-    <select id="getAllQnaBoards" parameterType="hash" resultType="CoQnaBoard">
+    <select id="getAllQnaBoards" parameterType="hashMap" resultType="CoQnaBoard">
         select distinct
             cqb.co_qnaId as 'co_qnaId',
             cqb.co_email as 'co_email',
