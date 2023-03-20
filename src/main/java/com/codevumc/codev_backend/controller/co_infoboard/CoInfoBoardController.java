@@ -10,6 +10,7 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardService;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import com.google.api.Http;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -91,6 +92,22 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.changeMark(getCoUserEmail(request),co_infoId);
     }
 
+    @GetMapping("/infoBoards/{page}")
+    public CoDevResponse getAllInfoBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard) throws Exception {
+        int limit = getLimitCnt(pageNum);
+        int offset = limit - SHOW_COUNT;
+        return coInfoBoardService.getAllInfoBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard);
+    }
+
+    private int getLimitCnt(int pageNum) {
+        int limit = SHOW_COUNT;
+        for(int i = 0; i <= pageNum; i++) {
+            if(i != 0)
+                limit += SHOW_COUNT;
+        }
+
+        return limit;
+    }
     @PutMapping(value="/update/{coInfoId}",consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CoDevResponse updateCoInfoBoard(HttpServletRequest request,@PathVariable("coInfoId") long coInfoId, @RequestPart Map<String, Object> InfoBoard, @RequestPart(required = false) MultipartFile[] files) throws Exception {
 

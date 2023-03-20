@@ -26,4 +26,5 @@ public interface CoQnaBoardMapper {
     void updateCoQnaBoard(CoQnaBoard coQnaBoard);
     Optional<CoQnaBoard> getCoQnaBoardByViewer(Map<String, Object> coQnaBoardDto);
     List<CoCommentOfQnaBoard> getComment(long co_qnaId);
+    List<CoQnaBoard> getCoQnaBoards(Map<String, Object> condition);
 }
