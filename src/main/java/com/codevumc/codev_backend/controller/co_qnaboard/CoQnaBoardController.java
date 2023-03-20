@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/codev/QnaBoard")
+@RequestMapping("/codev/qnaBoard")
 public class CoQnaBoardController extends JwtController {
     public static final int SHOW_COUNT = 10;
     public static final String BOARD_TYPE = "INFOBOARD";
