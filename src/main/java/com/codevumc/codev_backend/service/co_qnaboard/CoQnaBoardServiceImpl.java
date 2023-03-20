@@ -107,7 +107,7 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
     public CoDevResponse deleteQnaBoard(String co_email, Long co_qnaId) {
         Map<String, Object> coQnaBoardDto = new HashMap<>();
         coQnaBoardDto.put("co_email", co_email);
-        coQnaBoardDto.put("co_infoId", co_qnaId);
+        coQnaBoardDto.put("co_qnaId", co_qnaId);
         try {
             return coQnaBoardMapper.deleteQnaBoard(coQnaBoardDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
         } catch (Exception e) {
