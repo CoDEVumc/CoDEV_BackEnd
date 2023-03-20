@@ -102,4 +102,36 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
     }
+
+    @Override
+    public CoDevResponse deleteCoQnaComment(String co_email, long co_coqb) {
+        try {
+            Map<String, Object> coCommentDto = new HashMap<>();
+            coCommentDto.put("co_email", co_email);
+            coCommentDto.put("co_coqb", co_coqb);
+            Optional<CoCommentOfQnaBoard> coCommentOfQnaBoard = coQnaBoardMapper.getCoQnaComment(co_coqb);
+            if(coCommentOfQnaBoard.isPresent()) {
+                return coQnaBoardMapper.deleteCoQnaComment(coCommentDto) ? setResponse(200,"Complete", "댓글이 삭제되었습니다.") : setResponse(403,"Forbidden", "삭제 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse deleteCoQnaReComment(String co_email, long co_rcoqb) {
+        try {
+            Map<String, Object> coReCommentDto = new HashMap<>();
+            coReCommentDto.put("co_email", co_email);
+            coReCommentDto.put("co_rcoqb", co_rcoqb);
+            Optional<CoReCommentOfQnaBoard> coReCommentOfQnaBoard = coQnaBoardMapper.getCoQnaReComment(co_rcoqb);
+            if(coReCommentOfQnaBoard.isPresent()) {
+                return coQnaBoardMapper.deleteCoQnaReComment(coReCommentDto) ? setResponse(200,"Complete", "댓글이 삭제되었습니다.") : setResponse(403, "Forbidden", "삭제 권한이 없습니다");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
