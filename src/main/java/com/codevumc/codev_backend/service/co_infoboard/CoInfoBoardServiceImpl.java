@@ -78,8 +78,31 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
 
 
     @Override
+    public CoDevResponse getAllInfoBoards(String co_email, String co_keyword, String co_sortingTag, int limit, int offset, int pageNum, String co_myBoard) {
+        try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("co_keyword", setting(co_keyword));
+            condition.put("co_sortingTag", co_sortingTag);
+            condition.put("co_myBoard", co_myBoard);
+            condition.put("limit", limit);
+            condition.put("offset", offset);
+            List<CoInfoBoard> coInfoBoards = this.coInfoBoardMapper.getCoInfoBoards(condition);
+            setResponse(200, "success", coInfoBoards);
+            return addResponse("co_page", pageNum);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public void updateMainImg(String co_mainImg, long co_infoId) {
         coInfoBoardMapper.updateCoMainImg(co_mainImg, co_infoId);
+    }
+
+    private String setting(String keyword) {
+        return keyword == null ? null : "%" + keyword + "%";
     }
 
     @Override
