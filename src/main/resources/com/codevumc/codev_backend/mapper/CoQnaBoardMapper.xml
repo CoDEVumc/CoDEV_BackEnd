@@ -94,4 +94,20 @@
         <collection property="coReCommentOfQnaBoardList" column="CO_COQB" javaType="java.util.ArrayList" ofType="CoReCommentOfQnaBoard" select="getReComment"/>
     </resultMap>
 
+    <select id="getCoQnaComment" resultType="CoCommentOfQnaBoard">
+        select * from CoCommentOfQnaBoard where co_coqb = #{co_coqb}
+    </select>
+    
+    <select id="getCoQnaReComment" resultType="CoReCommentOfQnaBoard">
+        select * from CoReCommentOfQnaBoard where co_rcoqb = #{co_rcoqb}
+    </select>
+
+    <delete id="deleteCoQnaComment" parameterType="hashMap">
+        delete from CoCommentOfQnaBoard where co_email = #{co_email} and co_coqb = #{co_coqb}
+    </delete>
+
+    <delete id="deleteCoQnaReComment" parameterType="hashMap">
+        delete from CoReCommentOfQnaBoard where co_email = #{co_email} and co_rcoqb = #{co_rcoqb}
+    </delete>
+
 </mapper>

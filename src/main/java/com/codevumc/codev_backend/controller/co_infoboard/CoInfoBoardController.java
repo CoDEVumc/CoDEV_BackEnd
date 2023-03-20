@@ -97,4 +97,18 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.getCoInfoBoard(co_viewer,co_infoId);
     }
 
+    //정보게시판 댓글 삭제
+    @DeleteMapping("/out/comment/{coCoib}")
+    public CoDevResponse deleteCoInfoComment(HttpServletRequest request, @PathVariable("coCoib") Long co_coib) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coInfoBoardService.deleteCoInfoComment(co_email,co_coib);
+    }
+
+    //정보게시판 대댓글 삭제
+    @DeleteMapping("/out/recomment/{coRcoib}")
+    public CoDevResponse deleteCoInfoReComment(HttpServletRequest request, @PathVariable("coRcoib") Long co_rcoib) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coInfoBoardService.deleteCoInfoReComment(co_email,co_rcoib);
+    }
+
 }

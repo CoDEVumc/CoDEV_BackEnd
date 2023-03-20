@@ -22,4 +22,8 @@ public interface CoQnaBoardMapper {
     void insertCoReCommentOfQnaBoard(CoReCommentOfQnaBoard coReCommentOfQnaBoard);
     Optional<CoQnaBoard> getCoQnaBoardByViewer(Map<String, Object> coQnaBoardDto);
     List<CoCommentOfQnaBoard> getComment(long co_qnaId);
+    Optional<CoCommentOfQnaBoard> getCoQnaComment(long co_coqb);
+    Optional<CoReCommentOfQnaBoard> getCoQnaReComment(long co_rcoqb);
+    boolean deleteCoQnaComment(Map<String, Object> coCommentDto);
+    boolean deleteCoQnaReComment(Map<String, Object> coReCommentDto);
 }
