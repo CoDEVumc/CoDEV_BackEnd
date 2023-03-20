@@ -4,6 +4,7 @@ package com.codevumc.codev_backend.domain;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,4 +17,5 @@ public class CoCommentOfInfoBoard {
     private long co_infoId;
     private String content;
     private Timestamp createdAt;
+    private List<CoReCommentOfInfoBoard> coReCommentOfInfoBoardList;
 }
