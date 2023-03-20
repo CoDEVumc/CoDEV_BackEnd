@@ -14,10 +14,13 @@ public class CoQnaBoard {
     private long co_qnaId;
     private String co_email;
     private String co_viewer;
+    private String profileImg;
     private String co_title;
     private String content;
     private String co_mainImg;
-    private int commentCount;
+    private Long co_likeCount;
+    private Long co_commentCount;
+    private Long co_markCount;
     private boolean co_mark;
     private Timestamp createdAt;
     private Timestamp updatedAt;

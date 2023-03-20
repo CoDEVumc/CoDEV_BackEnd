@@ -115,4 +115,21 @@ public class CoQnaBoardController extends JwtController {
         String co_email = getCoUserEmail(request);
         return coQnaBoardService.deleteCoQnaReComment(co_email,co_rcoqb);
     }
+
+    @GetMapping("/qnaBoards/{page}")
+    public CoDevResponse getAllQnaBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coKeyword") String co_keyword, @RequestParam("coSortingTag") String co_sortingTag) throws Exception {
+        int limit = getLimitCnt(pageNum);
+        int offset = limit - SHOW_COUNT;
+        return coQnaBoardService.getAllQnaBoards(getCoUserEmail(request), co_keyword, co_sortingTag.toUpperCase(), SHOW_COUNT, offset, pageNum);
+    }
+
+    private int getLimitCnt(int pageNum) {
+        int limit = SHOW_COUNT;
+        for(int i = 0; i <= pageNum; i++) {
+            if(i != 0)
+                limit += SHOW_COUNT;
+        }
+
+        return limit;
+    }
 }
