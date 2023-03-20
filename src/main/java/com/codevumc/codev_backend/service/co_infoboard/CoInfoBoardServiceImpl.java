@@ -40,7 +40,7 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
     @Override
     public CoDevResponse insertCoCommentOfInfoBoard(CoCommentOfInfoBoard coCommentOfInfoBoard) {
         try{
-            this.coInfoBoardMapper.insertCoCommentOfQnaBoard(coCommentOfInfoBoard);
+            this.coInfoBoardMapper.insertCoCommentOfInfoBoard(coCommentOfInfoBoard);
             return setResponse(200,"message", "정보게시판 댓글이 작성되었습니다.");
         }catch(Exception e){
             e.printStackTrace();
