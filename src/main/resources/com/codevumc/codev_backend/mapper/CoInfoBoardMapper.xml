@@ -85,6 +85,10 @@
         where co_coib = #{co_coib}
     </select>
 
+    <delete id="deleteInfoBoard" parameterType="hashMap">
+        delete from CoInfoBoard where co_email = #{co_email} and co_infoId = #{co_infoId}
+    </delete>
+
     <resultMap id="commentResult" type="CoCommentOfInfoBoard">
         <result property="co_coib" column="CO_COIB"/>
         <result property="co_infoId" column="CO_INFOID"/>

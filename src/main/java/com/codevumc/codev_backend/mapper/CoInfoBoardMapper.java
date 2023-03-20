@@ -24,4 +24,5 @@ public interface CoInfoBoardMapper {
     void deleteCoMarkOfInfoBoard(String co_email, long co_infoId);
     Optional<CoInfoBoard> getCoInfoBoardByViewer(Map<String, Object> coInfoBoardDto);
     List<CoCommentOfInfoBoard> getComment(long co_infoId);
+    boolean deleteInfoBoard(Map<String, Object> coInfoBoardDto);
 }

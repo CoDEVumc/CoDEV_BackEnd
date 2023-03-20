@@ -97,4 +97,9 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.getCoInfoBoard(co_viewer,co_infoId);
     }
 
+    @DeleteMapping("/{coInfoId}")
+    public CoDevResponse deleteInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") Long co_infoId) throws Exception {
+        return coInfoBoardService.deleteInfoBoard(getCoUserEmail(request), co_infoId);
+    }
+
 }
