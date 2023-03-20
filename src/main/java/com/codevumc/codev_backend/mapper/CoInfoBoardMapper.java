@@ -8,6 +8,10 @@ import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardService;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 @Mapper
 public interface CoInfoBoardMapper {
 
@@ -18,4 +22,6 @@ public interface CoInfoBoardMapper {
     Long getCoMarkOfInfoBoardEmail(@Param("co_email") String co_email, @Param("co_infoId") long co_infoId);
     void insertCoMarkOfInfoBoard(String co_email, long co_infoId);
     void deleteCoMarkOfInfoBoard(String co_email, long co_infoId);
+    Optional<CoInfoBoard> getCoInfoBoardByViewer(Map<String, Object> coInfoBoardDto);
+    List<CoCommentOfInfoBoard> getComment(long co_infoId);
 }

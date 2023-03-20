@@ -43,4 +43,55 @@
         WHERE co_email =#{co_email} AND co_infoId = #{co_infoId}
     </delete>
 
+    <select id="getCoInfoBoardByViewer" parameterType="hashMap" resultType="CoInfoBoard">
+        select  cib.co_infoId                                                               as 'co_infoId',
+                cib.co_email                                                                as 'co_email',
+                cib.co_title                                                                as 'co_title',
+                cib.content                                                                 as 'content',
+                (select count(co_infoId) from CoLikeOfInfoBoard where co_infoId = #{co_infoId}) as 'co_likeBoardCount',
+                (select SUM(C.cnt)
+                 from(
+                         select count(ccoib.co_infoId) as cnt
+                         from CoCommentOfInfoBoard as ccoib
+                         where ccoib.co_infoId = #{co_infoId}
+
+                         UNION ALL
+
+                         select count(crcoib.co_coib) as cnt
+                         from CoReCommentOfInfoBoard as crcoib
+                         left join CoCommentOfInfoBoard as ccoib on crcoib.co_coib = ccoib.co_coib
+                         where ccoib.co_infoId = #{co_infoId}
+                     )C)                                                                    as 'commentCount',
+                if(cmoib.co_moib, 1, 0)                                                     as 'co_mark',
+                cib.createdAt                                                               as 'createdAt',
+                cib.updatedAt                                                               as 'updatedAt'
+        from CoInfoBoard as cib
+                 left join (select co_infoId,
+                                   co_moib
+                            from CoMarkOfInfoBoard
+                            where co_infoId = #{co_infoId} and co_email = #{co_email}) cmoib on cib.co_infoId = cmoib.co_infoId
+        where cib.co_infoId = #{co_infoId};
+    </select>
+
+    <select id="getComment" resultType="CoCommentOfInfoBoard" resultMap="commentResult">
+        select co_coib, co_infoId, co_email, content, createdAt
+        from CoCommentOfInfoBoard
+        where co_infoId = #{co_infoId}
+    </select>
+
+    <select id="getReComment" resultType="CoReCommentOfInfoBoard">
+        select co_rcoib, co_coib, co_email, content, createdAt
+        from CoReCommentOfInfoBoard
+        where co_coib = #{co_coib}
+    </select>
+
+    <resultMap id="commentResult" type="CoCommentOfInfoBoard">
+        <result property="co_coib" column="CO_COIB"/>
+        <result property="co_infoId" column="CO_INFOID"/>
+        <result property="co_email" column="CO_EMAIL"/>
+        <result property="content" column="CONTENT"/>
+        <result property="createdAt" column="CREATEDAT"/>
+        <collection property="coReCommentOfInfoBoardList" column="CO_COIB" javaType="java.util.ArrayList" ofType="CoReCommentOfInfoBoard" select="getReComment"/>
+    </resultMap>
+
 </mapper>

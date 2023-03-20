@@ -91,4 +91,10 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.changeMark(getCoUserEmail(request),co_infoId);
     }
 
+    @GetMapping("/{coInfoId}")
+    public CoDevResponse getCoInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") Long co_infoId) throws Exception {
+        String co_viewer = getCoUserEmail(request);
+        return coInfoBoardService.getCoInfoBoard(co_viewer,co_infoId);
+    }
+
 }
