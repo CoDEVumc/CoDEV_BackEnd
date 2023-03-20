@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/codev/QnaBoard")
+@RequestMapping("/codev/qnaBoard")
 public class CoQnaBoardController extends JwtController {
     public static final int SHOW_COUNT = 10;
     public static final String BOARD_TYPE = "INFOBOARD";
@@ -117,10 +117,10 @@ public class CoQnaBoardController extends JwtController {
     }
 
     @GetMapping("/qnaBoards/{page}")
-    public CoDevResponse getAllQnaBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coKeyword") String co_keyword, @RequestParam("coSortingTag") String co_sortingTag) throws Exception {
+    public CoDevResponse getAllQnaBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coQnaBoardService.getAllQnaBoards(getCoUserEmail(request), co_keyword, co_sortingTag.toUpperCase(), SHOW_COUNT, offset, pageNum);
+        return coQnaBoardService.getAllQnaBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard);
     }
 
     private int getLimitCnt(int pageNum) {

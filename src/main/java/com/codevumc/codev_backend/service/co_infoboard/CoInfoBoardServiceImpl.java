@@ -82,9 +82,6 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
-            //condition.put("co_keyword", setting(co_keyword));
-            //condition.put("co_sortingTag", co_sortingTag);
-
             condition.put("coMyBoard", coMyBoard ? co_email : null);
             condition.put("limit", limit);
             condition.put("offset", offset);

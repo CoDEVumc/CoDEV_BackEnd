@@ -49,7 +49,6 @@
         where cib.createdAt is not null
         <if test="coMyBoard != null and !coMyBoard.equals('')">
             and cib.co_email = #{coMyBoard}
-
         </if>
         order by createdAt desc limit #{limit} offset #{offset}
     </select>
