@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/codev/QnaBoard")
 public class CoQnaBoardController extends JwtController {
     public static final int SHOW_COUNT = 10;
-    public static final String BOARD_TYPE = "INFOBOARD";
+    public static final String BOARD_TYPE = "QNABOARD";
     private final CoFileService coFileService;
     private final CoQnaBoardService coQnaBoardService;
 
@@ -111,7 +111,7 @@ public class CoQnaBoardController extends JwtController {
                 .content(qnaBoard.get("content").toString()).build();
 
         CoDevResponse result = coQnaBoardService.updateCoQnaBoard(coQnaBoard);
-        coFileService.deleteFile(String.valueOf(coQnaBoard.getCo_qnaId()),"QNA");
+        coFileService.deleteFile(String.valueOf(coQnaBoard.getCo_qnaId()),BOARD_TYPE);
         if (files != null) {
             coQnaBoard.setCo_photos(uploadPhotos(files, String.valueOf(coQnaBoard.getCo_qnaId())));
         }

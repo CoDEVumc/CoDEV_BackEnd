@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/codev/infoBoard")
 public class CoInfoBoardController extends JwtController {
     public static final int SHOW_COUNT = 10;
-    public static final String BOARD_TYPE = "QNABOARD";
+    public static final String BOARD_TYPE = "INFOBOARD";
     private final CoFileService coFileService;
     private final CoInfoBoardService coInfoBoardService;
 
@@ -101,7 +101,7 @@ public class CoInfoBoardController extends JwtController {
                 .content(InfoBoard.get("content").toString()).build();
 
         CoDevResponse result = coInfoBoardService.updateCoInfoBoard(coInfoBoard);
-        coFileService.deleteFile(String.valueOf(coInfoBoard.getCo_infoId()),"INFO");
+        coFileService.deleteFile(String.valueOf(coInfoBoard.getCo_infoId()),BOARD_TYPE);
         if (files != null) {
             coInfoBoard.setCo_photos(uploadPhotos(files, String.valueOf(coInfoBoard.getCo_infoId())));
         }
