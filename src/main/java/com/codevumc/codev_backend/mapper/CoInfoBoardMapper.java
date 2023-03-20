@@ -22,6 +22,7 @@ public interface CoInfoBoardMapper {
     Long getCoMarkOfInfoBoardEmail(@Param("co_email") String co_email, @Param("co_infoId") long co_infoId);
     void insertCoMarkOfInfoBoard(String co_email, long co_infoId);
     void deleteCoMarkOfInfoBoard(String co_email, long co_infoId);
+    List<CoInfoBoard> getCoInfoBoards(Map<String, Object> condition);
     Optional<CoInfoBoard> getCoInfoBoardByViewer(Map<String, Object> coInfoBoardDto);
     List<CoCommentOfInfoBoard> getComment(long co_infoId);
     Optional<CoInfoBoard> getInfoBoard(long co_infoId);
