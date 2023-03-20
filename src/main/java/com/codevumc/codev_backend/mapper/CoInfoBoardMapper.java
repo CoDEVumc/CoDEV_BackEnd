@@ -17,6 +17,9 @@ public interface CoInfoBoardMapper {
     void insertCoInfoBoard(CoInfoBoard coInfoBoard);
     void insertCoCommentOfQnaBoard(CoCommentOfInfoBoard coCommentOfInfoBoard);
     void insertCoReCommentOfInfoBoard(CoReCommentOfInfoBoard coReCommentOfInfoBoard);
+    Long getCoMarkOfInfoBoardEmail(@Param("co_email") String co_email, @Param("co_infoId") long co_infoId);
+    void insertCoMarkOfInfoBoard(String co_email, long co_infoId);
+    void deleteCoMarkOfInfoBoard(String co_email, long co_infoId);
     Optional<CoInfoBoard> getInfoBoard(long co_infoId);
     void updateCoInfoBoard(CoInfoBoard coInfoBoard);
 }

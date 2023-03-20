@@ -90,6 +90,18 @@ public class CoQnaBoardController extends JwtController {
         return coQnaBoardService.insertCoReCommentOfQnaBoard(coReCommentOfQnaBoard);
     }
 
+    //질문게시판 북마크
+    @PatchMapping("/mark/{coQnaId}")
+    public CoDevResponse markOfQnaBoard(HttpServletRequest request, @PathVariable("coQnaId") long co_qnaId) throws Exception{
+        return coQnaBoardService.changeMark(getCoUserEmail(request),co_qnaId);
+    }
+
+    @GetMapping("/{coQnaId}")
+    public CoDevResponse getCoQnaBoard(HttpServletRequest request, @PathVariable("coQnaId") Long co_qnaId) throws Exception {
+        String co_viewer = getCoUserEmail(request);
+        return coQnaBoardService.getCoQnaBoard(co_viewer,co_qnaId);
+    }
+
     @PutMapping(value="/update/{coqnaId}",consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public CoDevResponse updateQnaBoard(HttpServletRequest request,@PathVariable("coqnaId") long coqnaId ,@RequestPart Map<String, Object> qnaBoard, @RequestPart(required = false) MultipartFile[] files) throws Exception {
 

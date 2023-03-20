@@ -28,6 +28,72 @@
         VALUES (#{co_email}, #{co_coqb}, #{content})
     </insert>
 
+    <select id ="getCoMarkOfQnaBoardEmail" resultType="Long">
+        SELECT co_moqb FROM CoMarkOfQnaBoard
+        WHERE co_email=#{co_email} AND co_qnaId=#{co_qnaId}
+    </select>
+
+    <insert id ="insertCoMarkOfQnaBoard">
+        INSERT INTO CoMarkOfQnaBoard (co_email,co_qnaId)
+        VALUES(#{co_email},#{co_qnaId})
+    </insert>
+
+    <delete id ="deleteCoMarkOfQnaBoard">
+        DELETE FROM CoMarkOfQnaBoard
+        WHERE co_email =#{co_email} AND co_qnaId = #{co_qnaId}
+    </delete>
+
+    <select id="getCoQnaBoardByViewer" parameterType="hashMap" resultType="CoQnaBoard">
+        select cqb.co_qnaId                                                                as 'co_qnaId',
+               cqb.co_email                                                                as 'co_email',
+               cqb.co_title                                                                as 'co_title',
+               cqb.content                                                                 as 'content',
+               (select count(co_qnaId) from CoLikeOfQnaBoard where co_qnaId = #{co_qnaId}) as 'co_likeBoardCount',
+               (select SUM(C.cnt)
+                from(
+                    select count(ccoqb.co_qnaId) as cnt
+                    from CoCommentOfQnaBoard as ccoqb
+                    where ccoqb.co_qnaId = #{co_qnaId}
+
+                    UNION ALL
+
+                    select count(crcoqb.co_coqb) as cnt
+                    from CoReCommentOfQnaBoard as crcoqb
+                    left join CoCommentOfQnaBoard as ccoqb on crcoqb.co_coqb = ccoqb.co_coqb
+                    where ccoqb.co_qnaId = #{co_qnaId}
+                    )C)                                                                    as 'commentCount',
+               if(cmoqb.co_moqb, 1, 0)                                                     as 'co_mark',
+               cqb.createdAt                                                               as 'createdAt',
+               cqb.updatedAt                                                               as 'updatedAt'
+        from CoQnaBoard as cqb
+                 left join (select co_qnaId,
+                                   co_moqb
+                            from CoMarkOfQnaBoard
+                            where co_qnaId = #{co_qnaId} and co_email = #{co_email}) cmoqb on cqb.co_qnaId = cmoqb.co_qnaId
+        where cqb.co_qnaId = #{co_qnaId};
+    </select>
+
+    <select id="getComment" resultType="CoCommentOfQnaBoard" resultMap="commentResult">
+        select co_coqb, co_qnaId, co_email, content, createdAt
+        from CoCommentOfQnaBoard
+        where co_qnaId = #{co_qnaId}
+    </select>
+
+    <select id="getReComment" resultType="CoReCommentOfQnaBoard">
+        select co_rcoqb, co_coqb, co_email, content, createdAt
+        from CoReCommentOfQnaBoard
+        where co_coqb = #{co_coqb}
+    </select>
+
+    <resultMap id="commentResult" type="CoCommentOfQnaBoard">
+        <result property="co_coqb" column="CO_COQB"/>
+        <result property="co_qnaId" column="CO_QNAID"/>
+        <result property="co_email" column="CO_EMAIL"/>
+        <result property="content" column="CONTENT"/>
+        <result property="createdAt" column="CREATEDAT"/>
+        <collection property="coReCommentOfQnaBoardList" column="CO_COQB" javaType="java.util.ArrayList" ofType="CoReCommentOfQnaBoard" select="getReComment"/>
+    </resultMap>
+
     <select id="getQnaBoard" resultType="coQnaBoard">
         select * from CoQnaBoard where co_qnaId=#{co_qnaId}
     </select>

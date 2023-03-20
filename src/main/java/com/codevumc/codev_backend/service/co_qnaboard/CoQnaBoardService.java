@@ -11,5 +11,7 @@ public interface CoQnaBoardService {
     CoDevResponse insertCoQnaBoard(CoQnaBoard coQnaBoard);
     CoDevResponse insertCoCommentOfQnaBoard(CoCommentOfQnaBoard coCommentOfQnaBoard);
     CoDevResponse insertCoReCommentOfQnaBoard(CoReCommentOfQnaBoard coReCommentOfQnaBoard);
+    CoDevResponse changeMark(String co_email, long co_qnaId);
+    CoDevResponse getCoQnaBoard(String co_viewer, long co_qnaId);
     CoDevResponse updateCoQnaBoard(CoQnaBoard coQnaBoard);
 }
