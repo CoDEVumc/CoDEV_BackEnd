@@ -101,4 +101,17 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
     }
+
+    @Override
+    public CoDevResponse deleteInfoBoard(String co_email, Long co_infoId) {
+        Map<String, Object> coInfoBoardDto = new HashMap<>();
+        coInfoBoardDto.put("co_email", co_email);
+        coInfoBoardDto.put("co_infoId", co_infoId);
+        try {
+            return coInfoBoardMapper.deleteInfoBoard(coInfoBoardDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
