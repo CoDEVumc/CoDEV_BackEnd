@@ -101,6 +101,7 @@ public class CoInfoBoardController extends JwtController {
                 .content(InfoBoard.get("content").toString()).build();
 
         CoDevResponse result = coInfoBoardService.updateCoInfoBoard(coInfoBoard);
+        coFileService.deleteFile(String.valueOf(coInfoBoard.getCo_infoId()),"INFO");
         if (files != null) {
             coInfoBoard.setCo_photos(uploadPhotos(files, String.valueOf(coInfoBoard.getCo_infoId())));
         }

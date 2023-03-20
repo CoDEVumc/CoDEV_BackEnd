@@ -95,12 +95,14 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
             }
             this.coQnaBoardMapper.updateCoQnaBoard(coQnaBoard);
 
+
             return setResponse(200, "message", "질문게시판 글이 수정되었습니다.");
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
     }
+
 
     @Override
     public CoDevResponse getCoQnaBoard(String co_viewer, long co_qnaId) {
