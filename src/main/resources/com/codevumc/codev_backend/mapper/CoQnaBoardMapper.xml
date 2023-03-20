@@ -94,10 +94,45 @@
         <collection property="coReCommentOfQnaBoardList" column="CO_COQB" javaType="java.util.ArrayList" ofType="CoReCommentOfQnaBoard" select="getReComment"/>
     </resultMap>
 
+    <select id="getCoQnaBoards" parameterType="hashMap" resultType="CoQnaBoard">
+        select distinct
+            cqb.co_qnaId as 'co_qnaId',
+            cqb.co_email as 'co_email',
+            cu.profileImg as 'profileImg',
+            cqb.co_title as 'co_title',
+            substr(cqb.content, 1, 40) as 'content',
+            cqb.co_mainImg as 'co_mainImg',
+            (select count(*) from CoLikeOfQnaBoard cloqb where cloqb.co_qnaId = cqb.co_qnaId) as 'co_likeCount',
+            (select
+                     (select count(*) from CoCommentOfQnaBoard ccoqb2 where ccoqb2.co_qnaId = cqb.co_qnaId) +
+                     (select count(*) from CoReCommentOfQnaBoard crcoqb where crcoqb.co_coqb = ccoqb.co_coqb)) as 'co_commentCount',
+            (select count(*) from CoMarkOfQnaBoard cmoqb where cmoqb.co_qnaId = cqb.co_qnaId) as 'co_markCount',
+            if(cmoqb.co_email is null, false, true) as 'co_mark',
+            cqb.createdAt as 'createdAt',
+            cqb.updatedAt as 'updatedAt'
+        from CoQnaBoard cqb
+                left join CoUser cu on cqb.co_email = cu.co_email
+                left join CoMarkOfQnaBoard cmoqb on cmoqb.co_qnaId = cqb.co_qnaId and cmoqb.co_email = #{co_email}
+                left join CoCommentOfQnaBoard ccoqb on cqb.co_qnaId = ccoqb.co_qnaId
+        <if test="co_keyword != null and !co_keyword.equals('')">
+            where cqb.co_title like #{co_keyword} or cqb.content like #{co_keyword}
+        </if>
+        order by
+        <choose>
+            <when test='co_sortingTag.equals("POPULARITY")'>
+                co_likeCount desc limit
+            </when>
+            <otherwise>
+                createdAt desc limit
+            </otherwise>
+        </choose>
+        #{limit} offset #{offset}
+    </select>
+
     <select id="getCoQnaComment" resultType="CoCommentOfQnaBoard">
         select * from CoCommentOfQnaBoard where co_coqb = #{co_coqb}
     </select>
-    
+
     <select id="getCoQnaReComment" resultType="CoReCommentOfQnaBoard">
         select * from CoReCommentOfQnaBoard where co_rcoqb = #{co_rcoqb}
     </select>

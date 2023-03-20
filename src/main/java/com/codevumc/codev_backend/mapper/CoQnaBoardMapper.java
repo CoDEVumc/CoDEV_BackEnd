@@ -26,4 +26,5 @@ public interface CoQnaBoardMapper {
     Optional<CoReCommentOfQnaBoard> getCoQnaReComment(long co_rcoqb);
     boolean deleteCoQnaComment(Map<String, Object> coCommentDto);
     boolean deleteCoQnaReComment(Map<String, Object> coReCommentDto);
+    List<CoQnaBoard> getCoQnaBoards(Map<String, Object> condition);
 }
