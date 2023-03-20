@@ -16,7 +16,7 @@
         VALUES (#{co_email}, #{co_title}, #{content})
     </insert>
 
-    <insert id="insertCoCommentOfQnaBoard" parameterType="CoCommentOfInfoBoard" useGeneratedKeys="true" keyProperty="co_coib">
+    <insert id="insertCoCommentOfInfoBoard" parameterType="CoCommentOfInfoBoard" useGeneratedKeys="true" keyProperty="co_coib">
         INSERT INTO CoCommentOfInfoBoard
             (co_email, co_infoId, content)
         VALUES (#{co_email}, #{co_infoId}, #{content})
