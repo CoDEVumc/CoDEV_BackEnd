@@ -108,4 +108,10 @@ public class CoInfoBoardController extends JwtController {
 
         return limit;
     }
+    @GetMapping("/{coInfoId}")
+    public CoDevResponse getCoInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") Long co_infoId) throws Exception {
+        String co_viewer = getCoUserEmail(request);
+        return coInfoBoardService.getCoInfoBoard(co_viewer,co_infoId);
+    }
+
 }

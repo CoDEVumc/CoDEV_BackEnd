@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -104,4 +105,23 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
         return keyword == null ? null : "%" + keyword + "%";
     }
 
+    @Override
+    public CoDevResponse getCoInfoBoard(String co_viewer, long co_infoId) {
+        try {
+            Map<String, Object> coInfoBoardDto = new HashMap<>();
+            List<CoPhotos> coPhotosList = coPhotosMapper.findByCoTargetId(String.valueOf(co_infoId), "INFOBOARD");
+            coInfoBoardDto.put("co_viewer", co_viewer);
+            coInfoBoardDto.put("co_infoId", co_infoId);
+            Optional<CoInfoBoard> coInfoBoard = coInfoBoardMapper.getCoInfoBoardByViewer(coInfoBoardDto);
+            if(coInfoBoard.isPresent()) {
+                coInfoBoard.get().setCo_viewer(co_viewer);
+                coInfoBoard.get().setCo_photos(coPhotosList);
+                coInfoBoard.get().setCo_comment(coInfoBoardMapper.getComment(co_infoId));
+            }
+                return setResponse(200, "Complete", coInfoBoard);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
 }
