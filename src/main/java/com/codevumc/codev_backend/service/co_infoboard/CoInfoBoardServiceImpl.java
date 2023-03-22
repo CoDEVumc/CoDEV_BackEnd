@@ -78,8 +78,29 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
 
 
     @Override
+    public CoDevResponse getAllInfoBoards(String co_email, int limit, int offset, int pageNum, boolean coMyBoard) {
+        try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("co_email", co_email);
+            condition.put("coMyBoard", coMyBoard ? co_email : null);
+            condition.put("limit", limit);
+            condition.put("offset", offset);
+            List<CoInfoBoard> coInfoBoards = this.coInfoBoardMapper.getCoInfoBoards(condition);
+            setResponse(200, "success", coInfoBoards);
+            return addResponse("co_page", pageNum);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public void updateMainImg(String co_mainImg, long co_infoId) {
         coInfoBoardMapper.updateCoMainImg(co_mainImg, co_infoId);
+    }
+
+    private String setting(String keyword) {
+        return keyword == null ? null : "%" + keyword + "%";
     }
 
     @Override
@@ -109,6 +130,38 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
         coInfoBoardDto.put("co_infoId", co_infoId);
         try {
             return coInfoBoardMapper.deleteInfoBoard(coInfoBoardDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse deleteCoInfoComment(String co_email, long co_coib) {
+        try {
+            Map<String, Object> coCommentDto = new HashMap<>();
+            coCommentDto.put("co_email", co_email);
+            coCommentDto.put("co_coib", co_coib);
+            Optional<CoCommentOfInfoBoard> coCommentOfInfoBoard = coInfoBoardMapper.getCoInfoComment(co_coib);
+            if(coCommentOfInfoBoard.isPresent()) {
+                return coInfoBoardMapper.deleteCoInfoComment(coCommentDto) ? setResponse(200,"Complete", "댓글이 삭제되었습니다.") : setResponse(403,"Forbidden", "삭제 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse deleteCoInfoReComment(String co_email, long co_rcoib) {
+        try {
+            Map<String, Object> coReCommentDto = new HashMap<>();
+            coReCommentDto.put("co_email", co_email);
+            coReCommentDto.put("co_rcoib", co_rcoib);
+            Optional<CoReCommentOfInfoBoard> coReCommentOfInfoBoard = coInfoBoardMapper.getCoInfoReComment(co_rcoib);
+            if(coReCommentOfInfoBoard.isPresent()) {
+                return coInfoBoardMapper.deleteCoInfoReComment(coReCommentDto) ? setResponse(200,"Complete", "댓글이 삭제되었습니다.") : setResponse(403, "Forbidden", "삭제 권한이 없습니다");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
