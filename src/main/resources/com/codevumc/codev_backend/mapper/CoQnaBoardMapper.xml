@@ -85,6 +85,10 @@
         where co_coqb = #{co_coqb}
     </select>
 
+    <delete id="deleteQnaBoard" parameterType="hashMap">
+        delete from CoQnaBoard where co_email = #{co_email} and co_qnaId = #{co_qnaId}
+    </delete>
+
     <resultMap id="commentResult" type="CoCommentOfQnaBoard">
         <result property="co_coqb" column="CO_COQB"/>
         <result property="co_qnaId" column="CO_QNAID"/>
