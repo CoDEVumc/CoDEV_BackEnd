@@ -1,10 +1,6 @@
 package com.codevumc.codev_backend.mapper;
 
-import com.codevumc.codev_backend.domain.CoCommentOfInfoBoard;
-import com.codevumc.codev_backend.domain.CoInfoBoard;
-import com.codevumc.codev_backend.domain.CoQnaBoard;
-import com.codevumc.codev_backend.domain.CoReCommentOfInfoBoard;
-import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardService;
+import com.codevumc.codev_backend.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,7 +18,12 @@ public interface CoInfoBoardMapper {
     Long getCoMarkOfInfoBoardEmail(@Param("co_email") String co_email, @Param("co_infoId") long co_infoId);
     void insertCoMarkOfInfoBoard(String co_email, long co_infoId);
     void deleteCoMarkOfInfoBoard(String co_email, long co_infoId);
+    List<CoInfoBoard> getCoInfoBoards(Map<String, Object> condition);
     Optional<CoInfoBoard> getCoInfoBoardByViewer(Map<String, Object> coInfoBoardDto);
     List<CoCommentOfInfoBoard> getComment(long co_infoId);
     boolean deleteInfoBoard(Map<String, Object> coInfoBoardDto);
+    Optional<CoCommentOfInfoBoard> getCoInfoComment(long co_coib);
+    Optional<CoReCommentOfInfoBoard> getCoInfoReComment(long co_rcoib);
+    boolean deleteCoInfoComment(Map<String, Object> coCommentDto);
+    boolean deleteCoInfoReComment(Map<String, Object> coReCommentDto);
 }

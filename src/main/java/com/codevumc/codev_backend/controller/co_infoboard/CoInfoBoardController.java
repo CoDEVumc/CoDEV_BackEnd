@@ -10,6 +10,7 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardService;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import com.google.api.Http;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -91,6 +92,22 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.changeMark(getCoUserEmail(request),co_infoId);
     }
 
+    @GetMapping("/infoBoards/{page}")
+    public CoDevResponse getAllInfoBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard) throws Exception {
+        int limit = getLimitCnt(pageNum);
+        int offset = limit - SHOW_COUNT;
+        return coInfoBoardService.getAllInfoBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard);
+    }
+
+    private int getLimitCnt(int pageNum) {
+        int limit = SHOW_COUNT;
+        for(int i = 0; i <= pageNum; i++) {
+            if(i != 0)
+                limit += SHOW_COUNT;
+        }
+
+        return limit;
+    }
     @GetMapping("/{coInfoId}")
     public CoDevResponse getCoInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") Long co_infoId) throws Exception {
         String co_viewer = getCoUserEmail(request);
@@ -100,6 +117,20 @@ public class CoInfoBoardController extends JwtController {
     @DeleteMapping("/{coInfoId}")
     public CoDevResponse deleteInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") Long co_infoId) throws Exception {
         return coInfoBoardService.deleteInfoBoard(getCoUserEmail(request), co_infoId);
+    }
+
+    //정보게시판 댓글 삭제
+    @DeleteMapping("/out/comment/{coCoib}")
+    public CoDevResponse deleteCoInfoComment(HttpServletRequest request, @PathVariable("coCoib") Long co_coib) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coInfoBoardService.deleteCoInfoComment(co_email,co_coib);
+    }
+
+    //정보게시판 대댓글 삭제
+    @DeleteMapping("/out/recomment/{coRcoib}")
+    public CoDevResponse deleteCoInfoReComment(HttpServletRequest request, @PathVariable("coRcoib") Long co_rcoib) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coInfoBoardService.deleteCoInfoReComment(co_email,co_rcoib);
     }
 
 }

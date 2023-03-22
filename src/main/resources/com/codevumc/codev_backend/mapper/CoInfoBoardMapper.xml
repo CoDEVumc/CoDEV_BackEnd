@@ -28,6 +28,31 @@
         VALUES (#{co_email}, #{co_coib}, #{content})
     </insert>
 
+    <select id="getCoInfoBoards" parameterType="hashMap" resultType="CoInfoBoard">
+        select distinct
+            cib.co_infoId as 'co_infoId',
+            cib.co_email as 'co_email',
+            cu.profileImg as 'profileImg',
+            cib.co_title as 'co_title',
+            substr(cib.content, 1, 40) as 'content',
+            cib.co_mainImg as 'co_mainImg',
+            (select count(*) from CoLikeOfInfoBoard cloib where cloib.co_infoId = cib.co_infoId) as 'co_likeCount',
+            (select
+                     (select count(*) from CoCommentOfInfoBoard ccoib2 where ccoib2.co_infoId = cib.co_infoId) +
+                     (select count(*) from CoReCommentOfInfoBoard crcoib where crcoib.co_coib = ccoib.co_coib)) as 'co_commentCount',
+            (select count(*) from CoMarkOfInfoBoard cmoib where cmoib.co_infoId = cib.co_infoId) as 'co_markCount',
+            cib.createdAt as 'createdAt',
+            cib.updatedAt as 'updatedAt'
+        from CoInfoBoard cib
+                 left join CoUser cu on cib.co_email = cu.co_email
+                 left join CoCommentOfInfoBoard ccoib on cib.co_infoId = ccoib.co_infoId
+        where cib.createdAt is not null
+        <if test="coMyBoard != null and !coMyBoard.equals('')">
+            and cib.co_email = #{coMyBoard}
+        </if>
+        order by createdAt desc limit #{limit} offset #{offset}
+    </select>
+
     <select id ="getCoMarkOfInfoBoardEmail" resultType="Long">
         SELECT co_moib FROM CoMarkOfInfoBoard
         WHERE co_email=#{co_email} AND co_infoId=#{co_infoId}
@@ -97,5 +122,21 @@
         <result property="createdAt" column="CREATEDAT"/>
         <collection property="coReCommentOfInfoBoardList" column="CO_COIB" javaType="java.util.ArrayList" ofType="CoReCommentOfInfoBoard" select="getReComment"/>
     </resultMap>
+
+    <select id="getCoInfoComment" resultType="CoCommentOfInfoBoard">
+        select * from CoCommentOfInfoBoard where co_coib = #{co_coib}
+    </select>
+
+    <select id="getCoInfoReComment" resultType="CoReCommentOfInfoBoard">
+        select * from CoReCommentOfInfoBoard where co_rcoib = #{co_rcoib}
+    </select>
+
+    <delete id="deleteCoInfoComment" parameterType="hashMap">
+        delete from CoCommentOfInfoBoard where co_email = #{co_email} and co_coib = #{co_coib}
+    </delete>
+
+    <delete id="deleteCoInfoReComment" parameterType="hashMap">
+        delete from CoReCommentOfInfoBoard where co_email = #{co_email} and co_rcoib = #{co_rcoib}
+    </delete>
 
 </mapper>
