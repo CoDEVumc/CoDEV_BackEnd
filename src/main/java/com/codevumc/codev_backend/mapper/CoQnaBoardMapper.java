@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import java.util.Optional;
+
 @Mapper
 public interface CoQnaBoardMapper {
 
@@ -20,6 +22,8 @@ public interface CoQnaBoardMapper {
     void insertCoMarkOfQnaBoard(String co_email, long co_qnaId);
     void deleteCoMarkOfQnaBoard(String co_email, long co_qnaId);
     void insertCoReCommentOfQnaBoard(CoReCommentOfQnaBoard coReCommentOfQnaBoard);
+    Optional<CoQnaBoard> getQnaBoard(long co_qnaId);
+    void updateCoQnaBoard(CoQnaBoard coQnaBoard);
     Optional<CoQnaBoard> getCoQnaBoardByViewer(Map<String, Object> coQnaBoardDto);
     List<CoCommentOfQnaBoard> getComment(long co_qnaId);
     boolean deleteQnaBoard(Map<String, Object> coQnaBoardDto);

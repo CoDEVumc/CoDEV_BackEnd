@@ -98,6 +98,17 @@
         <collection property="coReCommentOfQnaBoardList" column="CO_COQB" javaType="java.util.ArrayList" ofType="CoReCommentOfQnaBoard" select="getReComment"/>
     </resultMap>
 
+    <select id="getQnaBoard" resultType="coQnaBoard">
+        select * from CoQnaBoard where co_qnaId=#{co_qnaId}
+    </select>
+
+    <update id="updateCoQnaBoard" parameterType="CoQnaBoard">
+        UPDATE CoQnaBoard
+        SET co_title = #{co_title},
+            content = #{content}
+        WHERE co_qnaId = #{co_qnaId}
+    </update>
+
     <select id="getCoQnaBoards" parameterType="hashMap" resultType="CoQnaBoard">
         select distinct
             cqb.co_qnaId as 'co_qnaId',

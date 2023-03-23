@@ -16,7 +16,7 @@
         VALUES (#{co_email}, #{co_title}, #{content})
     </insert>
 
-    <insert id="insertCoCommentOfQnaBoard" parameterType="CoCommentOfInfoBoard" useGeneratedKeys="true" keyProperty="co_coib">
+    <insert id="insertCoCommentOfInfoBoard" parameterType="CoCommentOfInfoBoard" useGeneratedKeys="true" keyProperty="co_coib">
         INSERT INTO CoCommentOfInfoBoard
             (co_email, co_infoId, content)
         VALUES (#{co_email}, #{co_infoId}, #{content})
@@ -123,6 +123,17 @@
         <collection property="coReCommentOfInfoBoardList" column="CO_COIB" javaType="java.util.ArrayList" ofType="CoReCommentOfInfoBoard" select="getReComment"/>
     </resultMap>
 
+    <select id="getInfoBoard" resultType="coInfoBoard">
+        select * from CoInfoBoard where co_infoId=#{co_infoId}
+    </select>
+
+    <update id="updateCoInfoBoard" parameterType="CoInfoBoard">
+        UPDATE CoInfoBoard
+        SET co_title = #{co_title},
+            content = #{content}
+        WHERE co_infoId = #{co_infoId}
+    </update>
+    
     <select id="getCoInfoComment" resultType="CoCommentOfInfoBoard">
         select * from CoCommentOfInfoBoard where co_coib = #{co_coib}
     </select>

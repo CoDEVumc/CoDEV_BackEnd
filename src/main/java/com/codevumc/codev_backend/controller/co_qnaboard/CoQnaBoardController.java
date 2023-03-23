@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/codev/qnaBoard")
 public class CoQnaBoardController extends JwtController {
     public static final int SHOW_COUNT = 10;
-    public static final String BOARD_TYPE = "INFOBOARD";
+    public static final String BOARD_TYPE = "QNABOARD";
     private final CoFileService coFileService;
     private final CoQnaBoardService coQnaBoardService;
 
@@ -138,4 +138,21 @@ public class CoQnaBoardController extends JwtController {
 
         return limit;
     }
+
+    @PutMapping(value="/update/{coqnaId}",consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public CoDevResponse updateQnaBoard(HttpServletRequest request,@PathVariable("coqnaId") long coqnaId ,@RequestPart Map<String, Object> qnaBoard, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+        CoQnaBoard coQnaBoard = CoQnaBoard.builder()
+                .co_qnaId(coqnaId)
+                .co_email(getCoUserEmail(request))
+                .co_title(qnaBoard.get("co_title").toString())
+                .content(qnaBoard.get("content").toString()).build();
+
+        CoDevResponse result = coQnaBoardService.updateCoQnaBoard(coQnaBoard);
+        coFileService.deleteFile(String.valueOf(coQnaBoard.getCo_qnaId()),BOARD_TYPE);
+        if (files != null) {
+            coQnaBoard.setCo_photos(uploadPhotos(files, String.valueOf(coQnaBoard.getCo_qnaId())));
+        }
+        return result;
+    }
+
 }
