@@ -12,6 +12,7 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_qnaboard.CoQnaBoardService;
 import com.codevumc.codev_backend.service.co_qnaboard.CoQnaBoardServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -27,7 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/codev/QnaBoard")
+@RequestMapping("/codev/qnaBoard")
 public class CoQnaBoardController extends JwtController {
     public static final int SHOW_COUNT = 10;
     public static final String BOARD_TYPE = "QNABOARD";
@@ -102,11 +103,30 @@ public class CoQnaBoardController extends JwtController {
         return coQnaBoardService.getCoQnaBoard(co_viewer,co_qnaId);
     }
 
+    @DeleteMapping("/{coQnaId}")
+    public CoDevResponse deleteQnaBoard(HttpServletRequest request, @PathVariable("coQnaId") Long co_qnaId) throws Exception {
+        return coQnaBoardService.deleteQnaBoard(getCoUserEmail(request), co_qnaId);
+    }
+
+    //질문게시판 댓글 삭제
+    @DeleteMapping("/out/comment/{coCoqb}")
+    public CoDevResponse deleteCoQnaComment(HttpServletRequest request, @PathVariable("coCoqb") Long co_coqb) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coQnaBoardService.deleteCoQnaComment(co_email,co_coqb);
+    }
+
+    //질문게시판 대댓글 삭제
+    @DeleteMapping("/out/recomment/{coRcoqb}")
+    public CoDevResponse deleteCoQnaReComment(HttpServletRequest request, @PathVariable("coRcoqb") Long co_rcoqb) throws Exception {
+        String co_email = getCoUserEmail(request);
+        return coQnaBoardService.deleteCoQnaReComment(co_email,co_rcoqb);
+    }
+
     @GetMapping("/qnaBoards/{page}")
-    public CoDevResponse getAllQnaBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coKeyword") String co_keyword, @RequestParam("coSortingTag") String co_sortingTag) throws Exception {
+    public CoDevResponse getAllQnaBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coQnaBoardService.getAllQnaBoards(getCoUserEmail(request), co_keyword, co_sortingTag.toUpperCase(), SHOW_COUNT, offset, pageNum);
+        return coQnaBoardService.getAllQnaBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard);
     }
 
     private int getLimitCnt(int pageNum) {

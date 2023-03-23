@@ -26,5 +26,10 @@ public interface CoQnaBoardMapper {
     void updateCoQnaBoard(CoQnaBoard coQnaBoard);
     Optional<CoQnaBoard> getCoQnaBoardByViewer(Map<String, Object> coQnaBoardDto);
     List<CoCommentOfQnaBoard> getComment(long co_qnaId);
+    boolean deleteQnaBoard(Map<String, Object> coQnaBoardDto);
+    Optional<CoCommentOfQnaBoard> getCoQnaComment(long co_coqb);
+    Optional<CoReCommentOfQnaBoard> getCoQnaReComment(long co_rcoqb);
+    boolean deleteCoQnaComment(Map<String, Object> coCommentDto);
+    boolean deleteCoQnaReComment(Map<String, Object> coReCommentDto);
     List<CoQnaBoard> getCoQnaBoards(Map<String, Object> condition);
 }
