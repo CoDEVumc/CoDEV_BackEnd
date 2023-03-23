@@ -14,5 +14,8 @@ public interface CoQnaBoardService {
     CoDevResponse changeMark(String co_email, long co_qnaId);
     CoDevResponse getCoQnaBoard(String co_viewer, long co_qnaId);
     CoDevResponse updateCoQnaBoard(CoQnaBoard coQnaBoard);
-    CoDevResponse getAllQnaBoards(String co_email, String co_keyword, String co_sortingTag, int limit, int offset, int pageNum);
+    CoDevResponse deleteQnaBoard(String co_email, Long co_qnaId);
+    CoDevResponse getAllQnaBoards(String co_email, int showCount, int offset, int pageNum, boolean co_myBoard);
+    CoDevResponse deleteCoQnaComment(String co_email, long co_coqb);
+    CoDevResponse deleteCoQnaReComment(String co_email, long co_rcoqb);
 }

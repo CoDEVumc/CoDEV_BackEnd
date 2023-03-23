@@ -49,7 +49,6 @@
         where cib.createdAt is not null
         <if test="coMyBoard != null and !coMyBoard.equals('')">
             and cib.co_email = #{coMyBoard}
-
         </if>
         order by createdAt desc limit #{limit} offset #{offset}
     </select>
@@ -111,6 +110,10 @@
         where co_coib = #{co_coib}
     </select>
 
+    <delete id="deleteInfoBoard" parameterType="hashMap">
+        delete from CoInfoBoard where co_email = #{co_email} and co_infoId = #{co_infoId}
+    </delete>
+
     <resultMap id="commentResult" type="CoCommentOfInfoBoard">
         <result property="co_coib" column="CO_COIB"/>
         <result property="co_infoId" column="CO_INFOID"/>
@@ -130,4 +133,21 @@
             content = #{content}
         WHERE co_infoId = #{co_infoId}
     </update>
+    
+    <select id="getCoInfoComment" resultType="CoCommentOfInfoBoard">
+        select * from CoCommentOfInfoBoard where co_coib = #{co_coib}
+    </select>
+
+    <select id="getCoInfoReComment" resultType="CoReCommentOfInfoBoard">
+        select * from CoReCommentOfInfoBoard where co_rcoib = #{co_rcoib}
+    </select>
+
+    <delete id="deleteCoInfoComment" parameterType="hashMap">
+        delete from CoCommentOfInfoBoard where co_email = #{co_email} and co_coib = #{co_coib}
+    </delete>
+
+    <delete id="deleteCoInfoReComment" parameterType="hashMap">
+        delete from CoReCommentOfInfoBoard where co_email = #{co_email} and co_rcoib = #{co_rcoib}
+    </delete>
+
 </mapper>
