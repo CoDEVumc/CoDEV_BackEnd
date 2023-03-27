@@ -10,6 +10,7 @@ import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,11 +127,14 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
 
     @Override
     public CoDevResponse deleteQnaBoard(String co_email, Long co_qnaId) {
-        Map<String, Object> coQnaBoardDto = new HashMap<>();
-        coQnaBoardDto.put("co_email", co_email);
-        coQnaBoardDto.put("co_qnaId", co_qnaId);
         try {
-            return coQnaBoardMapper.deleteQnaBoard(coQnaBoardDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            Map<String, Object> coQnaBoardDto = new HashMap<>();
+            coQnaBoardDto.put("co_email", co_email);
+            coQnaBoardDto.put("co_qnaId", co_qnaId);
+            Optional<CoQnaBoard> coQnaBoard = coQnaBoardMapper.getQnaBoard(co_qnaId);
+            if (coQnaBoard.isPresent()) {
+                return coQnaBoardMapper.deleteQnaBoard(coQnaBoardDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,5 +209,21 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
         return null;
+    }
+
+    @Override
+    public CoDevResponse likeCoQnaBoard(CoLikeOfQnaBoard coLikeOfQnaBoard) {
+        try {
+            if(coLikeOfQnaBoard.isCo_like()==false) {
+                this.coQnaBoardMapper.insertLikeCoQnaBoard(coLikeOfQnaBoard);
+                return setResponse(200, "message", "좋아요를 하셨습니다.");
+            } else {
+                this.coQnaBoardMapper.deleteLikeCoQnaBoard(coLikeOfQnaBoard);
+                return setResponse(200, "message", "좋아요를 취소하였습니다");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
     }
 }

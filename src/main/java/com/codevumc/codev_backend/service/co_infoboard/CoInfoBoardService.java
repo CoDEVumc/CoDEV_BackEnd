@@ -2,6 +2,7 @@ package com.codevumc.codev_backend.service.co_infoboard;
 
 import com.codevumc.codev_backend.domain.CoCommentOfInfoBoard;
 import com.codevumc.codev_backend.domain.CoInfoBoard;
+import com.codevumc.codev_backend.domain.CoLikeOfInfoBoard;
 import com.codevumc.codev_backend.domain.CoReCommentOfInfoBoard;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 
@@ -19,4 +20,5 @@ public interface CoInfoBoardService {
     CoDevResponse deleteCoInfoComment(String co_email, long co_coib);
     CoDevResponse deleteCoInfoReComment(String co_email, long co_rcoib);
     CoDevResponse getMark(String co_email);
+    CoDevResponse likeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard);
 }

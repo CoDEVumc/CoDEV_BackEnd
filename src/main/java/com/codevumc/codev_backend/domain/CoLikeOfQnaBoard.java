@@ -13,6 +13,7 @@ public class CoLikeOfQnaBoard {
     private long co_loqb;
     private String co_email;
     private long co_qnaId;
+    private boolean co_like;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }

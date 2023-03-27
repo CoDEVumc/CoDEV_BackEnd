@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 public class CoReCommentOfQnaBoard {
     private long co_rcoqb;
     private String co_email;
+    private String co_nickname;
     private long co_coqb;
     private String content;
     private Timestamp createdAt;

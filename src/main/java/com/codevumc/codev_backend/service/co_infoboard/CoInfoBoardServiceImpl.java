@@ -142,11 +142,14 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
 
     @Override
     public CoDevResponse deleteInfoBoard(String co_email, Long co_infoId) {
-        Map<String, Object> coInfoBoardDto = new HashMap<>();
-        coInfoBoardDto.put("co_email", co_email);
-        coInfoBoardDto.put("co_infoId", co_infoId);
         try {
-            return coInfoBoardMapper.deleteInfoBoard(coInfoBoardDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            Map<String, Object> coInfoBoardDto = new HashMap<>();
+            coInfoBoardDto.put("co_email", co_email);
+            coInfoBoardDto.put("co_infoId", co_infoId);
+            Optional<CoInfoBoard> coInfoBoard = coInfoBoardMapper.getInfoBoard(co_infoId);
+            if (coInfoBoard.isPresent()){
+                return coInfoBoardMapper.deleteInfoBoard(coInfoBoardDto) ? setResponse(200, "Complete", "삭제되었습니다.") : setResponse(403, "Forbidden", "수정 권한이 없습니다.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -199,5 +202,21 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
         return null;
+    }
+
+    @Override
+    public CoDevResponse likeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard) {
+        try {
+            if(coLikeOfInfoBoard.isCo_like()==false) {
+                this.coInfoBoardMapper.insertLikeCoInfoBoard(coLikeOfInfoBoard);
+                return setResponse(200, "message", "좋아요를 하셨습니다.");
+            } else {
+                this.coInfoBoardMapper.deleteLikeCoInfoBoard(coLikeOfInfoBoard);
+                return setResponse(200, "message", "좋아요를 취소하였습니다");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
     }
 }

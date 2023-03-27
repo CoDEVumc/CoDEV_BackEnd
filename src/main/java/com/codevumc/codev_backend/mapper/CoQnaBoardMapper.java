@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.mapper;
 
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
 import com.codevumc.codev_backend.domain.CoMarkOfQnaBoard;
 import com.codevumc.codev_backend.domain.CoQnaBoard;
@@ -9,8 +10,6 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 import java.util.Optional;
 
 @Mapper
@@ -33,6 +32,8 @@ public interface CoQnaBoardMapper {
     boolean deleteCoQnaComment(Map<String, Object> coCommentDto);
     boolean deleteCoQnaReComment(Map<String, Object> coReCommentDto);
     List<CoQnaBoard> getCoQnaBoards(Map<String, Object> condition);
+    void insertLikeCoQnaBoard(CoLikeOfQnaBoard coLikeOfQnaBoard);
+    void deleteLikeCoQnaBoard(CoLikeOfQnaBoard coLikeOfQnaBoard);
     Optional<CoMarkOfQnaBoard> getCoMarkOfQnaBoards(String co_email);
     List<CoMarkOfQnaBoard> getCoMarkOfQnaBoard(String co_email);
 }

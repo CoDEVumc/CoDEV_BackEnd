@@ -14,6 +14,7 @@ import java.util.List;
 public class CoCommentOfInfoBoard {
     private long co_coib;
     private String co_email;
+    private String co_nickname;
     private long co_infoId;
     private String content;
     private Timestamp createdAt;

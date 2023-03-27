@@ -14,6 +14,7 @@ public class CoQnaBoard {
     private long co_qnaId;
     private String co_email;
     private String co_viewer;
+    private String co_nickname;
     private String profileImg;
     private String co_title;
     private String content;
@@ -22,6 +23,7 @@ public class CoQnaBoard {
     private Long co_commentCount;
     private Long co_markCount;
     private boolean co_mark;
+    private boolean co_like;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private List<CoPhotos> co_photos;
