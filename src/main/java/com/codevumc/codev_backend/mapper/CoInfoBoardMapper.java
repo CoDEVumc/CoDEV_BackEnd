@@ -28,4 +28,6 @@ public interface CoInfoBoardMapper {
     Optional<CoReCommentOfInfoBoard> getCoInfoReComment(long co_rcoib);
     boolean deleteCoInfoComment(Map<String, Object> coCommentDto);
     boolean deleteCoInfoReComment(Map<String, Object> coReCommentDto);
+    List<CoMarkOfInfoBoard> getCoMarkOfInfoBoard(String co_email);
+    Optional<CoMarkOfInfoBoard> getCoMarkOfInfoBoards(String co_email);
 }

@@ -92,6 +92,11 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.changeMark(getCoUserEmail(request),co_infoId);
     }
 
+    @GetMapping("/mark/get")
+    public CoDevResponse getmarkOfInfoBoard(HttpServletRequest request) throws Exception{
+        return coInfoBoardService.getMark(getCoUserEmail(request));
+    }
+
     @GetMapping("/infoBoards/{page}")
     public CoDevResponse getAllInfoBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard) throws Exception {
         int limit = getLimitCnt(pageNum);

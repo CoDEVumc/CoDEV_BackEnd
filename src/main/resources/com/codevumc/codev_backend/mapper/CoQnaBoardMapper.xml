@@ -33,6 +33,46 @@
         WHERE co_email=#{co_email} AND co_qnaId=#{co_qnaId}
     </select>
 
+    <select id="getCoMarkOfQnaBoards" resultType="CoMarkOfQnaBoard">
+        select * from CoMarkOfQnaBoard where co_email=#{co_email}
+    </select>
+    <select id="getCoMarkOfQnaBoard" resultType="CoQnaBoard">
+        SELECT
+            cqb.co_qnaId AS 'co_qnaId',
+                cqb.co_email AS 'co_email',
+                cqb.co_title AS 'co_title',
+                cqb.content AS 'content',
+                COUNT(clq.co_qnaId) AS 'co_likeCount',
+                (
+                    SELECT COUNT( ccoqb.co_qnaId) as cnt
+                    FROM CoCommentOfQnaBoard as ccoqb
+                    WHERE ccoqb.co_qnaId = cqb.co_qnaId
+                ) +
+                    (
+                        SELECT COUNT(crcoqb.co_coqb) as cnt
+                        FROM CoReCommentOfQnaBoard as crcoqb
+                                 LEFT JOIN (
+                            SELECT co_coqb, co_qnaId
+                            FROM CoCommentOfQnaBoard
+                        ) ccoqb ON ccoqb.co_coqb = crcoqb.co_coqb
+                        WHERE ccoqb.co_qnaId = cqb.co_qnaId
+                    ) AS 'co_commentCount',
+                if(cmoqb.co_moqb, 1, 0) as 'co_markCount',
+                cqb.createdAt,
+            cqb.updatedAt
+        FROM CoMarkOfQnaBoard cmoqb
+                 JOIN CoQnaBoard cqb ON cqb.co_qnaId = cmoqb.co_qnaId
+                 LEFT JOIN (
+            SELECT co_qnaId
+            FROM CoCommentOfQnaBoard
+        ) as ccoqb ON ccoqb.co_qnaId = cqb.co_qnaId
+                 LEFT JOIN CoLikeOfQnaBoard AS clq
+                           ON clq.co_qnaId = cqb.co_qnaId
+        WHERE cmoqb.co_email = #{co_email}
+        GROUP BY cqb.co_QnaId, cqb.co_title, cmoqb.co_moqb, cqb.content, cqb.createdAt, cqb.updatedAt;
+
+    </select>
+
     <insert id ="insertCoMarkOfQnaBoard">
         INSERT INTO CoMarkOfQnaBoard (co_email,co_qnaId)
         VALUES(#{co_email},#{co_qnaId})
