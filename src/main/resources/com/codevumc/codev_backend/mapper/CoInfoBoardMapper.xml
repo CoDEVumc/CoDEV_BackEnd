@@ -32,6 +32,8 @@
         select distinct
             cib.co_infoId as 'co_infoId',
             cib.co_email as 'co_email',
+            #{co_email} as 'co_viewer',
+            cu.co_nickName as 'co_nickname',
             cu.profileImg as 'profileImg',
             cib.co_title as 'co_title',
             substr(cib.content, 1, 40) as 'content',
@@ -71,9 +73,10 @@
     <select id="getCoInfoBoardByViewer" parameterType="hashMap" resultType="CoInfoBoard">
         select  cib.co_infoId                                                               as 'co_infoId',
                 cib.co_email                                                                as 'co_email',
+                cu.co_nickname                                                              as 'co_nickname',
                 cib.co_title                                                                as 'co_title',
                 cib.content                                                                 as 'content',
-                (select count(co_infoId) from CoLikeOfInfoBoard where co_infoId = #{co_infoId}) as 'co_likeBoardCount',
+                (select count(co_infoId) from CoLikeOfInfoBoard where co_infoId = #{co_infoId}) as 'co_likeCount',
                 (select SUM(C.cnt)
                  from(
                          select count(ccoib.co_infoId) as cnt
@@ -86,15 +89,21 @@
                          from CoReCommentOfInfoBoard as crcoib
                          left join CoCommentOfInfoBoard as ccoib on crcoib.co_coib = ccoib.co_coib
                          where ccoib.co_infoId = #{co_infoId}
-                     )C)                                                                    as 'commentCount',
+                     )C)                                                                    as 'co_commentCount',
                 if(cmoib.co_moib, 1, 0)                                                     as 'co_mark',
+                if(cloib.co_loib, 1, 0)                                                     as 'co_like',
                 cib.createdAt                                                               as 'createdAt',
                 cib.updatedAt                                                               as 'updatedAt'
         from CoInfoBoard as cib
+                 left join CoUser cu on cib.co_email = cu.co_email
                  left join (select co_infoId,
                                    co_moib
                             from CoMarkOfInfoBoard
-                            where co_infoId = #{co_infoId} and co_email = #{co_email}) cmoib on cib.co_infoId = cmoib.co_infoId
+                            where co_infoId = #{co_infoId} and co_email = #{co_viewer}) cmoib on cib.co_infoId = cmoib.co_infoId
+                 left join (select co_infoId,
+                                   co_loib
+                            from CoLikeOfInfoBoard
+                            where co_infoId = #{co_infoId} and co_email = #{co_viewer}) cloib on cib.co_infoId = cloib.co_infoId
         where cib.co_infoId = #{co_infoId};
     </select>
 
@@ -139,14 +148,26 @@
     </select>
 
     <select id="getComment" resultType="CoCommentOfInfoBoard" resultMap="commentResult">
-        select co_coib, co_infoId, co_email, content, createdAt
-        from CoCommentOfInfoBoard
+        select ccoib.co_coib as 'co_coib',
+               ccoib.co_infoId as 'co_infoId',
+               ccoib.co_email as 'co_email',
+               cu.co_nickname as 'co_nickname',
+               ccoib.content as 'content',
+               ccoib.createdAt as 'createdAt'
+        from CoCommentOfInfoBoard as ccoib
+        left join CoUser cu on ccoib.co_email = cu.co_email
         where co_infoId = #{co_infoId}
     </select>
 
     <select id="getReComment" resultType="CoReCommentOfInfoBoard">
-        select co_rcoib, co_coib, co_email, content, createdAt
-        from CoReCommentOfInfoBoard
+        select crcoib.co_rcoib as 'co_rcoib',
+               crcoib.co_coib as 'co_coib',
+               crcoib.co_email as 'co_email',
+               cu.co_nickname as 'co_nickname',
+               crcoib.content as 'content',
+               crcoib.createdAt as 'createdAt'
+        from CoReCommentOfInfoBoard as crcoib
+        left join CoUser cu on crcoib.co_email = cu.co_email
         where co_coib = #{co_coib}
     </select>
 
@@ -158,6 +179,7 @@
         <result property="co_coib" column="CO_COIB"/>
         <result property="co_infoId" column="CO_INFOID"/>
         <result property="co_email" column="CO_EMAIL"/>
+        <result property="co_nickname" column="CO_NICKNAME"/>
         <result property="content" column="CONTENT"/>
         <result property="createdAt" column="CREATEDAT"/>
         <collection property="coReCommentOfInfoBoardList" column="CO_COIB" javaType="java.util.ArrayList" ofType="CoReCommentOfInfoBoard" select="getReComment"/>
@@ -188,6 +210,15 @@
 
     <delete id="deleteCoInfoReComment" parameterType="hashMap">
         delete from CoReCommentOfInfoBoard where co_email = #{co_email} and co_rcoib = #{co_rcoib}
+    </delete>
+
+    <insert id="insertLikeCoInfoBoard" parameterType="CoLikeOfInfoBoard">
+        INSERT INTO CoLikeOfInfoBoard (co_email,co_infoId)
+        VALUES(#{co_email},#{co_infoId})
+    </insert>
+
+    <delete id="deleteLikeCoInfoBoard" parameterType="CoLikeOfInfoBoard">
+        delete from CoLikeOfInfoBoard where co_email = #{co_email} and co_infoId = #{co_infoId}
     </delete>
 
 </mapper>

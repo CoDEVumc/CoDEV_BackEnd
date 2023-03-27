@@ -2,6 +2,7 @@ package com.codevumc.codev_backend.service.co_qnaboard;
 
 
 import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
+import com.codevumc.codev_backend.domain.CoLikeOfQnaBoard;
 import com.codevumc.codev_backend.domain.CoQnaBoard;
 import com.codevumc.codev_backend.domain.CoReCommentOfQnaBoard;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
@@ -19,4 +20,5 @@ public interface CoQnaBoardService {
     CoDevResponse deleteCoQnaComment(String co_email, long co_coqb);
     CoDevResponse deleteCoQnaReComment(String co_email, long co_rcoqb);
     CoDevResponse getMark(String co_email);
+    CoDevResponse likeCoQnaBoard(CoLikeOfQnaBoard coLikeOfQnaBoard);
 }

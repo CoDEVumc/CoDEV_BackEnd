@@ -16,7 +16,7 @@
         VALUES (#{co_email}, #{co_title}, #{content})
     </insert>
 
-    <insert id="insertCoCommentOfQnaBoard" parameterType="CoCommentOfInfoBoard" useGeneratedKeys="true" keyProperty="co_coqb">
+    <insert id="insertCoCommentOfQnaBoard" parameterType="CoCommentOfQnaBoard" useGeneratedKeys="true" keyProperty="co_coqb">
         INSERT INTO CoCommentOfQnaBoard
             (co_email,co_qnaId,content)
         VALUES (#{co_email}, #{co_qnaId}, #{content})
@@ -86,9 +86,10 @@
     <select id="getCoQnaBoardByViewer" parameterType="hashMap" resultType="CoQnaBoard">
         select cqb.co_qnaId                                                                as 'co_qnaId',
                cqb.co_email                                                                as 'co_email',
+               cu.co_nickname                                                              as 'co_nickname',
                cqb.co_title                                                                as 'co_title',
                cqb.content                                                                 as 'content',
-               (select count(co_qnaId) from CoLikeOfQnaBoard where co_qnaId = #{co_qnaId}) as 'co_likeBoardCount',
+               (select count(co_qnaId) from CoLikeOfQnaBoard where co_qnaId = #{co_qnaId}) as 'co_likeCount',
                (select SUM(C.cnt)
                 from(
                     select count(ccoqb.co_qnaId) as cnt
@@ -101,27 +102,45 @@
                     from CoReCommentOfQnaBoard as crcoqb
                     left join CoCommentOfQnaBoard as ccoqb on crcoqb.co_coqb = ccoqb.co_coqb
                     where ccoqb.co_qnaId = #{co_qnaId}
-                    )C)                                                                    as 'commentCount',
+                    )C)                                                                    as 'co_commentCount',
                if(cmoqb.co_moqb, 1, 0)                                                     as 'co_mark',
+               if(cloqb.co_loqb, 1, 0)                                                     as 'co_like',
                cqb.createdAt                                                               as 'createdAt',
                cqb.updatedAt                                                               as 'updatedAt'
         from CoQnaBoard as cqb
+                 left join CoUser cu on cqb.co_email = cu.co_email
                  left join (select co_qnaId,
                                    co_moqb
                             from CoMarkOfQnaBoard
-                            where co_qnaId = #{co_qnaId} and co_email = #{co_email}) cmoqb on cqb.co_qnaId = cmoqb.co_qnaId
+                            where co_qnaId = #{co_qnaId} and co_email = #{co_viewer}) cmoqb on cqb.co_qnaId = cmoqb.co_qnaId
+                 left join (select co_qnaId,
+                                   co_loqb
+                            from CoLikeOfQnaBoard
+                            where co_qnaId = #{co_qnaId} and co_email = #{co_viewer}) cloqb on cqb.co_qnaId = cloqb.co_qnaId
         where cqb.co_qnaId = #{co_qnaId};
     </select>
 
     <select id="getComment" resultType="CoCommentOfQnaBoard" resultMap="commentResult">
-        select co_coqb, co_qnaId, co_email, content, createdAt
-        from CoCommentOfQnaBoard
+        select ccoqb.co_coqb as 'co_coqb',
+               ccoqb.co_qnaId as 'co_qnaId',
+               ccoqb.co_email as 'co_email',
+               cu.co_nickname as 'co_nickname',
+               ccoqb.content as 'content',
+               ccoqb.createdAt as 'createdAt'
+        from CoCommentOfQnaBoard as ccoqb
+        left join CoUser cu on ccoqb.co_email = cu.co_email
         where co_qnaId = #{co_qnaId}
     </select>
 
     <select id="getReComment" resultType="CoReCommentOfQnaBoard">
-        select co_rcoqb, co_coqb, co_email, content, createdAt
-        from CoReCommentOfQnaBoard
+        select crcoqb.co_rcoqb as 'co_rcoqb',
+               crcoqb.co_coqb as 'co_coqb',
+               crcoqb.co_email as 'co_email',
+               cu.co_nickname as 'co_nickname',
+               crcoqb.content as 'content',
+               crcoqb.createdAt as 'createdAt'
+        from CoReCommentOfQnaBoard as crcoqb
+        left join CoUser cu on crcoqb.co_email = cu.co_email
         where co_coqb = #{co_coqb}
     </select>
 
@@ -133,6 +152,7 @@
         <result property="co_coqb" column="CO_COQB"/>
         <result property="co_qnaId" column="CO_QNAID"/>
         <result property="co_email" column="CO_EMAIL"/>
+        <result property="co_nickname" column="CO_NICKNAME"/>
         <result property="content" column="CONTENT"/>
         <result property="createdAt" column="CREATEDAT"/>
         <collection property="coReCommentOfQnaBoardList" column="CO_COQB" javaType="java.util.ArrayList" ofType="CoReCommentOfQnaBoard" select="getReComment"/>
@@ -153,6 +173,8 @@
         select distinct
             cqb.co_qnaId as 'co_qnaId',
             cqb.co_email as 'co_email',
+            #{co_email} as 'co_viewer',
+            cu.co_nickName as 'co_nickname',
             cu.profileImg as 'profileImg',
             cqb.co_title as 'co_title',
             substr(cqb.content, 1, 40) as 'content',
@@ -188,6 +210,15 @@
 
     <delete id="deleteCoQnaReComment" parameterType="hashMap">
         delete from CoReCommentOfQnaBoard where co_email = #{co_email} and co_rcoqb = #{co_rcoqb}
+    </delete>
+
+    <insert id="insertLikeCoQnaBoard" parameterType="CoLikeOfQnaBoard">
+        INSERT INTO CoLikeOfQnaBoard (co_email,co_qnaId)
+        VALUES(#{co_email},#{co_qnaId})
+    </insert>
+
+    <delete id="deleteLikeCoQnaBoard" parameterType="CoLikeOfQnaBoard">
+        delete from CoLikeOfQnaBoard where co_email = #{co_email} and co_qnaId = #{co_qnaId}
     </delete>
 
 </mapper>
