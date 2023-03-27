@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.CoBoardMapper">
+
+    <select id="searchBoard" parameterType="hashMap" resultType="CoBoard">
+        select type, count(co_targetId) as boardCount
+        from (
+            select j1.type, co_targetId
+            from (
+                select type
+                from (
+                    select co_qnaId as co_targetId, co_title, content, createdAt, '질문' as type
+                    from CoQnaBoard as coqb
+                    union all
+                    select co_infoId as co_targetId, co_title, content, createdAt, '정보' as type
+                    from CoInfoBoard as coib
+                    ) temp group by type
+                ) j1
+        left join (
+                select co_targetId, co_title, content, createdAt, type
+                from (
+                    select co_qnaId as co_targetId, co_title, content, createdAt, '질문' as type
+                    from CoQnaBoard as coqb
+                    union all
+                    select co_infoId as co_targetId, co_title, content, createdAt, '정보' as type
+                    from CoInfoBoard as coib
+                    ) uniondata
+                <if test="searchTag != null and !searchTag.equals('')">
+                    where content like #{searchTag} or co_title like #{searchTag}
+                </if>
+                ) j2 on j1.type = j2.type
+        ) jj
+        group by type
+    </select>
+
+</mapper>
