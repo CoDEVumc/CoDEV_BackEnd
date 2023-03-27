@@ -16,6 +16,7 @@ public class CoInfoBoard {
     private String co_email;
     private String profileImg;
     private String co_viewer;
+    private String co_nickname;
     private String co_title;
     private String content;
     private String co_mainImg;

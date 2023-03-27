@@ -14,6 +14,7 @@ public class CoQnaBoard {
     private long co_qnaId;
     private String co_email;
     private String co_viewer;
+    private String co_nickname;
     private String profileImg;
     private String co_title;
     private String content;
