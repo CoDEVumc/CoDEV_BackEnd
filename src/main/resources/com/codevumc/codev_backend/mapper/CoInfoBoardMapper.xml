@@ -172,4 +172,13 @@
         delete from CoReCommentOfInfoBoard where co_email = #{co_email} and co_rcoib = #{co_rcoib}
     </delete>
 
+    <insert id="insertLikeCoInfoBoard" parameterType="CoLikeOfInfoBoard">
+        INSERT INTO CoLikeOfInfoBoard (co_email,co_infoId)
+        VALUES(#{co_email},#{co_infoId})
+    </insert>
+
+    <delete id="deleteLikeCoInfoBoard" parameterType="CoLikeOfInfoBoard">
+        delete from CoLikeOfInfoBoard where co_email = #{co_email} and co_infoId = #{co_infoId}
+    </delete>
+
 </mapper>

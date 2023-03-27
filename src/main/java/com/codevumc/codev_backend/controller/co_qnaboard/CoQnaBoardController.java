@@ -1,10 +1,7 @@
 package com.codevumc.codev_backend.controller.co_qnaboard;
 
 import com.codevumc.codev_backend.controller.JwtController;
-import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
-import com.codevumc.codev_backend.domain.CoPhotos;
-import com.codevumc.codev_backend.domain.CoQnaBoard;
-import com.codevumc.codev_backend.domain.CoReCommentOfQnaBoard;
+import com.codevumc.codev_backend.domain.*;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.jwt.JwtTokenProvider;
 import com.codevumc.codev_backend.service.co_file.CoFileService;
@@ -153,6 +150,16 @@ public class CoQnaBoardController extends JwtController {
             coQnaBoard.setCo_photos(uploadPhotos(files, String.valueOf(coQnaBoard.getCo_qnaId())));
         }
         return result;
+    }
+
+    //질문게시글 좋아요
+    @PatchMapping("/like/{coQnaId}")
+    public CoDevResponse likeCoQnaBoard(HttpServletRequest request, @PathVariable ("coQnaId") Long co_qnaId, @RequestBody Map<String, Object> likeDto) throws Exception {
+        CoLikeOfQnaBoard coLikeOfQnaBoard = CoLikeOfQnaBoard.builder()
+                .co_qnaId(co_qnaId)
+                .co_email(getCoUserEmail(request))
+                .co_like(Boolean.parseBoolean(likeDto.get("co_like").toString())).build();
+        return coQnaBoardService.likeCoQnaBoard(coLikeOfQnaBoard);
     }
 
 }

@@ -187,4 +187,20 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
         }
         return null;
     }
+
+    @Override
+    public CoDevResponse likeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard) {
+        try {
+            if(coLikeOfInfoBoard.isCo_like()==false) {
+                this.coInfoBoardMapper.insertLikeCoInfoBoard(coLikeOfInfoBoard);
+                return setResponse(200, "message", "좋아요를 하셨습니다.");
+            } else {
+                this.coInfoBoardMapper.deleteLikeCoInfoBoard(coLikeOfInfoBoard);
+                return setResponse(200, "message", "좋아요를 취소하였습니다");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+    }
 }

@@ -149,4 +149,14 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.deleteCoInfoReComment(co_email,co_rcoib);
     }
 
+    //정보게시판 좋아요
+    @PatchMapping("/like/{coInfoId}")
+    public CoDevResponse likeCoInfoBoard(HttpServletRequest request, @PathVariable("coInfoId") Long co_infoId, @RequestBody Map<String, Object> likeDto) throws Exception {
+        CoLikeOfInfoBoard coLikeOfInfoBoard = CoLikeOfInfoBoard.builder()
+                .co_infoId(co_infoId)
+                .co_email(getCoUserEmail(request))
+                .co_like(Boolean.parseBoolean(likeDto.get("co_like").toString())).build();
+        return coInfoBoardService.likeCoInfoBoard(coLikeOfInfoBoard);
+    }
+
 }
