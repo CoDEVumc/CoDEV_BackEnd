@@ -23,8 +23,8 @@ public class CoInfoBoard {
     private Long co_likeCount;
     private Long co_commentCount;
     private Long co_markCount;
-    private int commentCount;
     private boolean co_mark;
+    private boolean co_like;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private List<CoPhotos> co_photos;
