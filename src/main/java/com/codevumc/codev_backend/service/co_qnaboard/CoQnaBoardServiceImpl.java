@@ -142,11 +142,12 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
     }
 
     @Override
-    public CoDevResponse getAllQnaBoards(String co_email, int limit, int offset, int pageNum, boolean coMyBoard) {
+    public CoDevResponse getAllQnaBoards(String co_email, int limit, int offset, int pageNum, boolean coMyBoard, String sortingTag) {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
             condition.put("coMyBoard", coMyBoard ? co_email : null);
+            condition.put("sortingTag", sortingTag);
             condition.put("limit", limit);
             condition.put("offset", offset);
             List<CoQnaBoard> coQnaBoards = this.coQnaBoardMapper.getCoQnaBoards(condition);

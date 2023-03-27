@@ -95,13 +95,14 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
     }
 
     @Override
-    public CoDevResponse getAllInfoBoards(String co_email, int limit, int offset, int pageNum, boolean coMyBoard) {
+    public CoDevResponse getAllInfoBoards(String co_email, int limit, int offset, int pageNum, boolean coMyBoard, String sortingTag) {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("co_email", co_email);
             condition.put("coMyBoard", coMyBoard ? co_email : null);
             condition.put("limit", limit);
             condition.put("offset", offset);
+            condition.put("sortingTag", sortingTag);
             List<CoInfoBoard> coInfoBoards = this.coInfoBoardMapper.getCoInfoBoards(condition);
             setResponse(200, "success", coInfoBoards);
             return addResponse("co_page", pageNum);
