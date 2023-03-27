@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/codev/board")
 public class CoBoardSearchController extends JwtController {
-
+    public static final int SHOW_COUNT = 10;
     private final CoBoardSearchService coBoardSearchService;
 
     public CoBoardSearchController(JwtTokenProvider jwtTokenProvider, JwtService jwtService, CoBoardSearchService coBoardSearchService) {
@@ -22,11 +22,23 @@ public class CoBoardSearchController extends JwtController {
     }
 
 
-    @GetMapping("/search")
-    public CoDevResponse getSearch(HttpServletRequest request, @RequestParam("searchTag") String searchTag) throws Exception{
+    @GetMapping("/search/{page}")
+    public CoDevResponse getSearch(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("searchTag") String searchTag, @RequestParam("coMyBoard") boolean coMyBoard, @RequestParam("sortingTag") String sortingTag, @RequestParam("type") String type) throws Exception{
+        int limit = getLimitCnt(pageNum);
+        int offset = limit - SHOW_COUNT;
+        return coBoardSearchService.searchBoard(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard, searchTag, sortingTag.toUpperCase(), type);
 
-        return coBoardSearchService.searchBoard(getCoUserEmail(request), searchTag);
+    }
 
+
+    private int getLimitCnt(int pageNum) {
+        int limit = SHOW_COUNT;
+        for(int i = 0; i <= pageNum; i++) {
+            if(i != 0)
+                limit += SHOW_COUNT;
+        }
+
+        return limit;
     }
 
 }

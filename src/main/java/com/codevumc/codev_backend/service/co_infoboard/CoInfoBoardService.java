@@ -12,7 +12,7 @@ public interface CoInfoBoardService {
     CoDevResponse insertCoCommentOfInfoBoard(CoCommentOfInfoBoard coCommentOfInfoBoard);
     CoDevResponse changeMark(String co_email, long co_infoId);
     CoDevResponse insertCoReCommentOfInfoBoard(CoReCommentOfInfoBoard coReCommentOfInfoBoard);
-    CoDevResponse getAllInfoBoards(String co_email, int showCount, int offset, int pageNum, boolean coMyBoard);
+    CoDevResponse getAllInfoBoards(String co_email, int showCount, int offset, int pageNum, boolean coMyBoard, String sortingTag);
     CoDevResponse getCoInfoBoard(String co_viewer, long co_infoId);
     CoDevResponse updateCoInfoBoard(CoInfoBoard coInfoBoard);
     CoDevResponse deleteInfoBoard(String co_email, Long co_infoId);
