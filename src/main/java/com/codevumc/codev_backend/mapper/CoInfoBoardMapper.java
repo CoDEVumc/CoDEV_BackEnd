@@ -28,4 +28,6 @@ public interface CoInfoBoardMapper {
     Optional<CoReCommentOfInfoBoard> getCoInfoReComment(long co_rcoib);
     boolean deleteCoInfoComment(Map<String, Object> coCommentDto);
     boolean deleteCoInfoReComment(Map<String, Object> coReCommentDto);
+    void insertLikeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard);
+    void deleteLikeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard);
 }
