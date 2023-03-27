@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -120,10 +121,10 @@ public class CoQnaBoardController extends JwtController {
     }
 
     @GetMapping("/qnaBoards/{page}")
-    public CoDevResponse getAllQnaBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard) throws Exception {
+    public CoDevResponse getAllQnaBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard, @RequestParam("sortingTag") String sortingTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coQnaBoardService.getAllQnaBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard);
+        return coQnaBoardService.getAllQnaBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard, sortingTag.toUpperCase());
     }
 
     private int getLimitCnt(int pageNum) {
