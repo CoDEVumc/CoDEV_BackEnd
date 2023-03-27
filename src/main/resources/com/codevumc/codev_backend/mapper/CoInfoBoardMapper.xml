@@ -98,6 +98,46 @@
         where cib.co_infoId = #{co_infoId};
     </select>
 
+    <select id="getCoMarkOfInfoBoards" resultType="CoMarkOfInfoBoard">
+        select * from CoMarkOfInfoBoard where co_email=#{co_email}
+    </select>
+    <select id="getCoMarkOfInfoBoard" resultType="CoInfoBoard">
+        SELECT
+            cib.co_infoId AS 'co_infoId',
+                cib.co_email AS 'co_email',
+                cib.co_title AS 'co_title',
+                cib.content AS 'content',
+                COUNT(cli.co_infoId) AS 'co_likeCount',
+                (
+                    SELECT COUNT( ccoib.co_infoId) as cnt
+                    FROM CoCommentOfInfoBoard as ccoib
+                    WHERE ccoib.co_infoId = cib.co_infoId
+                ) +
+                    (
+                        SELECT COUNT(crcoib.co_coib) as cnt
+                        FROM CoReCommentOfInfoBoard as crcoib
+                                 LEFT JOIN (
+                            SELECT co_coib, co_infoId
+                            FROM CoCommentOfInfoBoard
+                        ) ccoib ON ccoib.co_coib = crcoib.co_coib
+                        WHERE ccoib.co_infoId = cib.co_infoId
+                    ) AS 'co_commentCount',
+                if(cmoib.co_moib, 1, 0) as 'co_markCount',
+                cib.createdAt,
+            cib.updatedAt
+        FROM CoMarkOfInfoBoard cmoib
+                 JOIN CoInfoBoard cib ON cib.co_infoId = cmoib.co_infoId
+                 LEFT JOIN (
+            SELECT co_infoId
+            FROM CoCommentOfInfoBoard
+        ) as ccoib ON ccoib.co_infoId = cib.co_infoId
+                 LEFT JOIN CoLikeOfInfoBoard AS cli
+                           ON cli.co_infoId = cib.co_infoId
+        WHERE cmoib.co_email = #{co_email}
+        GROUP BY cib.co_infoId, cib.co_title, cmoib.co_moib, cib.content, cib.createdAt, cib.updatedAt;
+
+    </select>
+
     <select id="getComment" resultType="CoCommentOfInfoBoard" resultMap="commentResult">
         select co_coib, co_infoId, co_email, content, createdAt
         from CoCommentOfInfoBoard
