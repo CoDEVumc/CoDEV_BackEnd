@@ -93,10 +93,10 @@ public class CoInfoBoardController extends JwtController {
     }
 
     @GetMapping("/infoBoards/{page}")
-    public CoDevResponse getAllInfoBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard) throws Exception {
+    public CoDevResponse getAllInfoBoards(HttpServletRequest request, @PathVariable("page") int pageNum, @RequestParam("coMyBoard") boolean coMyBoard, @RequestParam("sortingTag") String sortingTag) throws Exception {
         int limit = getLimitCnt(pageNum);
         int offset = limit - SHOW_COUNT;
-        return coInfoBoardService.getAllInfoBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard);
+        return coInfoBoardService.getAllInfoBoards(getCoUserEmail(request), SHOW_COUNT, offset, pageNum, coMyBoard, sortingTag);
     }
 
     private int getLimitCnt(int pageNum) {
