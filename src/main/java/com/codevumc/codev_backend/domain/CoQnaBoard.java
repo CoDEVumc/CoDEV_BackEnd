@@ -23,6 +23,7 @@ public class CoQnaBoard {
     private Long co_commentCount;
     private Long co_markCount;
     private boolean co_mark;
+    private boolean co_like;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private List<CoPhotos> co_photos;
