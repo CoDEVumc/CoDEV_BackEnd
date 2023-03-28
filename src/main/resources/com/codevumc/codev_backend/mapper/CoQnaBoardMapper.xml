@@ -173,7 +173,6 @@
         select distinct
             cqb.co_qnaId as 'co_qnaId',
             cqb.co_email as 'co_email',
-            #{co_email} as 'co_viewer',
             cu.co_nickName as 'co_nickname',
             cu.profileImg as 'profileImg',
             cqb.co_title as 'co_title',
@@ -193,8 +192,18 @@
         <if test="coMyBoard != null and !coMyBoard.equals('')">
             and cqb.co_email = #{coMyBoard}
         </if>
-        order by createdAt desc limit #{limit} offset #{offset}
+        order by
+        <choose>
+            <when test='sortingTag.equals("POPULARITY")'>
+                co_likeCount desc limit
+            </when>
+            <otherwise>
+                createdAt desc limit
+            </otherwise>
+        </choose>
+        #{limit} offset #{offset}
     </select>
+
 
     <select id="getCoQnaComment" resultType="CoCommentOfQnaBoard">
         select * from CoCommentOfQnaBoard where co_coqb = #{co_coqb}
