@@ -39,6 +39,7 @@
     <select id="getCoMarkOfQnaBoard" resultType="CoQnaBoard">
         SELECT
             cqb.co_qnaId AS 'co_qnaId',
+                cu.co_nickname                                                              as 'co_nickname',
                 cqb.co_email AS 'co_email',
                 cqb.co_title AS 'co_title',
                 cqb.content AS 'content',
@@ -63,11 +64,12 @@
         FROM CoMarkOfQnaBoard cmoqb
                  JOIN CoQnaBoard cqb ON cqb.co_qnaId = cmoqb.co_qnaId
                  LEFT JOIN (
-            SELECT co_qnaId
-            FROM CoCommentOfQnaBoard
-        ) as ccoqb ON ccoqb.co_qnaId = cqb.co_qnaId
+                    SELECT co_qnaId
+                    FROM CoCommentOfQnaBoard
+                        ) as ccoqb ON ccoqb.co_qnaId = cqb.co_qnaId
                  LEFT JOIN CoLikeOfQnaBoard AS clq
                            ON clq.co_qnaId = cqb.co_qnaId
+                 LEFT JOIN CoUser cu ON cqb.co_email = cu.co_email
         WHERE cmoqb.co_email = #{co_email}
         GROUP BY cqb.co_QnaId, cqb.co_title, cmoqb.co_moqb, cqb.content, cqb.createdAt, cqb.updatedAt;
 
