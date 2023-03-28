@@ -122,6 +122,7 @@
         SELECT
             cib.co_infoId AS 'co_infoId',
                 cib.co_email AS 'co_email',
+                cu.co_nickname                                                              as 'co_nickname',
                 cib.co_title AS 'co_title',
                 cib.content AS 'content',
                 COUNT(cli.co_infoId) AS 'co_likeCount',
@@ -143,15 +144,17 @@
                 cib.createdAt,
             cib.updatedAt
         FROM CoMarkOfInfoBoard cmoib
-                 JOIN CoInfoBoard cib ON cib.co_infoId = cmoib.co_infoId
+
+                 JOIN CoInfoBoard as cib ON cib.co_infoId = cmoib.co_infoId
                  LEFT JOIN (
-            SELECT co_infoId
-            FROM CoCommentOfInfoBoard
-        ) as ccoib ON ccoib.co_infoId = cib.co_infoId
+                    SELECT co_infoId
+                    FROM CoCommentOfInfoBoard
+                 ) as ccoib ON ccoib.co_infoId = cib.co_infoId
                  LEFT JOIN CoLikeOfInfoBoard AS cli
                            ON cli.co_infoId = cib.co_infoId
+                 LEFT JOIN CoUser cu ON cib.co_email = cu.co_email
         WHERE cmoib.co_email = #{co_email}
-        GROUP BY cib.co_infoId, cib.co_title, cmoib.co_moib, cib.content, cib.createdAt, cib.updatedAt;
+        GROUP BY cib.co_infoId, cib.co_title, cmoib.co_moib,cu.co_nickname, cib.content, cib.createdAt, cib.updatedAt;
 
     </select>
 
