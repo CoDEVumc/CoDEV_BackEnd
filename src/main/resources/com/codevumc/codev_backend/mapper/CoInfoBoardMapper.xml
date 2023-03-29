@@ -122,7 +122,8 @@
         SELECT
             cib.co_infoId AS 'co_infoId',
                 cib.co_email AS 'co_email',
-                cu.co_nickname                                                              as 'co_nickname',
+                cib.co_mainImg AS 'co_mainImg',
+                cu.co_nickname AS 'co_nickname',
                 cib.co_title AS 'co_title',
                 cib.content AS 'content',
                 COUNT(cli.co_infoId) AS 'co_likeCount',
@@ -154,7 +155,7 @@
                            ON cli.co_infoId = cib.co_infoId
                  LEFT JOIN CoUser cu ON cib.co_email = cu.co_email
         WHERE cmoib.co_email = #{co_email}
-        GROUP BY cib.co_infoId, cib.co_title, cmoib.co_moib,cu.co_nickname, cib.content, cib.createdAt, cib.updatedAt;
+        GROUP BY cib.co_infoId, cib.co_title, cib.co_mainImg, cmoib.co_moib,cu.co_nickname, cib.content, cib.createdAt, cib.updatedAt;
 
     </select>
 

@@ -41,6 +41,7 @@
             cqb.co_qnaId AS 'co_qnaId',
                 cu.co_nickname                                                              as 'co_nickname',
                 cqb.co_email AS 'co_email',
+                cqb.co_mainImg AS 'co_mainImg',
                 cqb.co_title AS 'co_title',
                 cqb.content AS 'content',
                 COUNT(clq.co_qnaId) AS 'co_likeCount',
@@ -71,7 +72,7 @@
                            ON clq.co_qnaId = cqb.co_qnaId
                  LEFT JOIN CoUser cu ON cqb.co_email = cu.co_email
         WHERE cmoqb.co_email = #{co_email}
-        GROUP BY cqb.co_QnaId, cqb.co_title, cmoqb.co_moqb, cqb.content, cqb.createdAt, cqb.updatedAt;
+        GROUP BY cqb.co_QnaId, cqb.co_title, cqb.co_mainImg, cmoqb.co_moqb, cqb.content, cqb.createdAt, cqb.updatedAt;
 
     </select>
 
