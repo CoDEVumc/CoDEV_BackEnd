@@ -197,6 +197,22 @@ public class CoQnaBoardServiceImpl extends ResponseService implements CoQnaBoard
     }
 
     @Override
+    public CoDevResponse getMark(String co_email) {
+        try{
+            Optional<CoMarkOfQnaBoard> coMarkOfQnaBoard = coQnaBoardMapper.getCoMarkOfQnaBoards(co_email);
+            if(coMarkOfQnaBoard.isPresent()){
+                List<CoMarkOfQnaBoard> coMarkOfQnaBoards = this.coQnaBoardMapper.getCoMarkOfQnaBoard(co_email);
+                return setResponse(200,"Complete",coMarkOfQnaBoards);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
+        }
+        return null;
+    }
+
+    @Override
     public CoDevResponse likeCoQnaBoard(CoLikeOfQnaBoard coLikeOfQnaBoard) {
         try {
             if(coLikeOfQnaBoard.isCo_like()==false) {

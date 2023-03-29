@@ -30,4 +30,6 @@ public interface CoInfoBoardMapper {
     boolean deleteCoInfoReComment(Map<String, Object> coReCommentDto);
     void insertLikeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard);
     void deleteLikeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard);
+    List<CoMarkOfInfoBoard> getCoMarkOfInfoBoard(String co_email);
+    Optional<CoMarkOfInfoBoard> getCoMarkOfInfoBoards(String co_email);
 }
