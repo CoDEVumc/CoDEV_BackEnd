@@ -72,8 +72,8 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.insertCoCommentOfInfoBoard(coCommentOfInfoBoard);
     }
 
-    @PostMapping("/recomments/{co_coib}")
-    public CoDevResponse insertCoReCommentOfInfoBoard(HttpServletRequest request, @PathVariable("co_coib") Long co_coib, @RequestBody Map<String, Object> co_content) throws Exception {
+    @PostMapping("/recomments/{coCoib}")
+    public CoDevResponse insertCoReCommentOfInfoBoard(HttpServletRequest request, @PathVariable("coCoib") Long co_coib, @RequestBody Map<String, Object> co_content) throws Exception {
         CoReCommentOfInfoBoard coReCommentOfInfoBoard = CoReCommentOfInfoBoard.builder()
                 .co_email(getCoUserEmail(request))
                 .co_coib(co_coib)
