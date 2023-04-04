@@ -10,11 +10,6 @@ import com.codevumc.codev_backend.service.co_file.CoFileServiceImpl;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardService;
 import com.codevumc.codev_backend.service.co_infoboard.CoInfoBoardServiceImpl;
 import com.codevumc.codev_backend.service.co_user.JwtService;
-import com.google.api.Http;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -114,13 +109,13 @@ public class CoInfoBoardController extends JwtController {
         return limit;
     }
     @PutMapping(value="/update/{coInfoId}",consumes = {MediaType.ALL_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public CoDevResponse updateCoInfoBoard(HttpServletRequest request,@PathVariable("coInfoId") long coInfoId, @RequestPart Map<String, Object> InfoBoard, @RequestPart(required = false) MultipartFile[] files) throws Exception {
+    public CoDevResponse updateCoInfoBoard(HttpServletRequest request,@PathVariable("coInfoId") long coInfoId, @RequestPart Map<String, Object> infoBoard, @RequestPart(required = false) MultipartFile[] files) throws Exception {
 
         CoInfoBoard coInfoBoard = CoInfoBoard.builder()
                 .co_infoId(coInfoId)
                 .co_email(getCoUserEmail(request))
-                .co_title(InfoBoard.get("co_title").toString())
-                .content(InfoBoard.get("content").toString()).build();
+                .co_title(infoBoard.get("co_title").toString())
+                .content(infoBoard.get("content").toString()).build();
 
         CoDevResponse result = coInfoBoardService.updateCoInfoBoard(coInfoBoard);
         coFileService.deleteFile(String.valueOf(coInfoBoard.getCo_infoId()),BOARD_TYPE);
