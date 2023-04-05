@@ -94,7 +94,7 @@ public class CoQnaBoardController extends JwtController {
     public CoDevResponse markOfQnaBoard(HttpServletRequest request, @PathVariable("coQnaId") long co_qnaId) throws Exception{
         return coQnaBoardService.changeMark(getCoUserEmail(request),co_qnaId);
     }
-    @GetMapping("/mark/get")
+    @GetMapping("/mark/list")
     public CoDevResponse getmarkOfQnaBoard(HttpServletRequest request) throws Exception{
         return coQnaBoardService.getMark(getCoUserEmail(request));
     }

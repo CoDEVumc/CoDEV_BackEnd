@@ -87,7 +87,7 @@ public class CoInfoBoardController extends JwtController {
         return coInfoBoardService.changeMark(getCoUserEmail(request),co_infoId);
     }
 
-    @GetMapping("/mark/get")
+    @GetMapping("/mark/list")
     public CoDevResponse getmarkOfInfoBoard(HttpServletRequest request) throws Exception{
         return coInfoBoardService.getMark(getCoUserEmail(request));
     }
