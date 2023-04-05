@@ -193,16 +193,13 @@ public class CoInfoBoardServiceImpl extends ResponseService implements CoInfoBoa
     public CoDevResponse getMark(String co_email) {
         try{
             Optional<CoMarkOfInfoBoard> coMarkOfInfoBoard = coInfoBoardMapper.getCoMarkOfInfoBoards(co_email);
-            if(coMarkOfInfoBoard.isPresent()){
-                List<CoMarkOfInfoBoard> coMarkOfInfoBoards = this.coInfoBoardMapper.getCoMarkOfInfoBoard(co_email);
-                return setResponse(200,"Complete",coMarkOfInfoBoards);
-            }
+            List<CoMarkOfInfoBoard> coMarkOfInfoBoards = this.coInfoBoardMapper.getCoMarkOfInfoBoard(co_email);
+            return setResponse(200,"Complete",coMarkOfInfoBoards);
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
-        return null;
     }
 
     @Override
