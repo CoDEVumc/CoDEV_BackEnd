@@ -1,13 +1,12 @@
 package com.codevumc.codev_backend.mapper;
 
-import com.codevumc.codev_backend.domain.CoPortfolio;
-import com.codevumc.codev_backend.domain.CoProject;
-import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Mapper
 public interface CoMyPageMapper {
@@ -19,4 +18,5 @@ public interface CoMyPageMapper {
     List<CoProject> getParticipateOfProjects(String co_email);
     List<CoProject> getRecruitOfProjects(String co_email);
     List<CoStudy> getRecruitOfStudies(String co_email);
+    List<CoBoards> getCoMarkOfBoard(String co_email);
 }

@@ -214,5 +214,93 @@
             crp.status = true
         order by crp.createdAt desc
     </select>
+    
+    <select id="getCoMarkOfBoard" resultType="CoBoards">
+        SELECT *
+        FROM (
+                 SELECT 'Info'                  AS 'co_type',
+                         cib.co_infoId           AS 'co_Id',
+                         cib.co_email            AS 'co_email',
+                         cib.co_mainImg          AS 'co_mainImg',
+                         cu.co_nickname          AS 'co_nickname',
+                         cib.co_title            AS 'co_title',
+                         cib.content             AS 'content',
+                         COUNT(cli.co_infoId)    AS 'co_likeCount',
+                         cmoib.createdAt         AS 'created_at',
+
+                         (
+                             SELECT COUNT(ccoib.co_infoId) as cnt
+                             FROM CoCommentOfInfoBoard as ccoib
+                             WHERE ccoib.co_infoId = cib.co_infoId
+                         ) +
+                             (
+                                 SELECT COUNT(crcoib.co_coib) as cnt
+                                 FROM CoReCommentOfInfoBoard as crcoib
+                                          LEFT JOIN (
+                                     SELECT co_coib, co_infoId
+                                     FROM CoCommentOfInfoBoard
+                                 ) ccoib ON ccoib.co_coib = crcoib.co_coib
+                                 WHERE ccoib.co_infoId = cib.co_infoId
+                             )                       AS 'co_commentCount',
+                         if(cmoib.co_moib, 1, 0) as 'co_markCount',
+                         cib.createdAt,
+                        cib.updatedAt
+                 FROM CoMarkOfInfoBoard cmoib
+
+                          JOIN CoInfoBoard as cib ON cib.co_infoId = cmoib.co_infoId
+                          LEFT JOIN (
+                     SELECT co_infoId
+                     FROM CoCommentOfInfoBoard
+                 ) as ccoib ON ccoib.co_infoId = cib.co_infoId
+
+                          LEFT JOIN CoLikeOfInfoBoard AS cli
+                                    ON cli.co_infoId = cib.co_infoId
+                          LEFT JOIN CoUser cu ON cib.co_email = cu.co_email
+                 WHERE cmoib.co_email = #{co_email}
+                 GROUP BY cib.co_infoId, cib.co_title, cib.co_mainImg, cmoib.co_moib, cu.co_nickname, cib.content,
+                          cib.createdAt, cib.updatedAt
+                 UNION ALL
+                 SELECT 'Qna'                   AS 'co_type',
+                         cqb.co_qnaId            AS 'co_Id',
+                         cqb.co_email            AS 'co_email',
+                         cqb.co_mainImg          AS 'co_mainImg',
+                         cu.co_nickname          as 'co_nickname',
+                         cqb.co_title            AS 'co_title',
+                         cqb.content             AS 'content',
+                         COUNT(clq.co_qnaId)     AS 'co_likeCount',
+                         cmoqb.createdAt         AS 'created_at',
+
+                         (
+                             SELECT COUNT(ccoqb.co_qnaId) as cnt
+                             FROM CoCommentOfQnaBoard as ccoqb
+                             WHERE ccoqb.co_qnaId = cqb.co_qnaId
+                         ) +
+                             (
+                                 SELECT COUNT(crcoqb.co_coqb) as cnt
+                                 FROM CoReCommentOfQnaBoard as crcoqb
+                                          LEFT JOIN (
+                                     SELECT co_coqb, co_qnaId
+                                     FROM CoCommentOfQnaBoard
+                                 ) ccoqb ON ccoqb.co_coqb = crcoqb.co_coqb
+                                 WHERE ccoqb.co_qnaId = cqb.co_qnaId
+                             )                       AS 'co_commentCount',
+                         if(cmoqb.co_moqb, 1, 0) as 'co_markCount',
+                         cqb.createdAt,
+                        cqb.updatedAt
+                 FROM CoMarkOfQnaBoard cmoqb
+                          JOIN CoQnaBoard cqb ON cqb.co_qnaId = cmoqb.co_qnaId
+                          LEFT JOIN (
+                     SELECT co_qnaId
+                     FROM CoCommentOfQnaBoard
+                 ) as ccoqb ON ccoqb.co_qnaId = cqb.co_qnaId
+                          LEFT JOIN CoLikeOfQnaBoard AS clq
+                                    ON clq.co_qnaId = cqb.co_qnaId
+                          LEFT JOIN CoUser cu ON cqb.co_email = cu.co_email
+                 WHERE cmoqb.co_email = #{co_email}
+                 GROUP BY cqb.co_QnaId, cqb.co_title, cqb.co_mainImg, cmoqb.co_moqb, cu.co_nickName, cqb.content,
+                          cqb.createdAt, cqb.updatedAt
+             ) as subquery
+        ORDER BY subquery.created_at DESC;
+    </select>
 
 </mapper>

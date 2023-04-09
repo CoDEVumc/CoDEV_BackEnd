@@ -79,6 +79,11 @@ public class CoMyPageController extends JwtController {
         return this.coMyPageService.deletePortfolio(co_email, coPortfolioId);
     }
 
+    @GetMapping("/mark/list")
+    public CoDevResponse getmarkOfBoard(HttpServletRequest request) throws Exception{
+        return coMyPageService.getMark(getCoUserEmail(request));
+    }
+
     @GetMapping("/hearts/studies")
     public CoDevResponse getHeartOfStudies(HttpServletRequest request) throws Exception {
         String co_email = getCoUserEmail(request);
