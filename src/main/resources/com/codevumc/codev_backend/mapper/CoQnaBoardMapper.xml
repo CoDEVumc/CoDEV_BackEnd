@@ -38,7 +38,7 @@
     </select>
     <select id="getCoMarkOfQnaBoard" resultType="CoQnaBoard">
         SELECT
-            cqb.co_qnaId AS 'co_qnaId',
+                cqb.co_qnaId AS 'co_qnaId',
                 cu.co_nickname                                                              as 'co_nickname',
                 cqb.co_email AS 'co_email',
                 cqb.co_mainImg AS 'co_mainImg',

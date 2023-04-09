@@ -19,6 +19,5 @@ public interface CoInfoBoardService {
     CoDevResponse deleteInfoBoard(String co_email, Long co_infoId);
     CoDevResponse deleteCoInfoComment(String co_email, long co_coib);
     CoDevResponse deleteCoInfoReComment(String co_email, long co_rcoib);
-    CoDevResponse getMark(String co_email);
     CoDevResponse likeCoInfoBoard(CoLikeOfInfoBoard coLikeOfInfoBoard);
 }
