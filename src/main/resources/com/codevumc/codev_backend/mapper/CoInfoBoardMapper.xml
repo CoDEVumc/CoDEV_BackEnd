@@ -82,6 +82,7 @@
         select  cib.co_infoId                                                               as 'co_infoId',
                 cib.co_email                                                                as 'co_email',
                 cu.co_nickname                                                              as 'co_nickname',
+                cu.profileImg                                                               as 'profileImg',
                 cib.co_title                                                                as 'co_title',
                 cib.content                                                                 as 'content',
                 (select count(co_infoId) from CoLikeOfInfoBoard where co_infoId = #{co_infoId}) as 'co_likeCount',
@@ -164,6 +165,7 @@
                ccoib.co_infoId as 'co_infoId',
                ccoib.co_email as 'co_email',
                cu.co_nickname as 'co_nickname',
+               cu.profileImg as 'profileImg',
                ccoib.content as 'content',
                ccoib.createdAt as 'createdAt'
         from CoCommentOfInfoBoard as ccoib
@@ -176,6 +178,7 @@
                crcoib.co_coib as 'co_coib',
                crcoib.co_email as 'co_email',
                cu.co_nickname as 'co_nickname',
+               cu.profileImg as 'profileImg',
                crcoib.content as 'content',
                crcoib.createdAt as 'createdAt'
         from CoReCommentOfInfoBoard as crcoib
@@ -192,6 +195,7 @@
         <result property="co_infoId" column="CO_INFOID"/>
         <result property="co_email" column="CO_EMAIL"/>
         <result property="co_nickname" column="CO_NICKNAME"/>
+        <result property="profileImg" column="PROFILEIMG"/>
         <result property="content" column="CONTENT"/>
         <result property="createdAt" column="CREATEDAT"/>
         <collection property="coReCommentOfInfoBoardList" column="CO_COIB" javaType="java.util.ArrayList" ofType="CoReCommentOfInfoBoard" select="getReComment"/>

@@ -13,6 +13,7 @@ public class CoReCommentOfInfoBoard {
     private long co_rcoib;
     private String co_email;
     private String co_nickname;
+    private String profileImg;
     private long co_coib;
     private String content;
     private Timestamp createdAt;
