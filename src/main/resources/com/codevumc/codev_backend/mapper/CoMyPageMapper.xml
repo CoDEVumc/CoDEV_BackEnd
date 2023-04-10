@@ -219,10 +219,11 @@
         SELECT *
         FROM (
                  SELECT 'Info'                  AS 'co_type',
-                         cib.co_infoId           AS 'co_Id',
+                         cib.co_infoId           AS 'co_infoId',
                          cib.co_email            AS 'co_email',
                          cib.co_mainImg          AS 'co_mainImg',
                          cu.co_nickname          AS 'co_nickname',
+                         cu.profileImg           AS 'profileImg',
                          cib.co_title            AS 'co_title',
                          cib.content             AS 'content',
                          COUNT(cli.co_infoId)    AS 'co_likeCount',
@@ -261,10 +262,11 @@
                           cib.createdAt, cib.updatedAt
                  UNION ALL
                  SELECT 'Qna'                   AS 'co_type',
-                         cqb.co_qnaId            AS 'co_Id',
+                         cqb.co_qnaId            AS 'co_qnaId',
                          cqb.co_email            AS 'co_email',
                          cqb.co_mainImg          AS 'co_mainImg',
                          cu.co_nickname          as 'co_nickname',
+                         cu.profileImg           AS 'profileImg',
                          cqb.co_title            AS 'co_title',
                          cqb.content             AS 'content',
                          COUNT(clq.co_qnaId)     AS 'co_likeCount',
