@@ -15,6 +15,7 @@ public class CoCommentOfQnaBoard {
     private long co_coqb;
     private String co_email;
     private String co_nickname;
+    private String profileImg;
     private long co_qnaId;
     private String content;
     private Timestamp createdAt;
