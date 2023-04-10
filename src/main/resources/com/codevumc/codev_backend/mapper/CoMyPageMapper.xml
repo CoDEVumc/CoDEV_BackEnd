@@ -218,8 +218,10 @@
     <select id="getCoMarkOfBoard" resultType="CoBoards">
         SELECT *
         FROM (
-                 SELECT 'Info'                  AS 'co_type',
-                         cib.co_infoId           AS 'co_infoId',
+                 SELECT
+                     'Info' AS 'co_type',
+                         cib.co_infoId AS 'co_infoId',
+                         NULL AS 'co_qnaId',
                          cib.co_email            AS 'co_email',
                          cib.co_mainImg          AS 'co_mainImg',
                          cu.co_nickname          AS 'co_nickname',
@@ -245,7 +247,7 @@
                              )                       AS 'co_commentCount',
                          if(cmoib.co_moib, 1, 0) as 'co_markCount',
                          cib.createdAt,
-                        cib.updatedAt
+                     cib.updatedAt
                  FROM CoMarkOfInfoBoard cmoib
 
                           JOIN CoInfoBoard as cib ON cib.co_infoId = cmoib.co_infoId
@@ -261,8 +263,10 @@
                  GROUP BY cib.co_infoId, cib.co_title, cib.co_mainImg, cmoib.co_moib, cu.co_nickname, cib.content,
                           cib.createdAt, cib.updatedAt
                  UNION ALL
-                 SELECT 'Qna'                   AS 'co_type',
-                         cqb.co_qnaId            AS 'co_qnaId',
+                 SELECT
+                     'Qna' AS 'co_type',
+                         NULL AS 'co_infoId',
+                         cqb.co_qnaId           AS 'co_qnaId',
                          cqb.co_email            AS 'co_email',
                          cqb.co_mainImg          AS 'co_mainImg',
                          cu.co_nickname          as 'co_nickname',
@@ -288,7 +292,7 @@
                              )                       AS 'co_commentCount',
                          if(cmoqb.co_moqb, 1, 0) as 'co_markCount',
                          cqb.createdAt,
-                        cqb.updatedAt
+                     cqb.updatedAt
                  FROM CoMarkOfQnaBoard cmoqb
                           JOIN CoQnaBoard cqb ON cqb.co_qnaId = cmoqb.co_qnaId
                           LEFT JOIN (
@@ -298,7 +302,7 @@
                           LEFT JOIN CoLikeOfQnaBoard AS clq
                                     ON clq.co_qnaId = cqb.co_qnaId
                           LEFT JOIN CoUser cu ON cqb.co_email = cu.co_email
-                 WHERE cmoqb.co_email = #{co_email}
+                 WHERE cmoqb.co_email =#{co_email}
                  GROUP BY cqb.co_QnaId, cqb.co_title, cqb.co_mainImg, cmoqb.co_moqb, cu.co_nickName, cqb.content,
                           cqb.createdAt, cqb.updatedAt
              ) as subquery
