@@ -202,16 +202,8 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
             List<CoMarkOfQnaBoard> coMarkOfQnaBoard = coQnaBoardMapper.getCoMarkOfQnaBoards(co_email);
             List<CoMarkOfInfoBoard> coMarkOfInfoBoard =  coInfoBoardMapper.getCoMarkOfInfoBoards(co_email);
             if(!coMarkOfInfoBoard.isEmpty() || !coMarkOfQnaBoard.isEmpty()){
-
                 List<CoBoards> coMarkOfBoards = this.coMyPageMapper.getCoMarkOfBoard(co_email);
-                if(coMarkOfBoards)
-                {
-
-                }
                 return setResponse(200,"Complete",coMarkOfBoards);
-
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
