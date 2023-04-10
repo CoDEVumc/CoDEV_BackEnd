@@ -90,6 +90,7 @@
         select cqb.co_qnaId                                                                as 'co_qnaId',
                cqb.co_email                                                                as 'co_email',
                cu.co_nickname                                                              as 'co_nickname',
+               cu.profileImg                                                               as 'profileImg',
                cqb.co_title                                                                as 'co_title',
                cqb.content                                                                 as 'content',
                (select count(co_qnaId) from CoLikeOfQnaBoard where co_qnaId = #{co_qnaId}) as 'co_likeCount',
@@ -128,6 +129,7 @@
                ccoqb.co_qnaId as 'co_qnaId',
                ccoqb.co_email as 'co_email',
                cu.co_nickname as 'co_nickname',
+               cu.profileImg as 'profileImg',
                ccoqb.content as 'content',
                ccoqb.createdAt as 'createdAt'
         from CoCommentOfQnaBoard as ccoqb
@@ -140,6 +142,7 @@
                crcoqb.co_coqb as 'co_coqb',
                crcoqb.co_email as 'co_email',
                cu.co_nickname as 'co_nickname',
+               cu.profileImg as 'profileImg',
                crcoqb.content as 'content',
                crcoqb.createdAt as 'createdAt'
         from CoReCommentOfQnaBoard as crcoqb
@@ -156,6 +159,7 @@
         <result property="co_qnaId" column="CO_QNAID"/>
         <result property="co_email" column="CO_EMAIL"/>
         <result property="co_nickname" column="CO_NICKNAME"/>
+        <result property="profileImg" column="PROFILEIMG"/>
         <result property="content" column="CONTENT"/>
         <result property="createdAt" column="CREATEDAT"/>
         <collection property="coReCommentOfQnaBoardList" column="CO_COQB" javaType="java.util.ArrayList" ofType="CoReCommentOfQnaBoard" select="getReComment"/>
