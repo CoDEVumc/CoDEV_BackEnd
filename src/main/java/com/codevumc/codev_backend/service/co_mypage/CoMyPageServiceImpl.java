@@ -199,11 +199,19 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
     @Override
     public CoDevResponse getMark(String co_email) {
         try{
-            Optional<CoMarkOfInfoBoard> coMarkOfInfoBoard =  coInfoBoardMapper.getCoMarkOfInfoBoards(co_email);
-            Optional<CoMarkOfQnaBoard> coMarkOfQnaBoard = coQnaBoardMapper.getCoMarkOfQnaBoards(co_email);
-            if(coMarkOfInfoBoard.isPresent() | coMarkOfQnaBoard.isPresent()){
+            List<CoMarkOfQnaBoard> coMarkOfQnaBoard = coQnaBoardMapper.getCoMarkOfQnaBoards(co_email);
+            List<CoMarkOfInfoBoard> coMarkOfInfoBoard =  coInfoBoardMapper.getCoMarkOfInfoBoards(co_email);
+            if(!coMarkOfInfoBoard.isEmpty() || !coMarkOfQnaBoard.isEmpty()){
+
                 List<CoBoards> coMarkOfBoards = this.coMyPageMapper.getCoMarkOfBoard(co_email);
+                if(coMarkOfBoards)
+                {
+
+                }
                 return setResponse(200,"Complete",coMarkOfBoards);
+
+
+
             }
         } catch (Exception e) {
             e.printStackTrace();

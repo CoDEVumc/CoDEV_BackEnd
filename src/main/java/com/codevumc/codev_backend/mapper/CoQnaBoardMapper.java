@@ -34,6 +34,6 @@ public interface CoQnaBoardMapper {
     List<CoQnaBoard> getCoQnaBoards(Map<String, Object> condition);
     void insertLikeCoQnaBoard(CoLikeOfQnaBoard coLikeOfQnaBoard);
     void deleteLikeCoQnaBoard(CoLikeOfQnaBoard coLikeOfQnaBoard);
-    Optional<CoMarkOfQnaBoard> getCoMarkOfQnaBoards(String co_email);
-    List<CoMarkOfQnaBoard> getCoMarkOfQnaBoard(String co_email);
+    Optional<CoMarkOfQnaBoard> getCoMarkOfQnaBoard(String co_email);
+    List<CoMarkOfQnaBoard> getCoMarkOfQnaBoards(String co_email);
 }
