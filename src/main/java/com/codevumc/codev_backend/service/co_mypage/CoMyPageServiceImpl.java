@@ -1,11 +1,13 @@
 package com.codevumc.codev_backend.service.co_mypage;
 
-import com.codevumc.codev_backend.domain.CoPortfolio;
-import com.codevumc.codev_backend.domain.CoProject;
-import com.codevumc.codev_backend.domain.CoStudy;
+import com.codevumc.codev_backend.domain.*;
+import com.codevumc.codev_backend.errorhandler.AuthenticationCustomException;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import com.codevumc.codev_backend.errorhandler.ErrorCode;
+import com.codevumc.codev_backend.mapper.CoInfoBoardMapper;
 import com.codevumc.codev_backend.mapper.CoMyPageMapper;
 import com.codevumc.codev_backend.mapper.CoMyPagePortfolioMapper;
+import com.codevumc.codev_backend.mapper.CoQnaBoardMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.json.simple.JSONArray;
@@ -18,6 +20,8 @@ import java.util.*;
 public class CoMyPageServiceImpl extends ResponseService implements CoMyPageService {
     private final CoMyPagePortfolioMapper coMyPagePortfolioMapper;
     private final CoMyPageMapper coMyPageMapper;
+    private final CoInfoBoardMapper coInfoBoardMapper;
+    private final CoQnaBoardMapper coQnaBoardMapper;
 
     @Override
     public CoDevResponse insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links) {
@@ -188,6 +192,22 @@ public class CoMyPageServiceImpl extends ResponseService implements CoMyPageServ
             return setResponse(200,"Complete",coStudies);
         }catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public CoDevResponse getMark(String co_email) {
+        try{
+            List<CoMarkOfQnaBoard> coMarkOfQnaBoard = coQnaBoardMapper.getCoMarkOfQnaBoards(co_email);
+            List<CoMarkOfInfoBoard> coMarkOfInfoBoard =  coInfoBoardMapper.getCoMarkOfInfoBoards(co_email);
+            if(!coMarkOfInfoBoard.isEmpty() || !coMarkOfQnaBoard.isEmpty()){
+                List<CoBoards> coMarkOfBoards = this.coMyPageMapper.getCoMarkOfBoard(co_email);
+                return setResponse(200,"Complete",coMarkOfBoards);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthenticationCustomException(ErrorCode.REQUESTFAILED);
         }
         return null;
     }
