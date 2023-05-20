@@ -1,5 +1,7 @@
 package com.codevumc.codev_backend.errorhandler;
 
+import com.codevumc.codev_backend.service.ResponseService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.security.core.AuthenticationException;
@@ -13,7 +15,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class AutheniticationEntryPointHandler implements AuthenticationEntryPoint {
+public class AutheniticationEntryPointHandler extends ResponseService implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -33,7 +35,7 @@ public class AutheniticationEntryPointHandler implements AuthenticationEntryPoin
 
         if(exception.equals("DUPLICATEERROR")) {
             errorCode = ErrorCode.DUPLICATEERROR;
-            setResponse(response, errorCode);
+            setChatDuplicateResponse(response, request.getAttribute("roomInfo"));
         }
         
         if(exception.equals("PasswordNotFoundException")) {
@@ -71,6 +73,18 @@ public class AutheniticationEntryPointHandler implements AuthenticationEntryPoin
         json.put("code", errorCode.getCode());
         json.put("message", errorCode.getMessage());
         response.getWriter().print(json);
+
+    }
+
+    private void setChatDuplicateResponse(HttpServletResponse response, Object chatRoom) throws IOException {
+        JSONObject json = new JSONObject();
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("utf-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        json.put("code", 401);
+        json.put("message", chatRoom);
+        response.getWriter().write(objectMapper.writeValueAsString(json));
 
     }
 }
