@@ -1,5 +1,6 @@
 package com.codevumc.codev_backend.errorhandler;
 
+import com.codevumc.codev_backend.domain.ChatRoom;
 import com.codevumc.codev_backend.service.ResponseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class AutheniticationEntryPointHandler extends ResponseService implements
 
         if(exception.equals("DUPLICATEERROR")) {
             errorCode = ErrorCode.DUPLICATEERROR;
-            setChatDuplicateResponse(response, request.getAttribute("roomInfo"));
+            setChatDuplicateResponse(response, (ChatRoom) request.getAttribute("roomInfo"));
         }
         
         if(exception.equals("PasswordNotFoundException")) {
@@ -76,7 +77,7 @@ public class AutheniticationEntryPointHandler extends ResponseService implements
 
     }
 
-    private void setChatDuplicateResponse(HttpServletResponse response, Object chatRoom) throws IOException {
+    private void setChatDuplicateResponse(HttpServletResponse response, ChatRoom chatRoom) throws IOException {
         JSONObject json = new JSONObject();
         ObjectMapper objectMapper = new ObjectMapper();
         response.setContentType("application/json;charset=UTF-8");
