@@ -37,14 +37,18 @@ public class CoChatServiceImpl extends ResponseService implements CoChatService{
 
     @Override
     public CoDevResponse createChatRoom(HttpServletRequest request, ChatRoom chatRoom, String self_email) {
+        Optional<ChatRoom> optionalChatRoomchatRoom = null;
         try {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            optionalChatRoomchatRoom = coChatMapper.getDuplicateChatRoom(self_email, chatRoom.getRoomId());
+            if(optionalChatRoomchatRoom.isPresent()) throw new Exception();
             coChatMapper.createChatRoom(chatRoom);
             coChatMapper.inviteUser(chatRoom.getRoomId(), self_email, timestamp);
             coChatMapper.inviteTemp(chatRoom.getRoomId(), "TEMP");
             return setResponse(200, "message", "채팅방이 생성되었습니다.");
         } catch (Exception e) {
             request.setAttribute("exception", "DUPLICATEERROR");
+            request.setAttribute("roomInfo", optionalChatRoomchatRoom.get());
             throw new AuthenticationCustomException(ErrorCode.DUPLICATEERROR);
         }
     }
