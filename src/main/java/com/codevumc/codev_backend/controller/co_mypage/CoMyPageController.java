@@ -123,4 +123,15 @@ public class CoMyPageController extends JwtController {
         return null;
     }
 
+    @GetMapping("/myWrite")
+    public CoDevResponse getMyProjectsAndStudies(HttpServletRequest request, @RequestParam("type") String type) throws Exception {
+        String co_email = getCoUserEmail(request);
+        if (type.equals("study")) {
+            return this.coMyPageService.getMyStudies(co_email);
+        } else if (type.equals("project")) {
+            return this.coMyPageService.getMyProjects(co_email);
+        }
+        return null;
+    }
+
 }

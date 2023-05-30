@@ -309,4 +309,64 @@
         ORDER BY subquery.created_at DESC;
     </select>
 
+    <select id="getMyProjects" resultType="CoProject">
+        select distinct cp.co_projectId as 'co_projectId',
+                cp.co_email as 'co_email',
+                cp.co_title as 'co_title',
+                cp.co_location as 'co_location',
+                cp.co_content as 'co_content',
+                cp.co_mainImg as 'co_mainImg',
+                cp.co_process as 'co_process',
+                DATEDIFF(cp.co_deadLine, now())           as 'co_deadLine',
+                IF(chp.status is null, false, chp.status) as 'co_heart',
+                (select count(*) from CoHeartOfProject as chpcnt where cp.co_projectId = chpcnt.co_projectId) as 'co_heartCount',
+                clp.co_languages as 'co_languages',
+                cpp.co_parts as 'co_parts',
+                cpIs.co_total as 'co_total',
+                cp.createdAt as 'createdAt',
+                cp.status as 'status'
+        from CoProject as cp
+                 left join CoHeartOfProject as chp on cp.co_projectId = chp.co_projectId and chp.co_email = #{co_email}
+                 left join (select co_projectId, sum(co_limit) as 'co_total'
+                            from CoPartOfProject
+                            group by CoPartOfProject.co_projectId) as cpIs on cpIs.co_projectId = cp.co_projectId
+                 left join (select co_projectId, GROUP_CONCAT(co_part SEPARATOR ',') as co_parts
+                            from CoPartOfProject
+                            where co_limit != 0 group by co_projectId) as cpp
+                           on cpp.co_projectId = cp.co_projectId
+                 left join (select co_projectId, GROUP_CONCAT(cl.co_logo SEPARATOR ',') as co_languages
+                            from CoLanguageOfProject as clo
+                                     join CoLanguage as cl on clo.co_languageId = cl.co_languageId
+                            group by co_projectId) as clp
+                           on cp.co_projectId = clp.co_projectId
+        where cp.co_email = #{co_email} order by cp.createdAt desc
+    </select>
+
+    <select id="getMyStudies" resultType="CoStudy">
+        select distinct cs.co_studyId as 'co_studyId',
+                cs.co_email as 'co_email',
+                cs.co_title as 'co_title',
+                cs.co_location as 'co_location',
+                cs.co_content as 'co_content',
+                cs.co_mainImg as 'co_mainImg',
+                cs.co_process as 'co_process',
+                DATEDIFF(cs.co_deadLine, now())           as 'co_deadLine',
+                IF(chs.status is null, false, chs.status) as 'co_heart',
+                (select count(*) from CoHeartOfStudy as chscnt where cs.co_studyId = chscnt.co_studyId) as 'co_heartCount',
+                cls.co_languages as 'co_languages',
+                cps.co_part as 'co_part',
+                cps.co_total as 'co_total',
+                cs.createdAt as 'createdAt',
+                cs.status as 'status'
+        from CoStudy as cs
+                 left join CoHeartOfStudy as chs on cs.co_studyId = chs.co_studyId and chs.co_email = #{co_email}
+                 left join CoPartOfStudy as cps on cs.co_studyId = cps.co_studyId
+                 left join (select co_studyId, GROUP_CONCAT(cl.co_logo SEPARATOR ',') as co_languages
+                            from CoLanguageOfStudy as clo
+                                     join CoLanguage as cl on clo.co_languageId = cl.co_languageId
+                            group by co_studyId) as cls
+                           on cs.co_studyId = cls.co_studyId
+        where cs.co_email = #{co_email} order by cs.createdAt desc
+    </select>
+
 </mapper>
