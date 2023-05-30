@@ -17,4 +17,6 @@ public interface CoMyPageService {
     CoDevResponse getParticipateStudies(String coUserEmail);
     CoDevResponse getParticipateProjects(String co_email);
     CoDevResponse getMark(String co_email);
+    CoDevResponse getMyStudies(String co_email);
+    CoDevResponse getMyProjects(String co_email);
 }
