@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.codevumc.codev_backend.service.co_project.CoProjectServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-01-21T08:45:17" hostname="LAPTOP-5D6CMVVF" time="0.028">
-  <properties/>
-  <testcase name="프로젝트 글 작성 및 조회 테스트" classname="com.codevumc.codev_backend.service.co_project.CoProjectServiceTest" time="0.028"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
