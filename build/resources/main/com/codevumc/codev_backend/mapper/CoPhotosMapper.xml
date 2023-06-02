@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.CoPhotosMapper">
+
+
+    <insert id="insertCoPhoto" parameterType="CoPhotos">
+        INSERT INTO CoPhotos
+        (co_targetId, co_type, co_uuId, co_fileName, co_filePath, co_fileUrl, co_fileDownloadPath, co_fileSize)
+        VALUES
+            (#{co_targetId}, #{co_type}, #{co_uuId}, #{co_fileName}, #{co_filePath}, #{co_fileUrl}, #{co_fileDownloadPath}, #{co_fileSize})
+    </insert>
+
+    <select id="deleteCoPhotoOfProject">
+        DELETE FROM CoPhotos WHERE co_targetId = #{co_projectId}
+    </select>
+
+    <select id="findByCoTargetId" resultType="CoPhotos">
+        select
+            co_photoId,
+            co_targetId,
+            co_type,
+            co_uuId,
+            co_fileName,
+            co_filePath,
+            co_fileUrl,
+            co_fileDownloadPath,
+            co_fileSize
+        from CoPhotos
+        where co_targetId = #{co_targetId} and co_type = #{co_type}
+    </select>
+
+    <select id="findByCo_uuId" resultType="CoPhotos">
+        select
+            co_targetId,
+            co_type,
+            co_uuId,
+            co_fileName,
+            co_filePath,
+            co_fileUrl,
+            co_fileDownloadPath,
+            co_fileSize
+        from CoPhotos
+        where co_uuId = #{co_uuId}
+    </select>
+
+    <select id="findByCo_mainImg" resultType="CoPhotos">
+        select co_fileUrl
+        from CoPhotos
+        where co_type = #{co_type} AND co_targetId = #{co_targetId}
+        order by createdAt asc limit 1;
+    </select>
+
+    <select id="findByFileUrl" resultType="CoPhotos">
+        select co_photoId,
+               co_targetId,
+               co_type,
+               co_uuId,
+               co_fileName,
+               co_filePath,
+               co_fileUrl,
+               co_fileDownloadPath,
+               co_fileSize
+        from CoPhotos
+        where co_fileUrl = #{co_fileUrl}
+    </select>
+</mapper>

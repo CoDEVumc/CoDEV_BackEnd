@@ -105,7 +105,7 @@
         </if>
         order by
         <choose>
-            <when test='co_sortingTag.equals("POPULARITY")'>
+            <when test='sortingTag.equals("POPULARITY")'>
                 co_likeCount desc limit
             </when>
             <otherwise>

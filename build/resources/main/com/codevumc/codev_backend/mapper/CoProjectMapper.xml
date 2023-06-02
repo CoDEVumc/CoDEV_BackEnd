@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.CoProjectMapper">
+
+    <insert id="insertCoProject" parameterType="CoProject" useGeneratedKeys="true" keyProperty="co_projectId">
+        INSERT INTO CoProject
+            (co_email, co_title, co_location, co_content, co_process, co_deadLine)
+        VALUES (#{co_email}, #{co_title}, #{co_location}, #{co_content}, #{co_process}, #{co_deadLine})
+    </insert>
+
+    <update id="updateCoProject" parameterType="CoProject">
+        UPDATE CoProject
+        SET co_title = #{co_title},
+            co_location = #{co_location},
+            co_content = #{co_content},
+            co_mainImg = null,
+            co_process = #{co_process},
+            co_deadLine = #{co_deadLine}
+        WHERE co_projectId = #{co_projectId}
+    </update>
+
+    <insert id="insertCoPartOfProject" parameterType="hashMap">
+        INSERT INTO CoPartOfProject
+            (co_projectId, co_part, co_limit)
+        VALUES (#{co_projectId}, #{co_part}, #{co_limit})
+    </insert>
+
+    <insert id="insertCoLanguageOfProject">
+        INSERT INTO CoLanguageOfProject
+        (co_projectId, co_languageId)
+        values (#{co_projectId}, #{co_languageId})
+    </insert>
+
+    <delete id="deleteCoPartOfProject">
+        DELETE FROM CoPartOfProject WHERE co_projectId = #{co_projectId}
+    </delete>
+
+    <delete id="deleteCoLanguageOfProject">
+        DELETE FROM CoLanguageOfProject WHERE co_projectId = #{co_projectId}
+    </delete>
+
+    <update id="updateCoMainImg">
+        UPDATE CoProject
+        SET co_mainImg = #{co_mainImg}
+        WHERE `co_projectId` = #{co_projectId};
+    </update>
+
+    <select id="getCoProject" resultType="CoProject">
+        select * from CoProject where co_projectId = #{co_projectId}
+    </select>
+
+    <select id="getCoProjects" parameterType="hashMap" resultType="CoProject">
+        select distinct cp.co_projectId as 'co_projectId',
+        cp.co_email as 'co_email',
+        cp.co_title as 'co_title',
+        cp.co_location as 'co_location',
+        cp.co_content as 'co_content',
+        cp.co_mainImg as 'co_mainImg',
+        cp.co_process as 'co_process',
+        DATEDIFF(cp.co_deadLine, now())           as 'co_deadLine',
+        IF(chp.status is null, false, chp.status) as 'co_heart',
+        (select count(*) from CoHeartOfProject as chpcnt where cp.co_projectId = chpcnt.co_projectId) as 'co_heartCount',
+        clp.co_languages as 'co_languages',
+        cpp.co_parts as 'co_parts',
+        cpIs.co_total as 'co_total',
+        cp.createdAt as 'createdAt',
+        cp.updatedAt as 'updatedAt',
+        cp.status as 'status'
+        from CoProject as cp
+        left join CoHeartOfProject as chp on cp.co_projectId = chp.co_projectId and chp.co_email = #{co_email}
+        left join (select co_projectId, sum(co_limit) as 'co_total'
+        from CoPartOfProject
+        group by CoPartOfProject.co_projectId) as cpIs on cpIs.co_projectId = cp.co_projectId
+        left join (select co_projectId, GROUP_CONCAT(co_part SEPARATOR ',') as co_parts
+        from CoPartOfProject
+        where co_limit != 0 group by co_projectId) as cpp
+        on cpp.co_projectId = cp.co_projectId
+        left join (select co_projectId, GROUP_CONCAT(cl.co_logo SEPARATOR ',') as co_languages
+        from CoLanguageOfProject as clo
+        join CoLanguage as cl on clo.co_languageId = cl.co_languageId
+        group by co_projectId) as clp
+        on cp.co_projectId = clp.co_projectId
+        where
+        <if test="co_locationTag != null and !co_locationTag.equals('')">
+            cp.co_location = #{co_locationTag} and
+        </if>
+        <if test="co_partTag != null and !co_partTag.equals('')">
+            cpp.co_parts like #{co_partTag} and
+        </if>
+        <if test="co_keyword != null and !co_keyword.equals('')">
+            (cp.co_title like #{co_keyword} or cp.co_content like #{co_keyword}) and
+        </if>
+        <if test="co_processTag != null and !co_processTag.equals('')">
+            cp.co_process = #{co_processTag} and
+        </if>
+        cp.status = true
+        order by
+        <choose>
+            <when test='co_sortingTag.equals("POPULARITY")'>
+                co_heartCount desc limit
+            </when>
+            <otherwise>
+                createdAt desc limit
+            </otherwise>
+        </choose>
+        #{limit} offset #{offset}
+    </select>
+
+    <insert id ="insertCoHeartOfProject" >
+        INSERT INTO CoHeartOfProject (co_email,co_projectId)
+        VALUES (#{co_email},#{co_projectId})
+    </insert>
+
+    <delete id="deleteCoHeartOfProject">
+        DELETE FROM CoHeartOfProject
+        WHERE co_projectId = #{co_projectId} AND co_email = #{co_email}
+    </delete>
+
+    <select id ="getCoHeartOfProjectEmail" resultType="Long">
+        SELECT co_hopId FROM CoHeartOfProject WHERE co_projectId = #{co_projectId} AND co_email = #{co_email}
+    </select>
+
+    <select id="getCoPartList" resultType="CoPartOfProject">
+        select co_part, co_limit from CoPartOfProject where co_projectId = #{co_projectId}
+    </select>
+
+    <select id="getCoLanguageList" resultType="CoLanguageOfProject">
+        select cl.co_languageId, cl.co_language, cl.co_logo from CoLanguageOfProject cop
+        join CoLanguage cl on cl.co_languageId = cop.co_languageId
+        where co_projectId = #{co_projectId}
+    </select>
+
+    <select id="getCoHeartCount" resultType="Long">
+        select count(*) as coHeartCount from CoHeartOfProject where co_projectId = #{co_projectId}
+    </select>
+
+    <delete id="deleteCoProject" parameterType="hashMap">
+        delete from CoProject where co_email = #{co_email} and co_projectId = #{co_projectId}
+    </delete>
+    
+    <insert id="insertCoRecruitOfProject" parameterType="CoRecruitOfProject">
+        insert into CoRecruitOfProject(co_email, co_projectId, co_partId,
+        <if test="co_portfolioId != 0">
+            co_portfolioId,
+        </if> co_motivation)
+        values (#{co_email}, #{co_projectId}, #{co_partId},
+        <if test="co_portfolioId != 0">
+            #{co_portfolioId},
+        </if> #{co_motivation})
+    </insert>
+
+    <delete id="cancelCoRecruitOfProject" parameterType="CoRecruitOfProject">
+        delete from CoRecruitOfProject where co_email = #{co_email} and co_projectId = #{co_projectId}
+    </delete>
+
+    <select id="getCoProjectProcess" resultType="boolean">
+        select EXISTS(select co_process from CoProject where co_projectId=#{co_projectId} and co_process=#{co_process}) as co_process
+    </select>
+
+    <update id="updateCoProjectdeadLine" parameterType="CoProject">
+        UPDATE CoProject
+        SET co_deadLine = #{co_deadLine}, co_process = 'ING'
+        WHERE co_projectId = #{co_projectId} and co_email = #{co_email}
+    </update>
+
+    <update id="closeCoProjectDeadLine" parameterType="hashMap">
+        UPDATE CoProject
+        SET co_process = 'FIN'
+        WHERE co_projectId = #{co_projectId} and co_email = #{co_email}
+    </update>
+
+    <update id="approveCoProjectMember">
+        UPDATE CoRecruitOfProject
+        SET isApproved = true
+        WHERE co_projectId = #{co_projectId} and co_email = #{co_email}
+    </update>
+
+    <select id="getCoApplicantsInfo" parameterType="hashMap" resultType="CoApplicantInfo">
+        select crp.co_portfolioId      as 'co_portfolioId',
+               crp.co_email            as 'co_email',
+               cu.co_name              as 'co_name',
+               cu.profileImg           as 'profileImg',
+               cp.co_title             as 'co_title',
+               crp.co_partId           as 'co_part',
+               crp.co_temporaryStorage as 'co_temporaryStorage',
+               crp.createdAt           as 'createdAt'
+        from CoRecruitOfProject as crp
+                 left join CoUser cu on cu.co_email = crp.co_email
+                 left join CoPortfolio cp on crp.co_portfolioId = cp.co_portfolioId
+        where crp.co_projectId = #{co_projectId}
+          <choose>
+              <when test='co_partId.equals("TEMP")'>
+                  and crp.co_temporaryStorage = true
+              </when>
+              <otherwise>
+                  and crp.co_partId = #{co_partId}
+                  and crp.co_temporaryStorage = false
+              </otherwise>
+          </choose>
+        order by crp.createdAt asc;
+    </select>
+
+    <select id="getTempsavedApplicantsCount" parameterType="Long" resultType="Integer">
+        select count(co_ropId) as 'co_tempSavedApplicantsCount'
+        from CoRecruitOfProject
+        where co_projectId = #{co_projectId}
+          and co_temporaryStorage = true;
+    </select>
+
+    <select id="getCoApplicantsCount" parameterType="Long" resultType="CoApplicantCount">
+        select cpop.co_part as 'co_part',
+               cpop.co_limit as 'co_limit',
+               IFNULL(crop.co_recruitCount, 0) as 'co_applicantsCount'
+        from CoPartOfProject as cpop
+                 left join (select crop.co_projectId, crop.co_partId, count(*) as co_recruitCount
+                            from CoRecruitOfProject crop
+                            where co_projectId = #{co_projectId}
+                            and crop.co_temporaryStorage = false
+                            group by crop.co_partId) crop on crop.co_partId = cpop.co_part
+        where cpop.co_projectId = #{co_projectId};
+    </select>
+
+    <select id="getCoProjectByViewer" parameterType="hashMap" resultType="CoProject">
+        select cp.co_projectId                                                as 'co_projectId',
+               cp.co_email                                                    as 'co_email',
+               cu.co_nickName                                                 as 'co_nickname',
+               cp.co_title                                                    as 'co_title',
+               cp.co_location                                                 as 'co_location',
+               cp.co_content                                                  as 'co_content',
+               cp.co_mainImg                                                  as 'co_mainImg',
+               cp.co_process                                                  as 'co_process',
+               cp.co_deadLine                                                 as 'co_deadLine',
+               cp.createdAt                                                   as 'createdAt',
+               cp.updatedAt                                                   as 'updatedAt',
+               (select count(*) from CoHeartOfProject where co_projectId = #{co_projectId}) as 'co_heartCount',
+               cpop.co_total                                                  as 'co_total',
+               if(chop.co_hopId, 1, 0)                                        as 'co_heart',
+               if(crop.co_ropId, 1, 0)                                        as 'co_recruitStatus'
+        from CoProject cp
+                 left join CoUser cu on cp.co_email = cu.co_email
+                 left join (select co_projectId as 'co_projectId',
+                                   co_hopId     as 'co_hopId'
+                            from CoHeartOfProject
+                            where co_projectId = #{co_projectId}
+                              and co_email = #{co_viewer}) chop on cp.co_projectId = chop.co_projectId
+                 left join (select co_projectId as 'co_projectId',
+                                   co_ropId     as 'co_ropId'
+                            from CoRecruitOfProject
+                            where co_projectId = #{co_projectId}
+                              and co_email = #{co_viewer}) crop on cp.co_projectId = crop.co_projectId
+                 left join (select co_projectId as 'co_projectId',
+                                   sum(co_limit)     as 'co_total'
+                            from CoPartOfProject
+                            where co_projectId = #{co_projectId}
+                            group by co_projectId) cpop on cp.co_projectId = cpop.co_projectId
+        where cp.co_projectId = #{co_projectId};
+    </select>
+
+    <select id="getCoPortfolioOfApplicant" parameterType="hashMap" resultType="CoPortfolioOfApplicant">
+        select cp.co_portfolioId  as 'co_portfolioId',
+               cp.co_title        as 'co_title',
+               crop.co_motivation as 'co_motivation',
+               cp.co_email        as 'co_email',
+               cu.co_name         as 'co_name',
+               cu.profileImg      as 'profileImg',
+               cu.co_birth        as 'co_birth',
+               cu.co_gender       as 'co_gender',
+               cp.co_rank         as 'co_rank',
+               clap.co_languages  as 'co_languages',
+               cp.co_headLine     as 'co_headLine',
+               cp.co_introduction as 'co_introduction',
+               clop.co_links      as 'co_links',
+               cp.createdAt       as 'createdAt',
+               cp.updatedAt       as 'updatedAt'
+        from CoPortfolio as cp
+                 left join CoUser cu on cp.co_email = cu.co_email
+                 left join (select co_portfolioId, GROUP_CONCAT(cl.co_language SEPARATOR ',') as co_languages
+                            from CoLanguageOfPortfolio as clop
+                                     join CoLanguage as cl on clop.co_languageId = cl.co_languageId
+                            group by co_portfolioId) as clap on cp.co_portfolioId = clap.co_portfolioId
+                 left join (select co_portfolioId, GROUP_CONCAT(clop.co_link SEPARATOR ',') as co_links
+                            from CoLinkOfPortfolio as clop
+                            group by co_portfolioId) as clop on cp.co_portfolioId = clop.co_portfolioId
+                 left join (select co_portfolioId as 'co_portfolioId',
+                                   co_motivation  as 'co_motivation'
+                            from CoRecruitOfProject
+                            where co_projectId = #{co_projectId}
+                              and co_portfolioId = #{co_portfolioId}) as crop on cp.co_portfolioId = crop.co_portfolioId
+        where cp.co_portfolioId = #{co_portfolioId};
+    </select>
+
+    <select id="getCoTemporaryStorage" parameterType="hashMap" resultType="Boolean">
+        select
+            crop.co_temporaryStorage
+        from CoRecruitOfProject crop
+        where crop.co_projectId = #{co_projectId}
+            and crop.co_email in
+        <foreach collection="co_emails" item="co_email" index="index" open="(" separator="," close=")">
+            #{co_email}
+        </foreach>
+    </select>
+
+    <update id="updateCoTemporaryStorage" parameterType="hashMap">
+        update CoRecruitOfProject crop
+        set crop.co_temporaryStorage = !crop.co_temporaryStorage
+        where crop.co_projectId = #{co_projectId}
+            and crop.co_email in
+        <foreach collection="co_emails" item="co_email" index="index" open="(" separator="," close=")">
+            #{co_email}
+        </foreach>
+    </update>
+</mapper>

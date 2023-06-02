@@ -7,9 +7,7 @@ plugins {
 group = 'com.CoDEVumc'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-jar {
-    enabled = false
-}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -24,48 +22,13 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'mysql:mysql-connector-java:8.0.25'
-    /*compileOnly 'com.zaxxer:HikariCP:3.4.5'*/
+    runtimeOnly 'mysql:mysql-connector-java'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.1'
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    // mail
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    //implementation group: 'org.springframework', name: 'spring-context-support', version: '5.3.23'
-    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
-
-    // com.sun.xml.bind
-    implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
-    implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
-    // javax.xml.bind
-    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    // gson
-    implementation 'org.jsoup:jsoup:1.14.3'
-    implementation 'com.google.code.gson:gson:2.7'
-    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
-
-    implementation group: 'com.google.api-client', name: 'google-api-client-jackson2', version: '1.30.10'
-
-    //websocket
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.webjars:sockjs-client:1.1.2'
-    implementation 'org.webjars:stomp-websocket:2.3.3-1'
-
-    //mongoDB
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
-    // firebase sdk
-    implementation 'com.google.firebase:firebase-admin:6.8.1'
-    // okhttp
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 }
 
 tasks.named('test') {

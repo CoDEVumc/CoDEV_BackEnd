@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codevumc.codev_backend.mapper.TokenMapper">
+
+    <insert id="insertRefreshToken" parameterType="RefreshToken">
+        insert into refreshtoken
+        VALUES (#{refreshTokenId}, #{refreshToken}, #{keyId}, #{userAgent})
+    </insert>
+
+    <select id="findByRefreshToken" resultType="RefreshToken">
+        select
+            refreshTokenId,
+            refreshToken,
+            keyId,
+            userAgent
+        from refreshtoken
+        where refreshToken = #{refreshToken}
+    </select>
+
+    <select id="findByKeyId" resultType="RefreshToken">
+        select
+            keyId,
+            userAgent
+        from refreshtoken
+        where keyId = #{co_email}
+    </select>
+
+    <delete id="deleteByKeyId">
+        DELETE FROM refreshtoken
+        WHERE keyId = #{co_email}
+    </delete>
+
+</mapper>
