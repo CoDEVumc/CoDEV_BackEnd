@@ -1,0 +1,11 @@
+*.lnk
+
+### Custom ###
+*.json
+*.properties
+.idea
+.gradle
+build/
+
+
+# End of https://www.toptal.com/developers/gitignore/api/windows,macos,java
