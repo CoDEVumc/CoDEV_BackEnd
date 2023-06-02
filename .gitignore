@@ -85,11 +85,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-*.lnk
 
 ### Custom ###
 *.json
-**/*.properties
+*.properties
 .idea
 .gradle
 build/
