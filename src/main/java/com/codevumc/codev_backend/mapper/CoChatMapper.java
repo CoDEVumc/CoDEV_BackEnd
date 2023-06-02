@@ -2,7 +2,6 @@ package com.codevumc.codev_backend.mapper;
 
 import com.codevumc.codev_backend.domain.ChatRoom;
 import com.codevumc.codev_backend.domain.ChatRoomOfUser;
-import com.codevumc.codev_backend.domain.CoChatOfUser;
 import com.codevumc.codev_backend.domain.CoUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

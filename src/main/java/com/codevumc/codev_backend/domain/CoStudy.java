@@ -41,8 +41,8 @@ public class CoStudy {
         private String value;
 
         @JsonCreator
-        public static CoStudy.DevType from(String s) {
-            return CoStudy.DevType.valueOf(s.toUpperCase());
+        public static DevType from(String s) {
+            return DevType.valueOf(s.toUpperCase());
         }
     }
 }

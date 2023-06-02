@@ -2,8 +2,6 @@ package com.codevumc.codev_backend.domain;
 
 import lombok.*;
 
-import java.sql.Timestamp;
-
 @Getter
 @Setter
 @Builder

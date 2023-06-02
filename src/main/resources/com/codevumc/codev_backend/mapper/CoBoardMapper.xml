@@ -96,6 +96,7 @@
         left join CoUser cu on cib.co_email = cu.co_email
         left join CoCommentOfInfoBoard ccoib on cib.co_infoId = ccoib.co_infoId
         where cib.createdAt is not null
+
         <if test="coMyBoard != null and !coMyBoard.equals('')">
             and cib.co_email = #{coMyBoard}
         </if>
@@ -103,6 +104,7 @@
         <if test="searchTag != null and !searchTag.equals('')">
             and cib.content like #{searchTag} or cib.co_title like #{searchTag}
         </if>
+
         order by
         <choose>
             <when test='sortingTag.equals("POPULARITY")'>

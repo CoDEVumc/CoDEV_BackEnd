@@ -95,7 +95,7 @@ public class CoFileServiceImpl implements CoFileService{
 
     @Override
     public ResponseEntity<Resource> showImage(Map<String, String> param) {
-        Optional<com.codevumc.codev_backend.domain.CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(param.get("name"));
+        Optional<CoPhotos> coPhotoOfProject = coPhotos.findByCo_uuId(param.get("name"));
         if(coPhotoOfProject.isPresent()) {
             String fileUrl = coPhotoOfProject.get().getCo_filePath().replace("\\", "/");
 
@@ -150,7 +150,7 @@ public class CoFileServiceImpl implements CoFileService{
     }
 
     private CoPhotos insertPhoto(String co_targetId, String co_type, String uuidFileName, String originFileName, String filePath, String fileUrl, String fileDownloadUri, long bytes) {
-        com.codevumc.codev_backend.domain.CoPhotos coPhotos =  com.codevumc.codev_backend.domain.CoPhotos.builder()
+        CoPhotos coPhotos =  CoPhotos.builder()
                 .co_targetId(co_targetId)
                 .co_type(co_type)
                 .co_uuId(uuidFileName)

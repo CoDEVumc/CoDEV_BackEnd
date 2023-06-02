@@ -1,10 +1,6 @@
 package com.codevumc.codev_backend.mapper;
 
 import com.codevumc.codev_backend.domain.*;
-import com.codevumc.codev_backend.domain.CoCommentOfQnaBoard;
-import com.codevumc.codev_backend.domain.CoMarkOfQnaBoard;
-import com.codevumc.codev_backend.domain.CoQnaBoard;
-import com.codevumc.codev_backend.domain.CoReCommentOfQnaBoard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

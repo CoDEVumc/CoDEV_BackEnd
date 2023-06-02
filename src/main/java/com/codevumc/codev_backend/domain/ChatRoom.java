@@ -32,8 +32,8 @@ public class ChatRoom {
             this.value=value;
         }
 
-        public static ChatRoom.RoomType from(String s) {
-            return ChatRoom.RoomType.valueOf(s.toUpperCase());
+        public static RoomType from(String s) {
+            return RoomType.valueOf(s.toUpperCase());
         }
         public String getValue() { return this.value; }
     }

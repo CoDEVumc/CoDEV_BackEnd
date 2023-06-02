@@ -1,15 +1,10 @@
 package com.codevumc.codev_backend.service.co_studyheart;
 
-import com.codevumc.codev_backend.domain.CoHeartOfProject;
-import com.codevumc.codev_backend.domain.CoHeartOfStudy;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import com.codevumc.codev_backend.mapper.CoStudyMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service

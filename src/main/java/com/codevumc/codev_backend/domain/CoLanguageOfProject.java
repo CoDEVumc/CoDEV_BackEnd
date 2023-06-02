@@ -1,9 +1,6 @@
 package com.codevumc.codev_backend.domain;
 
 import lombok.*;
-import org.springframework.context.annotation.Scope;
-
-import java.sql.Timestamp;
 
 @Builder
 @Getter
