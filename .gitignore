@@ -89,7 +89,7 @@ $RECYCLE.BIN/
 
 ### Custom ###
 *.json
-*.properties
+**/application.properties
 .idea
 .gradle
 build/
