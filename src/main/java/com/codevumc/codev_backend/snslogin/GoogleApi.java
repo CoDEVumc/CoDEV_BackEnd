@@ -5,14 +5,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.HashMap;

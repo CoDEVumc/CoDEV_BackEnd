@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Mapper
 public interface CoPhotosMapper {
-    void insertCoPhoto(com.codevumc.codev_backend.domain.CoPhotos coPhotos);
+    void insertCoPhoto(CoPhotos coPhotos);
 
     void deleteCoPhotoOfProject(String co_targetId);
 

@@ -1,12 +1,13 @@
 package com.codevumc.codev_backend.mapper;
 
-import com.codevumc.codev_backend.domain.*;
+import com.codevumc.codev_backend.domain.CoBoards;
+import com.codevumc.codev_backend.domain.CoPortfolio;
+import com.codevumc.codev_backend.domain.CoProject;
+import com.codevumc.codev_backend.domain.CoStudy;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Mapper
 public interface CoMyPageMapper {

@@ -2,7 +2,10 @@ package com.codevumc.codev_backend.domain;
 
 import com.codevumc.codev_backend.domain.role.Role;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -80,8 +83,8 @@ public class CoUser implements UserDetails {
         private String value;
 
         @JsonCreator
-        public static CoUser.loginType from(String s) {
-            return CoUser.loginType.valueOf(s.toUpperCase());
+        public static loginType from(String s) {
+            return loginType.valueOf(s.toUpperCase());
         }
     }
 }

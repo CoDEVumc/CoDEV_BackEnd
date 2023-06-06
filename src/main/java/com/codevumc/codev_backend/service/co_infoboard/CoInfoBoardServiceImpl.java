@@ -9,7 +9,6 @@ import com.codevumc.codev_backend.mapper.CoInfoBoardMapper;
 import com.codevumc.codev_backend.mapper.CoPhotosMapper;
 import com.codevumc.codev_backend.service.ResponseService;
 import lombok.AllArgsConstructor;
-import org.json.simple.JSONArray;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

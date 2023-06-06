@@ -1,9 +1,6 @@
 package com.codevumc.codev_backend.service;
 
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
-import com.codevumc.codev_backend.jwt.JwtTokenProvider;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 public abstract class ResponseService {

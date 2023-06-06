@@ -4,10 +4,7 @@ import com.codevumc.codev_backend.domain.CoUser;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 
 public interface CoUserService {
     UserDetails loadUserByUsername(String co_email);

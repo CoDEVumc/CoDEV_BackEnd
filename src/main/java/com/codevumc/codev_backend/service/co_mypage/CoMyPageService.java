@@ -1,8 +1,8 @@
 package com.codevumc.codev_backend.service.co_mypage;
 
 import com.codevumc.codev_backend.domain.CoPortfolio;
-import org.json.simple.JSONArray;
 import com.codevumc.codev_backend.errorhandler.CoDevResponse;
+import org.json.simple.JSONArray;
 
 public interface CoMyPageService {
     CoDevResponse insertCoPortfolio(CoPortfolio coPortfolio, JSONArray co_languages, JSONArray co_links);

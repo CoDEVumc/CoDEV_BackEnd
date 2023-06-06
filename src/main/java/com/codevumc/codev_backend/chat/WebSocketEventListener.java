@@ -1,12 +1,10 @@
 package com.codevumc.codev_backend.chat;
 
 import com.codevumc.codev_backend.domain.ChatMessage;
-import org.apache.logging.log4j.message.SimpleMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
